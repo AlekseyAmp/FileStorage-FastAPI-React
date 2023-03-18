@@ -1,0 +1,64 @@
+@import '../../assets/variables.scss';
+
+.category {
+    padding: 80px 50px;
+
+    &Title {
+        gap: 15px;
+        display: flex;
+        align-items: center;
+
+        img {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    &Content {
+        position: relative;
+        margin-top: 50px;
+    }
+
+    .files {
+        margin-top: 50px;
+
+        &Elem {
+            cursor: pointer;
+            user-select: none;
+            img {
+                width: 50px;
+                height: 50px;
+            }
+
+            &Text {
+                margin-top: 5px;
+            }
+        }
+
+        &Elem:hover {
+            opacity: 0.5;
+        }
+    }
+
+    .contextMenu {
+        position: absolute;
+        background-color: $white;
+        border: 1px solid $light_gray;
+        border-radius: 4px;
+        padding: 8px;
+        box-shadow: 0 4px 8px $light_dark;
+        z-index: 1;
+        user-select: none;
+        /* add z-index to position the context menu above the other elements */
+    }
+
+    .contextMenuItem {
+        padding: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+
+        &:hover {
+            background-color: $light_gray;
+        }
+    }
+}

@@ -1,0 +1,55 @@
+.sidebarRight{
+    gap: 50px;
+    display: flex;
+    flex-direction: column;
+    padding: 70px 0px 70px 60px;
+    .user{
+        align-items: center;
+        display: flex;
+        gap: 20px;
+        &Info{
+            cursor: pointer;
+            gap: 10px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            img{
+                width: 50px;
+                height: 50px;
+            }
+        }
+        &Notifications{
+            cursor: pointer;
+            img{
+                width: 25px;
+                height: 25px;
+            }
+        }
+    }
+    .todayStats{
+        margin-top: 50px;
+        &Content{
+            margin-top: 10px;
+            p{
+                margin-top: 5px;
+            }
+        }
+    }
+    .diskSpace{
+        margin-top: 50px;
+        &Graphic{
+            margin-top: 20px;
+        }
+    }
+    .upgradeSpace{
+        margin-top: 50px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        cursor: pointer;
+        img{
+            width: 60px;
+            height: 60px;
+        }
+    }
+}

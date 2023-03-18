@@ -1,0 +1,98 @@
+@import '../../assets/variables.scss';
+
+.home {
+    padding: 80px 50px;
+    background-color: $background_blue;
+
+    .search {
+        display: flex;
+        gap: 10px;
+    }
+
+    .categories {
+        margin-top: 50px;
+        &List{
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        &Elem {
+            cursor: pointer;
+            transition: 0.4s;
+            padding: 15px 20px;
+            background-color: $white;
+            border-radius: 20px;
+            text-decoration: none;
+            &Title {
+                align-items: center;
+                display: flex;
+                gap: 8px;
+                img {
+                    width: 30px;
+                    height: 30px;
+                  }
+            }
+            &Space {
+                margin-top: 5px;
+            }
+        }
+        &Elem:hover{
+            background-color: $light_gray;
+        }
+    }
+
+    .recent{
+        margin-top: 80px;
+        &List{
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+        &Headlines{
+            display: flex;
+            flex-direction: row;
+            gap: 135px;
+            p{
+                gap: 5px;
+                display: flex;
+                align-items: center;
+            }
+            img{
+                width: 18px;
+                height: 18px;
+                margin-right: 5px;
+            }
+        }
+        &Elem{
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 20px;
+            background-color: $cloud_blue;
+            border-radius: 15px;
+            margin-top: 30px;
+            transition: 0.3s;
+            &Title{
+                align-items: center;
+                text-decoration: none;
+                display: flex;
+                gap: 8px;
+                img {
+                    width: 25px;
+                    height: 25px;
+                  }
+            }
+            &Date{
+                margin-left: 40px;
+            }
+            &Action{
+                margin-left: 100px;
+                width: 200px;
+            }
+        }
+        &Elem:hover{
+            background-color: $light_gray;
+        }
+    }
+}

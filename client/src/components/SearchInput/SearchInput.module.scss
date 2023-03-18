@@ -1,0 +1,23 @@
+@import '../../assets/variables.scss';
+
+.inputForm {
+        input {
+            font-family: 'Montserrat';
+            font-weight: 400;
+            font-size: 16px;
+            color: $dark;
+            background-color: $white;
+            border: none;
+            outline: none;
+            border-radius: 20px;
+            width: 300px;
+            height: 35px;
+            padding-left: 15px;
+        }
+
+        label {
+            margin-bottom: 20px;
+        }
+        display: flex;
+        flex-direction: column;
+}

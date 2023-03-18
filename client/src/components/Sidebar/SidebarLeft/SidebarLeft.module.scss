@@ -1,0 +1,44 @@
+.sidebarLeft {
+    gap: 50px;
+    display: flex;
+    flex-direction: column;
+    padding: 70px 60px 70px 0px;
+    .uploadFile {
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background-color: rgba(220, 227, 245, 0.6);
+        padding: 15px;
+        border-radius: 25px;
+        img{
+            width: 55px;
+            height: 55px;
+        }
+    }
+    .logo {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        img{
+            width: 55px;
+            height: 55px;
+        }
+    }
+    .menu{
+        ul{
+            li{
+                cursor: pointer;
+                display: flex;
+                margin-top: 30px;
+                gap: 13px;
+                img{
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+        }
+    }
+}

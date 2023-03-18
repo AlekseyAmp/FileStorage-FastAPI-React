@@ -1,0 +1,96 @@
+@import './fonts.scss';
+
+$white: #FFFFFF;
+$gray: RGB(183, 186, 207);
+$dark_gray: #6B6E78;
+$light_gray: #c7c8ce;
+$dark: rgba(34, 32, 32, 0.97);
+$light_dark: rgba(58, 54, 54, 0.89);
+$blue: #3763FD;
+$cloud_blue: #e2e4fd;
+$background_blue: rgb(220 227 245 / 60%);
+$light_green: rgb(196 255 229 / 60%);
+$light_red: rgb(243 217 220 / 60%);
+$orange: #EC4E21;
+$red: rgb(239 7 7);
+
+
+
+.link-text {
+    font-family: 'Montserrat';
+    font-size: 17px;
+    font-weight: 500;
+    color: $light_dark;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.link-text:hover {
+    color: $blue; // or blue
+}
+
+
+.link-text-blue {
+    font-family: 'Montserrat';
+    font-size: 17px;
+    font-weight: 500;
+    color: $blue;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.link-text-blue:hover {
+    color: $orange; // or blue
+}
+
+.link-text-orange {
+    font-family: 'Montserrat';
+    font-size: 17px;
+    font-weight: 500;
+    color: $orange;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.link-text-orange:hover {
+    color: $blue; // or blue
+}
+
+.dark-text {
+    text-decoration: none;
+    font-family: 'Montserrat';
+    font-size: 16px;
+    font-weight: 500;
+    color: $dark;
+}
+
+.gray-text {
+    font-family: 'Montserrat';
+    font-size: 15px;
+    font-weight: 500;
+    color: $dark_gray;
+}
+
+.red-text {
+    font-family: 'Montserrat';
+    font-size: 17px;
+    font-weight: 500;
+    color: $red;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.small-text {
+    font-family: 'Montserrat';
+    font-size: 14px;
+    font-weight: 400;
+    color: $light_dark;
+}
+
+.title {
+    font-family: 'Montserrat';
+    font-size: 18px;
+    font-weight: bold;
+    color: $dark;
+    text-decoration: none;
+}
