@@ -1,19 +1,19 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from config.settings import settings
+import uvicorn
+from auth import auth_routes
+from api import file_routes, folder_routes
 from config.database import DbSettings
 
-dbSettings = DbSettings()
-
-from auth import routes
 
 app = FastAPI()
 
+dbSettings = DbSettings()
 
 
 origins = [
-    settings.CLIENT_ORIGIN,
+    "http://localhost",
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
@@ -24,16 +24,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_routes.router, tags=['auth'], prefix='/api')
+app.include_router(folder_routes.router, tags=['folder'], prefix='/api')
+app.include_router(file_routes.router, tags=['file'], prefix='/api')
+
 
 @app.on_event("startup")
 async def init_db():
     await dbSettings.initialize_database()
-    # await startMinio()
 
 
-app.include_router(routes.router, tags=['Auth'], prefix='/api')
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="localhost", port=8000, reload=True)
 
+
+@app.get("/")
+def root():
+    return {"message": "go to /api"}
 
 @app.get("/api")
-def root():
-    return {"message": "Welcome to FastAPI with MongoDB"}
+def api_root():
+    return {
+        "message": "Welcome to FastAPI with MongoDB",
+        "all query": "/docs (without /api)",
+        "register": "api/register",
+        "login": "api/login",
+        "logout": "api/logout",
+        "me": "api/me",
+        "upload file": "api/uploadfile",
+        "upload folders": "api/uploadfolder",
+    }
