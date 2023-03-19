@@ -27,8 +27,8 @@ const Login = () => {
       });
 
       Cookie.set('access_token', response.data.access_token);
-      Cookie.set('refresh_token', response.data.refresh_token);
       Cookie.set('logged_in', true);
+      Cookie.set('email', email)
       navigate('/home')
     } catch (error) {
       alert(error.response.data.detail);
@@ -45,7 +45,7 @@ const Login = () => {
           authHelpText='Нет аккаунта?'
           onSubmit={handleSubmit}
           authHelpLink='Регистрация'
-          link='/regsiter'
+          link='/register'
         />
       </div>
     </div>

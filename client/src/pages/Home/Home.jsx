@@ -7,8 +7,11 @@ import '../../assets/variables.scss'
 import Button from '../../components/Button/Button'
 import SearchInput from '../../components/SearchInput/SearchInput'
 
+import DragAndDropFile from '../../components/DragAndDropFile'
 function Home() {
   return (
+    <div className="drag-and-drop">
+      <DragAndDropFile />
     <div className={styles.home}>
       <form className={styles.search}>
         <SearchInput title={'Поиск по всем файлам'} />
@@ -100,6 +103,7 @@ function Home() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   )
 }

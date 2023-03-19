@@ -1,13 +1,17 @@
 import { React, useState, useEffect } from 'react';
 import styles from './SidebarRight.module.scss';
 import '../../../assets/variables.scss';
+import Cookie from 'js-cookie'
+import { useNavigate } from 'react-router-dom';
+
 function SidebarRight() {
+  const username = Cookie.get('logged_in') === 'true' ? Cookie.get('email').slice(0, Cookie.get('email').indexOf('@')) : 'none'
   return (
     <div className={styles.sidebarRight}>
       <div className={styles.user}>
         <div onClick={() => (window.location.href = '/')} className={styles.userInfo} href="#">
           <img src="img/avatar.png" alt="avatar" />
-          <p className={`dark-text`}>1</p>
+          <p className={`dark-text`}>{username}</p>
         </div>
         <div onClick={() => (window.location.href = '/')} className={styles.userNotifications} href="#">
           <img src="img/sidebarRight/notification.png" alt="notification" />

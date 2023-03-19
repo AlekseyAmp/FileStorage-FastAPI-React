@@ -2,7 +2,7 @@ import React from 'react';
 import AuthForm from '../../components/AuthForm/AuthForm';
 import styles from './Auth.module.scss';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../axios';
 
 const Register = () => {
 
@@ -20,7 +20,7 @@ const Register = () => {
         const password = e.target.password.value;
         const password_repeat = e.target.password_repeat.value;
         try {
-          const response = await axios.post('http://127.0.0.1:8000/api/register', { email, password, password_repeat });
+          const response = await axios.post('/register', { email, password, password_repeat });
           if (response.data) {
             navigate('/login')
           }
