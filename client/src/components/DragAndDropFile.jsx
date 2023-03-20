@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import '../assets/variables.scss'
 import axios from '../axios'
-
+import Cookie from 'js-cookie'
 
 function DragAndDropFile() {
     const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef(null);
-
+    const token = Cookie.get('access_token');
     function handleDragOver(event) {
         event.preventDefault();
         setIsDragging(true);
@@ -28,7 +28,8 @@ function DragAndDropFile() {
 
         axios.post('/uploadfile', formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,
             }
         }).then(response => {
             console.log(response);
