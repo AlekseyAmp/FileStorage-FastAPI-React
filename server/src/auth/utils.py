@@ -1,7 +1,5 @@
 from passlib.context import CryptContext
 import re
-from fastapi import HTTPException, Depends, Request
-from fastapi_jwt_auth import AuthJWT
 
 
 
@@ -21,9 +19,3 @@ def hash_password(password: str):
 
 def verify_password(password: str, hashed_password: str):
     return pwd_context.verify(password, hashed_password)
-
-
-async def check_auth(request: Request, Authorize: AuthJWT):
-    Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    return user_id
