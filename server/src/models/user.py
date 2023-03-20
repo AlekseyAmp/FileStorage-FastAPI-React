@@ -33,6 +33,3 @@ class User(Document):
                 "is_premium": True
             }
         }
-
-
-
