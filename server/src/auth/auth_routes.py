@@ -76,11 +76,13 @@ async def logout(response: Response, Authorize: AuthJWT = Depends()):
     return {'status': 'success'}
 
 
-
+async def get_user_id(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return user_id
 
 
 @router.get('/me')
-async def get_user_info(request: Request, Authorize: AuthJWT = Depends()):
-    user_id = await auth.utils.check_auth(request, Authorize)
-    user = await User.get(PydanticObjectId(user_id))
+async def get_user_info(get_user_id: get_user_id = Depends()):
+    user = await User.get(PydanticObjectId(get_user_id))
     return {'email': user.email, 'id': user.id}
