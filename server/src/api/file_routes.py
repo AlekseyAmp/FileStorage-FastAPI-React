@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Request, UploadFile, APIRouter, Depends
+from fastapi import FastAPI, HTTPException, Request, UploadFile, APIRouter, Depends
 from config.database import GridFSSettings
 from auth.oauth2 import AuthJWT
-from auth.utils import check_auth
+import auth.utils
 
 app = FastAPI()
 
@@ -12,7 +12,7 @@ grid_fs = GridFSSettings()
 
 @router.post("/uploadfile")
 async def upload_file(file: UploadFile, request: Request, Authorize: AuthJWT = Depends()):
-    user_id = await check_auth(request, Authorize)
+    user_id = await auth.utils.check_auth(request, Authorize)
     file_id = grid_fs.file.put(
         file.file,
         filename=file.filename,
