@@ -7,44 +7,51 @@ function DragAndDropFile() {
     const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef(null);
     const access_token = Cookie.get('access_token');
-    function handleDragOver(event) {
-        event.preventDefault();
+
+    async function handleDragOver(e) {
+        e.preventDefault();
         setIsDragging(true);
     }
 
-    function handleDragLeave(event) {
-        event.preventDefault();
+    async function handleDragLeave(e) {
+        e.preventDefault();
         setIsDragging(false);
     }
 
-    function handleDrop(event) {
-        event.preventDefault();
+    async function handleDrop(e) {
+        e.preventDefault();
         setIsDragging(false);
-        const file = event.dataTransfer.files[0];
-        console.log(file);
+        const files = Array.from(e.dataTransfer.files);
 
-        const formData = new FormData();
-        formData.append('file', file);
-
-        axios.post('/uploadfile', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${access_token}`
-            }
-        }).then(response => {
-            console.log(response);
-        }).catch(error => {
-            console.log(error);
+        const formDataArray = files.map((file) => {
+            const formData = new FormData();
+            formData.append('file', file);
+            return formData;
         });
+
+        try {
+            const responses = await Promise.all(formDataArray.map((formData) => {
+                return axios.post('/upload_file', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                });
+            }));
+            console.log(responses);
+        } catch (error) {
+            console.log(error.response.data.detail);
+        }
     }
 
-    function handleFileInputChange(event) {
-        const file = event.target.files[0];
+
+    async function handleFileInputChange(e) {
+        const file = e.target.files[0];
         console.log(file);
     }
 
     useEffect(() => {
-        function handleWindowDragOver(event) {
+        async function handleWindowDragOver(event) {
             const dragOverElement = document.elementFromPoint(event.clientX, event.clientY);
             if (dragOverElement && dragOverElement.closest('.drag-and-drop')) {
                 setIsDragging(true);
@@ -67,7 +74,6 @@ function DragAndDropFile() {
             </div>
             <input type="file" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileInputChange} />
         </div>
-
     );
 }
 
