@@ -1,11 +1,11 @@
 from datetime import datetime
-from beanie import PydanticObjectId
-from fastapi import APIRouter, Response, status, Depends, HTTPException, Request
+from fastapi import APIRouter, Response, status, Depends, HTTPException
 from models.user import User, Login, Register
 import auth.utils
-from auth.oauth2 import AuthJWT
+from auth.jwt_confg import AuthJWT
 
 router = APIRouter()
+
 
 @router.post('/register', status_code=status.HTTP_201_CREATED)
 async def register(credentials: Register):
@@ -74,15 +74,3 @@ async def logout(response: Response, Authorize: AuthJWT = Depends()):
     Authorize.unset_jwt_cookies()
     response.set_cookie('logged_in', False)
     return {'status': 'success'}
-
-
-async def get_user_id(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    return user_id
-
-
-@router.get('/me')
-async def get_user_info(get_user_id: get_user_id = Depends()):
-    user = await User.get(PydanticObjectId(get_user_id))
-    return {'email': user.email, 'id': user.id}
