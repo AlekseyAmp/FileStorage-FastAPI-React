@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+
 from auth import auth_routes
-from api import file_routes, folder_routes
+
+from api.users import user_routes
+from api.files import file_routes
+from api.categories import category_routes
+
 from config.database import DbSettings
 
 
@@ -25,8 +30,9 @@ app.add_middleware(
 )
 
 app.include_router(auth_routes.router, tags=['auth'], prefix='/api')
-app.include_router(folder_routes.router, tags=['folder'], prefix='/api')
+app.include_router(user_routes.router, tags=['user'], prefix='/api')
 app.include_router(file_routes.router, tags=['file'], prefix='/api')
+app.include_router(category_routes.router, tags=['category'], prefix='/api')
 
 
 @app.on_event("startup")
