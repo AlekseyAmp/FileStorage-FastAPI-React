@@ -1,25 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from '../../axios'
+import Cookie from 'js-cookie';
 
 import '../../assets/variables.scss';
 
-import SearchInput from '../../components/SearchInput/SearchInput'
+import File from '../File/File';
+import SearchInput from '../SearchInput/SearchInput'
 import styles from './Category.module.scss'
 
-function Category({ title, titleIcon, labelTitle, background  }) {
+function Category(props) {
+
+  const { categoryName, imagePath, title, titleIcon, labelTitle, background } = props;
+
   const categoryStyle = {
     background: background
   };
 
+  const [files, setFiles] = useState([]);
   const [showContextMenu, setShowContextMenu] = useState(false);
+  const access_token = Cookie.get('access_token');
 
-  const handleContextMenu = (event) => {
-    event.preventDefault();
-    setShowContextMenu(true);
-  };
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
-  const handleCloseContextMenu = () => {
-    setShowContextMenu(false);
-  };
+
+  useEffect(() => {
+    async function getCategoryFiles() {
+      try {
+        const response = await axios.get(`/category/${categoryName}`, {
+          headers: {
+            'Authorization': `Bearer ${access_token}`
+          }
+        });
+        setFiles(response.data.files);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getCategoryFiles();
+  }, []);
+
+
+
+    async function handleContextMenu(e) {
+      e.preventDefault();
+      setShowContextMenu(true);
+      setContextMenuPosition({ x: e.pageX, y: e.pageY });
+    };
+
+    async function handleCloseContextMenu(e) {
+      setShowContextMenu(false);
+    };
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className={styles.category} style={categoryStyle} onClick={handleCloseContextMenu}>
@@ -28,21 +68,26 @@ function Category({ title, titleIcon, labelTitle, background  }) {
         {title}
       </div>
       <div className={styles.categoryContent}>
-        <SearchInput title={`Поиск по ${labelTitle}`}/>
+        <SearchInput title={`Поиск по ${labelTitle}`} />
 
         <div className={styles.files}>
-          <div className={styles.filesElem} onContextMenu={handleContextMenu}>
-            <img src="../img/example.png" alt="images" />
-            <div className={styles.filesElemText}>
-              <p className={`dark-text`}>Пример</p>
-              <p className={`small-text`}>Вес: N гб</p>
-            </div>
-          </div>
+
+          {files.map((file) => (
+            <File
+              key={file.file_id}
+              onContextMenu={handleContextMenu}
+              image={`../img/categories/${imagePath}`}
+              filename={file.filename}
+              fileformat={file.fileformat}
+              size={file.size}
+            />
+          ))}
+
         </div>
 
         {showContextMenu && (
-          <div className={styles.contextMenu} onClick={handleCloseContextMenu}>
-            <div className={styles.contextMenuItem}>Открыть</div>
+          <div className={styles.contextMenu} onClick={handleCloseContextMenu} style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}>
+            <div className={styles.contextMenuItem}>Скачать</div>
             <div className={styles.contextMenuItem}>Переименовать</div>
             <div className={styles.contextMenuItem}>Поделиться</div>
             <div className={styles.contextMenuItem}>Добавить в избранное</div>
