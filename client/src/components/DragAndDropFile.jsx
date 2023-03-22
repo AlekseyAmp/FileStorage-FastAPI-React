@@ -37,6 +37,7 @@ function DragAndDropFile() {
                         'Authorization': `Bearer ${access_token}`
                     }
                 });
+
             }));
             console.log(responses);
         } catch (error) {
@@ -44,15 +45,14 @@ function DragAndDropFile() {
         }
     }
 
-
     async function handleFileInputChange(e) {
         const file = e.target.files[0];
         console.log(file);
     }
 
     useEffect(() => {
-        async function handleWindowDragOver(event) {
-            const dragOverElement = document.elementFromPoint(event.clientX, event.clientY);
+        async function handleWindowDragOver(e) {
+            const dragOverElement = document.elementFromPoint(e.clientX, e.clientY);
             if (dragOverElement && dragOverElement.closest('.drag-and-drop')) {
                 setIsDragging(true);
             } else {
