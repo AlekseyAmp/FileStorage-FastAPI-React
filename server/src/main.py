@@ -49,7 +49,7 @@ def root():
     return {"message": "go to /api"}
 
 @app.get("/api")
-def api_root():
+def api_commands():
     return {
         "message": "Welcome to FastAPI with MongoDB",
         "all query": "/docs (without /api)",

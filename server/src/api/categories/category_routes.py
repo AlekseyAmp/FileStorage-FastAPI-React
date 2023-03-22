@@ -24,4 +24,4 @@ async def get_music_category(user_id: get_user_id = Depends()):
 
 @router.get("/category/videos")
 async def get_videos_category(user_id: get_user_id = Depends()):
-    return {"files": await get_files_by_category("videos")}
+    return {"files": await get_files_by_category("videos", user_id)}
