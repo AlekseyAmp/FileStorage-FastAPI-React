@@ -19,7 +19,6 @@ function Category(props) {
   const [files, setFiles] = useState([]);
   const [showContextMenu, setShowContextMenu] = useState(false);
   const access_token = Cookie.get('access_token');
-
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
 
@@ -47,19 +46,10 @@ function Category(props) {
       setContextMenuPosition({ x: e.pageX, y: e.pageY });
     };
 
+
     async function handleCloseContextMenu(e) {
       setShowContextMenu(false);
     };
-
-
-
-
-
-
-
-
-
-
 
   return (
     <div className={styles.category} style={categoryStyle} onClick={handleCloseContextMenu}>
@@ -79,7 +69,7 @@ function Category(props) {
               image={`../img/categories/${imagePath}`}
               filename={file.filename}
               fileformat={file.fileformat}
-              size={file.size}
+              size={Math.floor(file.size / 1000) + ' КБ'}
             />
           ))}
 
