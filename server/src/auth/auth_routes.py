@@ -1,10 +1,15 @@
-from datetime import datetime
 from fastapi import APIRouter, Response, status, Depends, HTTPException
-from models.user import User, Login, Register
-import auth.utils
+from datetime import datetime, timedelta
 from auth.jwt_confg import AuthJWT
 
+from models.user import User, Login, Register
+from api.users.user_services import get_user_id
+from config.settings import settings
+import auth.utils
+
 router = APIRouter()
+ACCESS_TOKEN_EXPIRES_IN = settings.ACCESS_TOKEN_EXPIRES_IN
+REFRESH_TOKEN_EXPIRES_IN = settings.REFRESH_TOKEN_EXPIRES_IN
 
 
 @router.post('/register', status_code=status.HTTP_201_CREATED)
@@ -61,16 +66,43 @@ async def login(credentials: Login, response: Response, Authorize: AuthJWT = Dep
 
     access_token = Authorize.create_access_token(
         subject=str(user.id),
+        expires_time=timedelta(minutes=ACCESS_TOKEN_EXPIRES_IN)
     )
 
-    response.set_cookie('access_token', access_token)
-    response.set_cookie('logged_in', True)
+    refresh_token = Authorize.create_refresh_token(
+        subject=str(user.id),
+        expires_time=timedelta(minutes=REFRESH_TOKEN_EXPIRES_IN)
+    )
 
+    # Store refresh and access tokens in cookie
+    response.set_cookie('access_token', access_token, ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, True, 'lax')
+    response.set_cookie('refresh_token', refresh_token,
+                        REFRESH_TOKEN_EXPIRES_IN * 60, REFRESH_TOKEN_EXPIRES_IN * 60, '/', None, False, True, 'lax')
+    response.set_cookie('logged_in', True, ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, False, 'lax')
+
+    # Send both access
     return {'status': 'success', 'access_token': access_token}
+
+
+@router.get('/refresh')
+async def refresh_token(response: Response, Authorize: AuthJWT = Depends(), user_id: get_user_id = Depends()):
+    access_token = Authorize.create_access_token(
+        subject=str(user_id),
+        expires_time=timedelta(minutes=ACCESS_TOKEN_EXPIRES_IN)
+    )
+    response.set_cookie('access_token', access_token, ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, True, 'lax')
+    response.set_cookie('logged_in', True, ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, False, 'lax')
+
+    return access_token
 
 
 @router.get('/logout', status_code=status.HTTP_200_OK)
 async def logout(response: Response, Authorize: AuthJWT = Depends()):
     Authorize.unset_jwt_cookies()
+    response.delete_cookie('refresh_token')
     response.set_cookie('logged_in', False)
     return {'status': 'success'}
