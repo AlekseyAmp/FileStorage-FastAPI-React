@@ -2,7 +2,6 @@ from passlib.context import CryptContext
 import re
 
 
-
 def is_valid_email(email: str) -> bool:
     pat = "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
     if re.match(pat, email):
