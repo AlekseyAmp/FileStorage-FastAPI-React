@@ -1,9 +1,10 @@
-import base64
-from typing import List
 from fastapi_jwt_auth import AuthJWT
 from pydantic import BaseModel
+from typing import List
+import base64
 
 from config.settings import settings
+
 
 class Settings(BaseModel):
     authjwt_algorithm: str = settings.JWT_ALGORITHM
