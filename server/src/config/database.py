@@ -1,4 +1,4 @@
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorGridFSBucket
 from beanie import init_beanie
 from pydantic import BaseSettings
 
@@ -14,10 +14,6 @@ class DbSettings(BaseSettings):
         client = AsyncIOMotorClient(settings.DATABASE_URL)
         database = client[settings.DATABASE_NAME]
         await init_beanie(database=database, document_models=[User])
-
-    async def close_connection(self):
-        self.fs.close()
-        self.fs = None
 
     class Config:
         env_file = ".env"
