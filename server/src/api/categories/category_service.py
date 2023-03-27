@@ -1,5 +1,5 @@
 from config.database import GridFSSettings
-from api.categories.constants import ALLOWED_FORMATS
+from api.categories.category_constants import ALLOWED_FORMATS
 
 
 grid_fs = GridFSSettings()
@@ -11,7 +11,7 @@ def is_allowed_format(fileformat, category):
     return False
 
 
-async def get_files_by_category(category: str, user_id: str):
+def get_files_by_category(category: str, user_id: str):
     files = []
     for file_obj in grid_fs.file.find():
         if file_obj.metadata["user_id"] == user_id and is_allowed_format(file_obj.fileformat, category):

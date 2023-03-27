@@ -10,7 +10,7 @@ from config.database import GridFSSettings
 grid_fs = GridFSSettings()
 
 
-async def upload_file(file: UploadFile, user_id: str):
+def upload_file(file: UploadFile, user_id: str):
     file_id = grid_fs.file.put(
         file.file,
         filename=file.filename.split('.')[0],
@@ -25,7 +25,7 @@ async def upload_file(file: UploadFile, user_id: str):
     return {"succes": PydanticObjectId(file_id)}
 
 
-async def download_file(file_id: str, user_id: str):
+def download_file(file_id: str, user_id: str):
     file_obj = grid_fs.file.find_one({"_id": PydanticObjectId(file_id), "metadata.user_id": user_id})
 
     if file_obj is None:
@@ -40,7 +40,7 @@ async def download_file(file_id: str, user_id: str):
     return StreamingResponse(file_stream, headers=headers)
 
 
-async def get_all_files(user_id: str):
+def get_all_files(user_id: str):
     files = list()
 
     for file_obj in grid_fs.file.find({"metadata.user_id": user_id}):
