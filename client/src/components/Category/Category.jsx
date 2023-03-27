@@ -47,7 +47,7 @@ function Category(props) {
     };
 
 
-    async function handleCloseContextMenu(e) {
+    async function handleCloseContextMenu() {
       setShowContextMenu(false);
     };
 
