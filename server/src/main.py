@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
@@ -34,10 +34,12 @@ app.include_router(user_routes.router, tags=['user'], prefix='/api')
 app.include_router(file_routes.router, tags=['file'], prefix='/api')
 app.include_router(category_routes.router, tags=['category'], prefix='/api')
 
+db_settings = DbSettings()
+
 
 @app.on_event("startup")
-async def init_db():
-    await dbSettings.initialize_database()
+async def startup():
+    await db_settings.initialize_database()
 
 
 if __name__ == "__main__":
@@ -47,6 +49,7 @@ if __name__ == "__main__":
 @app.get("/")
 def root():
     return {"message": "go to /api"}
+
 
 @app.get("/api")
 def api_commands():
