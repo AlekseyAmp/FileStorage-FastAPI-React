@@ -10,6 +10,7 @@ function AuthChecked({ children }) {
         const isAuthRedirectPaths = ['/register', '/login', '/'];
         const currentPath = window.location.pathname;
 
+
         if (!isAuth) {
             if (isAuthRedirectPaths.includes(currentPath)) {
                 return;
@@ -22,6 +23,7 @@ function AuthChecked({ children }) {
             }
         }
     }, [navigate]);
+
 
     return <>{children}</>;
 }
