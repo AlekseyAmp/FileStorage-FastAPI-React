@@ -3,7 +3,7 @@ from beanie import init_beanie
 from pydantic import BaseSettings
 
 from pymongo import MongoClient
-from gridfs import GridFS
+from gridfs import GridFS, GridFSBucket
 
 from models.user import User
 from config.settings import settings
@@ -23,3 +23,4 @@ class GridFSSettings():
     mongo_client = MongoClient(settings.DATABASE_URL)
     db = mongo_client[settings.DATABASE_NAME]
     file = GridFS(db)
+    file_bucket = GridFSBucket(db)
