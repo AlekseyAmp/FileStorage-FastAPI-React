@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 function Logout() {
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  async function handleSubmit(e) {
     try {
       const response = await axios.get('/logout');
 
@@ -17,7 +17,7 @@ function Logout() {
         navigate('/login');
       }
     } catch (error) {
-      console.error(error.response.data.detail);
+      console.log(error.response.data.detail);
     }
   };
 

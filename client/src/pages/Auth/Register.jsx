@@ -14,7 +14,7 @@ const Register = () => {
 
     const navigate = useNavigate()
 
-    const handleSubmit = async (e) => {
+    async function handleSubmit(e) {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
@@ -25,9 +25,10 @@ const Register = () => {
             navigate('/login')
           }
         } catch (error) {
-          console.error(error.response.data.detail);
+          console.log(error.response.data.detail);
         }
-      };
+    };
+
     return (
         <div className={styles.registration}>
             <div className={`title ${styles.title}`}>Регистрация</div>

@@ -16,7 +16,7 @@ const Login = () => {
 
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
@@ -31,7 +31,7 @@ const Login = () => {
       Cookie.set('email', email)
       navigate('/home')
     } catch (error) {
-      alert(error.response.data.detail);
+      console.log(error.response.data.detail);
     }
   };
 
