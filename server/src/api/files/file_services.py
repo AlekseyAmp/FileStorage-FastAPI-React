@@ -10,6 +10,14 @@ from config.database import GridFSSettings
 grid_fs = GridFSSettings()
 
 
+def find_file(file_id: str, user_id: str):
+    file_obj = grid_fs.file.find_one({"_id": PydanticObjectId(file_id), "metadata.user_id": user_id})
+
+    if file_obj is None:
+        raise HTTPException(status_code=404, detail="Файл не найден")
+    return file_obj
+
+
 def upload_file(file: UploadFile, user_id: str):
     file_id = grid_fs.file.put(
         file.file,
@@ -26,18 +34,24 @@ def upload_file(file: UploadFile, user_id: str):
 
 
 def download_file(file_id: str, user_id: str):
-    file_obj = grid_fs.file.find_one({"_id": PydanticObjectId(file_id), "metadata.user_id": user_id})
+    file = find_file(file_id, user_id)
 
-    if file_obj is None:
-        raise HTTPException(status_code=404, detail="Файл не найден")
-
-    file_stream = grid_fs.file.get(file_obj._id)
-    filename = urllib.parse.quote(file_obj.filename)
+    file_stream = grid_fs.file.get(file._id)
+    filename = urllib.parse.quote(file.filename)
     headers = {
         "Content-Disposition": f"attachment; filename*=UTF-8''{filename}",
-        "Content-Type": file_obj.content_type,
+        "Content-Type": find_file.content_type,
     }
     return StreamingResponse(file_stream, headers=headers)
+
+
+def rename_file(file_id: str, new_name: str, user_id: str):
+
+    file = find_file(file_id, user_id)
+
+    grid_fs.file.put(file._id, new_name)
+
+    return {"new_name": str(new_name)}
 
 
 def get_all_files(user_id: str):
