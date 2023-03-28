@@ -8,29 +8,30 @@ function DragAndDropFile() {
     const fileInputRef = useRef(null);
     const access_token = Cookie.get('access_token');
 
+
     async function handleDragOver(e) {
         e.preventDefault();
         setIsDragging(true);
     }
+
 
     async function handleDragLeave(e) {
         e.preventDefault();
         setIsDragging(false);
     }
 
+
     async function handleDrop(e) {
         e.preventDefault();
         setIsDragging(false);
         const files = Array.from(e.dataTransfer.files);
-
         const formDataArray = files.map((file) => {
             const formData = new FormData();
             formData.append('file', file);
             return formData;
         });
-
         try {
-            const responses = await Promise.all(formDataArray.map((formData) => {
+            const response = await Promise.all(formDataArray.map((formData) => {
                 return axios.post('/upload_file', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -39,16 +40,18 @@ function DragAndDropFile() {
                 });
 
             }));
-            console.log(responses);
+            console.log(response);
         } catch (error) {
             console.log(error.response.data.detail);
         }
     }
 
+
     async function handleFileInputChange(e) {
         const file = e.target.files[0];
         console.log(file);
     }
+
 
     useEffect(() => {
         async function handleWindowDragOver(e) {
@@ -67,6 +70,7 @@ function DragAndDropFile() {
         };
     }, []);
 
+    
     return (
         <div className='drag-and-drop-block' onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
             <div className='drag-and-drop-file' style={{ display: isDragging ? 'flex' : 'none', opacity: isDragging ? 1 : 0 }}>
