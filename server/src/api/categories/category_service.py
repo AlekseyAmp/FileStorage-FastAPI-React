@@ -1,9 +1,5 @@
-from config.database import GridFSSettings
 from api.categories.category_constants import ALLOWED_FORMATS
-
-
-grid_fs = GridFSSettings()
-
+from models.file import File
 
 def is_allowed_format(fileformat, category):
     if fileformat in ALLOWED_FORMATS[category]:
@@ -11,19 +7,18 @@ def is_allowed_format(fileformat, category):
     return False
 
 
-def get_files_by_category(category: str, user_id: str):
+async def get_files_by_category(category: str, user_id: str):
     files = []
-    for file_obj in grid_fs.file.find():
-        if file_obj.metadata["user_id"] == user_id and is_allowed_format(file_obj.fileformat, category):
-            file = {
-                "file_id": str(file_obj._id),
-                "filename": file_obj.filename,
-                "fileformat": file_obj.fileformat,
-                "size": file_obj.length,
-                "content_type": file_obj.content_type,
-                "is_favorite": file_obj.metadata["is_favorite"],
-                "is_deleted": file_obj.metadata["is_deleted"],
-                "upload_date": file_obj.upload_date,
+    async for file in File.find():
+        if file.user_id == user_id and is_allowed_format(file.name.split('.')[1], category):
+            file_dict = {
+                "file_id": str(file.id),
+                "name": file.name,
+                "size": file.size,
+                "content_type": file.content_type,
+                "is_favorite": file.metadata["is_favorite"],
+                "is_deleted": file.metadata["is_deleted"],
+                "created_at": file.metadata["created_at"],
             }
-            files.append(file)
+            files.append(file_dict)
     return files

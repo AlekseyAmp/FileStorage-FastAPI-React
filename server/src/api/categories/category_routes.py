@@ -8,20 +8,21 @@ router = APIRouter()
 
 
 @router.get("/category/documents")
-def get_documents_category(user_id: get_user_id = Depends()):
-    return {"files": get_files_by_category("documents", user_id)}
+async def get_documents_category(user_id: get_user_id = Depends()):
+    return {"files": await get_files_by_category("documents", user_id)}
 
 
 @router.get("/category/images")
-def get_videos_category(user_id: get_user_id = Depends()):
-    return {"files": get_files_by_category("images", user_id)}
+async def get_videos_category(user_id: get_user_id = Depends()):
+    return {"files": await get_files_by_category("images", user_id)}
 
 
 @router.get("/category/music")
-def get_music_category(user_id: get_user_id = Depends()):
-    return {"files": get_files_by_category("music", user_id)}
+async def get_music_category(user_id: get_user_id = Depends()):
+    return {"files": await get_files_by_category("music", user_id)}
 
 
 @router.get("/category/videos")
-def get_videos_category(user_id: get_user_id = Depends()):
-    return {"files": get_files_by_category("videos", user_id)}
+async def get_videos_category(user_id: get_user_id = Depends()):
+    return {"files": await get_files_by_category("videos", user_id)}
+
