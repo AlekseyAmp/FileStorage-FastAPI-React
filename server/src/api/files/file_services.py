@@ -1,72 +1,115 @@
 from fastapi import HTTPException, UploadFile
-from fastapi.responses import StreamingResponse
-
-from beanie import PydanticObjectId
+from datetime import datetime
 import urllib
+import os
 
-from config.database import GridFSSettings
+from starlette.responses import StreamingResponse
+from beanie import PydanticObjectId
+
+from models.file import File
 
 
-grid_fs = GridFSSettings()
+async def get_file(file_id: str, user_id: str):
+    file = await File.get(PydanticObjectId(file_id))
 
-
-def find_file(file_id: str, user_id: str):
-    file_obj = grid_fs.file.find_one({"_id": PydanticObjectId(file_id), "metadata.user_id": user_id})
-
-    if file_obj is None:
+    if not file:
         raise HTTPException(status_code=404, detail="Файл не найден")
-    return file_obj
+
+    if file.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Отказано в доступе")
+
+    return file
 
 
-def upload_file(file: UploadFile, user_id: str):
-    file_id = grid_fs.file.put(
-        file.file,
-        filename=file.filename.split('.')[0],
-        fileformat=file.filename.split('.')[1],
+async def upload_file(file: UploadFile, user_id: str):
+    file_path = os.path.join("file_storage", file.filename)
+    with open(file_path, "wb") as buffer:
+        buffer.write(file.file.read())
+
+    new_file = File(
+        user_id=user_id,
+        name=file.filename,
         content_type=file.content_type,
+        path=file_path,
+        size=file.size,
         metadata={
-            "user_id": user_id,
+            "created_at": datetime.now(),
             "is_favorite": False,
-            "is_deleted": False,
+            "is_deleted": False
         }
     )
-    return {"succes": PydanticObjectId(file_id)}
+
+    await new_file.insert()
+
+    return {"file_id": new_file.id}
 
 
-def download_file(file_id: str, user_id: str):
-    file = find_file(file_id, user_id)
+async def download_file(file_id: str, user_id: str):
+    file = await get_file(file_id, user_id)
+    file_path = file.path
 
-    file_stream = grid_fs.file.get(file._id)
-    filename = urllib.parse.quote(file.filename)
-    headers = {
-        "Content-Disposition": f"attachment; filename*=UTF-8''{filename}",
-        "Content-Type": find_file.content_type,
-    }
-    return StreamingResponse(file_stream, headers=headers)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Файл не найден")
 
+    filename = urllib.parse.quote(file.name)
 
-def rename_file(file_id: str, new_name: str, user_id: str):
-
-    file = find_file(file_id, user_id)
-
-    grid_fs.file.put(file._id, new_name)
-
-    return {"new_name": str(new_name)}
-
-
-def get_all_files(user_id: str):
-    files = list()
-
-    for file_obj in grid_fs.file.find({"metadata.user_id": user_id}):
-        file = {
-            "file_id": str(file_obj._id),
-            "filename": file_obj.filename,
-            "fileformat": file_obj.fileformat,
-            "size": file_obj.length,
-            "content_type": file_obj.content_type,
-            "is_favorite": file_obj.metadata["is_favorite"],
-            "is_deleted": file_obj.metadata["is_deleted"],
-            "upload_date": file_obj.upload_date,
+    return StreamingResponse(
+        open(file_path, "rb"),
+        media_type="application/octet-stream",
+        headers={
+            "Content-Disposition": f"attachment; filename*=UTF-8''{filename}",
+            "Content-Type": file.content_type,
         }
-        files.append(file)
-    return {"files": files}
+    )
+
+
+async def rename_file(file_id: str, new_name: str, user_id: str):
+    file = await get_file(file_id, user_id)
+    file_path = file.path
+
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Файл не найден")
+
+    dir_path = os.path.dirname(file_path)
+    ext = os.path.splitext(file_path)[1]
+    new_file_path = os.path.join(dir_path, new_name + ext)
+
+    os.rename(file_path, new_file_path)
+    file.name = new_name + ext
+    file.path = f"file_storage\{file.name}"
+    await file.save()
+    return {"new_name": file.name}
+
+
+async def delete_file(file_id: str, user_id: str):
+    file = await get_file(file_id, user_id)
+    file_path = file.path
+
+    if file.metadata["is_deleted"] == False:
+        raise HTTPException(status_code=403, detail="Файл должен находиться в корзине")
+
+
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Файл не найден")
+
+    os.remove(file_path)
+    await file.delete()
+    return {"status": "succes"}
+
+
+async def in_basket_file(file_id: str, user_id: str):
+    file = await get_file(file_id, user_id)
+
+    file.metadata["is_deleted"] = True
+    await file.save()
+
+    return {"status": "succes"}
+
+
+async def in_favorite_file(file_id: str, user_id: str):
+    file = await get_file(file_id, user_id)
+
+    file.metadata["is_favorite"] = True
+    await file.save()
+
+    return {"status": "succes"}
