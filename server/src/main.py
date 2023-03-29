@@ -1,9 +1,8 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from auth import auth_routes
-
+from api.auth import auth_routes
 from api.users import user_routes
 from api.files import file_routes
 from api.categories import category_routes
