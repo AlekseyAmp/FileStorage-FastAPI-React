@@ -23,13 +23,4 @@ class User(Document):
     is_premium: bool = Field(default=False)
 
     class Settings:
-        schema_extra = {
-            "example": {
-                "email": "example@example.com",
-                "password": "example_password",
-                "created_at": "2022-01-01T12:00:00",
-                "storage_used": 0,
-                "max_storage": 15.0,
-                "is_premium": True
-            }
-        }
+        name = "users"
