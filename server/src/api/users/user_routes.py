@@ -11,4 +11,4 @@ router = APIRouter()
 @router.get('/me')
 async def get_user_info(user_id: get_user_id = Depends()):
     user = await User.get(PydanticObjectId(user_id))
-    return {'email': user.email, 'id': user_id}
+    return {"email": user.email}
