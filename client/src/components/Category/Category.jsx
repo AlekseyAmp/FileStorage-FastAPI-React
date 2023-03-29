@@ -58,7 +58,7 @@ function Category(props) {
       const url = window.URL.createObjectURL(new Blob([response.data], { type: selectedFile.content_type }));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', selectedFile.filename);
+      link.setAttribute('download', selectedFile.name);
       document.body.appendChild(link);
       link.click();
     } catch (error) {
@@ -99,8 +99,7 @@ function Category(props) {
               key={file.file_id}
               onContextMenu={(e) => handleContextMenu(e, file)}
               image={`../img/categories/${imagePath}`}
-              filename={file.filename}
-              fileformat={file.fileformat}
+              name={file.name}
               size={`${Math.floor(file.size / 1000)} КБ`}
             />
           ))}
@@ -109,10 +108,10 @@ function Category(props) {
         {showContextMenu && (
           <div className={styles.contextMenu} onClick={handleCloseContextMenu} style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}>
             <div className={styles.contextMenuItem} onClick={handleDownload}>Скачать</div>
+            <div className={styles.contextMenuItem}>Добавить избранное</div>
             <div className={styles.contextMenuItem} onClick={handleRename}>Переименовать</div>
             <div className={styles.contextMenuItem}>Поделиться</div>
-            <div className={styles.contextMenuItem}>Добавить в избранное</div>
-            <div className={styles.contextMenuItem}>Удалить</div>
+            <div className={styles.contextMenuItem}>В коризну</div>
           </div>
         )}
       </div>
