@@ -1,8 +1,8 @@
 
 from fastapi import APIRouter, Depends, UploadFile
 
-from api.users.user_services import get_user_id
-from api.files.file_services import upload_file, download_file, rename_file, delete_file, in_basket_file, in_favorite_file
+from services.user_services import get_user_id
+from services.file_services import upload_file, download_file, rename_file, delete_file, in_basket_file, in_favorite_file
 # from api.files.file_services import upload_file, download_file, delete_file, rename_file, get_all_files
 
 

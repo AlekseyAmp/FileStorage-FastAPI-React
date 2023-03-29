@@ -1,4 +1,4 @@
-from api.categories.category_constants import ALLOWED_FORMATS
+from constants.category_constants import ALLOWED_FORMATS
 from models.file import File
 
 def is_allowed_format(fileformat, category):

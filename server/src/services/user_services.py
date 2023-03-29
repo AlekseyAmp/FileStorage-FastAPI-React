@@ -1,5 +1,5 @@
 from fastapi import Depends, HTTPException
-from api.auth.jwt_confg import AuthJWT
+from config.jwt_config import AuthJWT
 
 
 async def get_user_id(Authorize: AuthJWT = Depends()):

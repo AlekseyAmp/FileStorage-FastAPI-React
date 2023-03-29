@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
-from api.categories.category_service import get_files_by_category
-from api.users.user_services import get_user_id
+from services.category_services import get_files_by_category
+from services.user_services import get_user_id
 
 
 router = APIRouter()
@@ -25,4 +25,3 @@ async def get_music_category(user_id: get_user_id = Depends()):
 @router.get("/category/videos")
 async def get_videos_category(user_id: get_user_id = Depends()):
     return {"files": await get_files_by_category("videos", user_id)}
-

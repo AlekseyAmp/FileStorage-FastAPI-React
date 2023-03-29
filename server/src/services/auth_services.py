@@ -1,9 +1,10 @@
 from fastapi import Response, status, Depends, HTTPException
 from datetime import datetime, timedelta
-from auth.jwt_confg import AuthJWT
 
 from models.user import User, Login, Register
-from auth import auth_constants, auth_utils
+from config.jwt_config import AuthJWT
+from constants import auth_constants
+from utils import auth_utils
 
 
 async def create_access_token(Authorize: AuthJWT, user_id: str):
@@ -73,7 +74,6 @@ async def login_user(credentials: Login, response: Response, Authorize: AuthJWT 
     access_token = await create_access_token(Authorize, str(user.id))
     refresh_token = await create_refresh_token(Authorize, str(user.id))
 
-    # Store refresh and access tokens in cookie
     response.set_cookie('access_token', access_token, auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60,
                         auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, True, 'lax')
     response.set_cookie('refresh_token', refresh_token,

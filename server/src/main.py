@@ -2,10 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from api.auth import auth_routes
-from api.users import user_routes
-from api.files import file_routes
-from api.categories import category_routes
+from routes import auth_routes, user_routes, file_routes, category_routes
 
 from config.database import DbSettings
 
@@ -57,8 +54,17 @@ def api_commands():
         "all query": "/docs (without /api)",
         "register": "api/register",
         "login": "api/login",
+        "refresh token": "api/refresh",
         "logout": "api/logout",
         "me": "api/me",
         "upload file": "api/uploadfile",
-        "upload folders": "api/uploadfolder",
+        "download file": "api/download_file/file_id",
+        "rename file": "api/rename_file/file_id",
+        "delete file": "api/delete_file/file_id",
+        "in_basket_file": "api/in_basket_file/file_id",
+        "in_favorite_file": "api/in_favorite_file/file_id",
+        "documents": "api/category/documents",
+        "images": "api/category/images",
+        "music": "api/category/music",
+        "videos": "api/category/videos",
     }

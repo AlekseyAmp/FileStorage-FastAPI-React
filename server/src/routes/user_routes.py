@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from beanie import PydanticObjectId
 
 from models.user import User
-from api.users.user_services import get_user_id
+from services.user_services import get_user_id
 
 
 router = APIRouter()
