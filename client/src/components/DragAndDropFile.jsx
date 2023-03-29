@@ -70,7 +70,7 @@ function DragAndDropFile() {
         };
     }, []);
 
-    
+
     return (
         <div className='drag-and-drop-block' onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
             <div className='drag-and-drop-file' style={{ display: isDragging ? 'flex' : 'none', opacity: isDragging ? 1 : 0 }}>
