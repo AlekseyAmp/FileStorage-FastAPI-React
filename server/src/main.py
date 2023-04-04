@@ -9,6 +9,7 @@ from config.database import DbSettings
 
 app = FastAPI()
 
+
 dbSettings = DbSettings()
 
 
