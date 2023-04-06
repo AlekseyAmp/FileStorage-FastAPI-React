@@ -10,11 +10,11 @@ function SidebarRight() {
     <div className={styles.sidebarRight}>
       <div className={styles.user}>
         <div onClick={() => (window.location.href = '/')} className={styles.userInfo} href="#">
-          <img src="img/avatar.png" alt="avatar" />
+          <img src="../img/avatar.png" alt="avatar" />
           <p className={`dark-text`}>{username}</p>
         </div>
         <div onClick={() => (window.location.href = '/')} className={styles.userNotifications} href="#">
-          <img src="img/sidebarRight/notification.png" alt="notification" />
+          <img src="../img/sidebarRight/notification.png" alt="notification" />
         </div>
       </div>
 
@@ -36,7 +36,7 @@ function SidebarRight() {
       </div>
 
       <div onClick={() => (window.location.href = '/')} className={styles.upgradeSpace}>
-        <img src="img/sidebarRight/premium.png" alt="premium" />
+        <img src="../img/sidebarRight/premium.png" alt="premium" />
         <h3 className={`title`}>Купить больше места</h3>
       </div>
     </div>
