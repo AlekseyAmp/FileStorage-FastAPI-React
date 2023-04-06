@@ -81,7 +81,7 @@ async def login_user(credentials: Login, response: Response, Authorize: AuthJWT 
     response.set_cookie('logged_in', True, auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60,
                         auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, False, 'lax')
 
-    return {'status': 'success', 'access_token': access_token}
+    return {'refresh_token': refresh_token, 'access_token': access_token}
 
 
 async def refresh_access_token(Authorize: AuthJWT, response: Response, user_id: str):
@@ -98,5 +98,7 @@ async def refresh_access_token(Authorize: AuthJWT, response: Response, user_id: 
 async def logout_user(response: Response, Authorize: AuthJWT = Depends()):
     Authorize.unset_jwt_cookies()
     response.set_cookie('logged_in', False)
+    response.delete_cookie('access_token')
     response.delete_cookie('refresh_token')
+    response.delete_cookie('email')
     return {'status': 'success'}
