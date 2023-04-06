@@ -6,12 +6,13 @@ import { useNavigate } from 'react-router-dom';
 function Logout() {
   const navigate = useNavigate();
 
-  async function handleSubmit(e) {
+  async function handleSubmit() {
     try {
       const response = await axios.get('/logout');
 
       if (response.data.status === 'success') {
         Cookie.remove('access_token');
+        Cookie.remove('refresh_token');
         Cookie.remove('email');
         Cookie.set('logged_in', false);
         navigate('/login');
