@@ -22,7 +22,11 @@ async def get_file(file_id: str, user_id: str):
 
 
 async def upload_file(file: UploadFile, user_id: str):
-    file_path = os.path.join("file_storage", file.filename)
+    directory = os.path.join("file_storage", user_id)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    file_path = os.path.join(directory, file.filename)
     with open(file_path, "wb") as buffer:
         buffer.write(file.file.read())
 
@@ -67,16 +71,13 @@ async def rename_file(file_id: str, new_name: str, user_id: str):
     file = await get_file(file_id, user_id)
     file_path = file.path
 
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="Файл не найден")
-
     dir_path = os.path.dirname(file_path)
     ext = os.path.splitext(file_path)[1]
     new_file_path = os.path.join(dir_path, new_name + ext)
 
     os.rename(file_path, new_file_path)
     file.name = new_name + ext
-    file.path = f"file_storage\{file.name}"
+    file.path = f"file_storage/{user_id}/{file.name}"
     await file.save()
     return {"new_name": file.name}
 
