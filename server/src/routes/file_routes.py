@@ -24,16 +24,16 @@ async def rename_file_endpoint(file_id: str, new_name: str, user_id: get_user_id
     return await rename_file(file_id, new_name, user_id)
 
 
-@router.get("/delete_file/{file_id}")
+@router.delete("/delete_file/{file_id}")
 async def delete_file_endpoint(file_id: str, user_id: get_user_id = Depends()):
     return await delete_file(file_id, user_id)
 
 
-@router.get("/in_basket_file/{file_id}")
+@router.patch("/in_basket_file/{file_id}")
 async def in_basket_file_endpoint(file_id: str, user_id: get_user_id = Depends()):
     return await in_basket_file(file_id, user_id)
 
 
-@router.get("/in_favorite_file/{file_id}")
+@router.patch("/in_favorite_file/{file_id}")
 async def in_favorite_file_endpoint(file_id: str, user_id: get_user_id = Depends()):
     return await in_favorite_file(file_id, user_id)
