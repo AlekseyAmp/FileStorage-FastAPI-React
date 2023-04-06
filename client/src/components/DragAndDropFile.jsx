@@ -14,12 +14,10 @@ function DragAndDropFile() {
         setIsDragging(true);
     }
 
-
     async function handleDragLeave(e) {
         e.preventDefault();
         setIsDragging(false);
     }
-
 
     async function handleDrop(e) {
         e.preventDefault();
@@ -46,12 +44,10 @@ function DragAndDropFile() {
         }
     }
 
-
     async function handleFileInputChange(e) {
         const file = e.target.files[0];
         console.log(file);
     }
-
 
     useEffect(() => {
         async function handleWindowDragOver(e) {
@@ -69,7 +65,6 @@ function DragAndDropFile() {
             window.removeEventListener('dragover', handleWindowDragOver);
         };
     }, []);
-
 
     return (
         <div className='drag-and-drop-block' onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
