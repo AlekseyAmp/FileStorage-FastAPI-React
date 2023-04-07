@@ -10,7 +10,7 @@ import Input from '../Input/Input'
 import styles from './Category.module.scss';
 
 
-function Category({ categoryName, imagePath, title, titleIcon, labelTitle, background }) {
+function Category({ categoryName, title, titleIcon, labelTitle, background }) {
   const categoryStyle = {
     background: background,
   };
@@ -35,7 +35,6 @@ function Category({ categoryName, imagePath, title, titleIcon, labelTitle, backg
           },
         });
         setFiles(response.data.files);
-        console.log(response.data.files)
       } catch (error) {
         console.log(error.response.data.detail);
       }
@@ -156,9 +155,9 @@ function Category({ categoryName, imagePath, title, titleIcon, labelTitle, backg
             }
             return (
               <File
-                key={file._id}
+                key={file.file_id}
                 onContextMenu={(e) => handleContextMenu(e, file)}
-                image={`../img/categories/${imagePath}`}
+                image={`../img/categories/${file.content_type}.png`}
                 name={file.name}
                 size={`${Math.floor(file.size / 1000)} КБ`}
               />
