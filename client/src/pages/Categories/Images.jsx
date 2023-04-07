@@ -6,7 +6,6 @@ function Images() {
   return (
     <Category
     categoryName={'images'}
-    imagePath='../../img/categories/image.png'
     title={'Изображения'}
     labelTitle = {'изображениям'}
      background='rgb(220 227 245 / 60%)'
