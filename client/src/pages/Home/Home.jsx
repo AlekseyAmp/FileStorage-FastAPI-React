@@ -8,6 +8,7 @@ import Button from '../../components/Button/Button'
 import SearchInput from '../../components/SearchInput/SearchInput'
 
 import DragAndDropFile from '../../components/DragAndDropFile'
+
 function Home() {
   return (
     <div className="drag-and-drop">
@@ -33,7 +34,7 @@ function Home() {
 
           <Link to="/category/documents" className={styles.categoriesElem}>
             <div className={styles.categoriesElemTitle}>
-              <img src="img/categories/docs.png" alt="documents" />
+              <img src="img/categories/documents.png" alt="documents" />
               <p className={`dark-text`}>Документы</p>
             </div>
             <div className={styles.categoriesElemSpace}>
@@ -43,7 +44,7 @@ function Home() {
 
           <Link to="/category/images" className={styles.categoriesElem}>
             <div className={styles.categoriesElemTitle}>
-              <img src="img/categories/image.png" alt="images" />
+              <img src="img/categories/images.png" alt="images" />
               <p className={`dark-text`}>Картинки</p>
             </div>
             <div className={styles.categoriesElemSpace}>
