@@ -2,8 +2,15 @@
 from fastapi import APIRouter, Depends, UploadFile
 
 from services.user_services import get_user_id
-from services.file_services import upload_file, download_file, rename_file, delete_file, in_basket_file, in_favorite_file
-# from api.files.file_services import upload_file, download_file, delete_file, rename_file, get_all_files
+from services.file_services import (
+                                    upload_file, 
+                                    download_file, 
+                                    rename_file, 
+                                    delete_file, 
+                                    in_basket_file, 
+                                    in_favorite_file,
+                                    get_moved_files,
+                                    )
 
 
 router = APIRouter()
@@ -37,3 +44,13 @@ async def in_basket_file_endpoint(file_id: str, user_id: get_user_id = Depends()
 @router.patch("/in_favorite_file/{file_id}")
 async def in_favorite_file_endpoint(file_id: str, user_id: get_user_id = Depends()):
     return await in_favorite_file(file_id, user_id)
+
+
+@router.get("/get_basket_files")
+async def get_basket_file_endpoint(user_id: get_user_id = Depends()):
+    return await get_moved_files("is_deleted", user_id)
+
+
+@router.get("/get_favorites_files")
+async def get_favorites_file_endpoint(user_id: get_user_id = Depends()):
+    return await get_moved_files("is_favorite", user_id)
