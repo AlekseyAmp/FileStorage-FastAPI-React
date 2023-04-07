@@ -7,7 +7,7 @@ from starlette.responses import StreamingResponse
 from beanie import PydanticObjectId
 
 from models.file import File
-from utils.files_utils import set_file_category 
+from utils.file_utils import set_file_category 
 
 async def files_info(user_id: str):
     files = await File.find().to_list(None)
