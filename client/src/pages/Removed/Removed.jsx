@@ -1,16 +1,44 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import axios from "../../axios";
 
-import Category from '../../components/Category/Category'
+import File from "../../components/File/File";
 
-function Removed() {
+import Cookies from "js-cookie";
+
+function Basket() {
+  const [files, setFiles] = useState([]);
+  const access_token = Cookies.get('access_token')
+
+
+  useEffect(() => {
+    async function getBasketFiles() {
+      try {
+        const response = await axios.get("/get_basket_files", {
+          headers: {
+            Authorization: `Bearer ${access_token}`
+          }
+        });
+        setFiles(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getBasketFiles();
+  }, []);
+
   return (
-    <Category
-    title={'Здесь хранятся удаленные файлы'}
-    titleIcon={<img src="img/categories/delete.png" alt="removed" />}
-    labelTitle = {'удаленным файлам'}
-    background='rgb(243 217 220 / 60%)'
-    />
-  )
-}
+    <div>
+        {files.map((file) => (
+          <File
+          key={file.file_id}
+          onContextMenu={null}
+          image={`../img/categories/${file.content_type}.png`}
+          name={file.name}
+          size={`${Math.floor(file.size / 1000)} КБ`}
+        />
+        ))}
+    </div>
+  );
+};
 
-export default Removed
+export default Basket;
