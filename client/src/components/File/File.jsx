@@ -1,13 +1,9 @@
-import { React, useState } from 'react';
+import { React } from 'react';
 import '../../assets/variables.scss';
 import styles from './File.module.scss'
 
 
-function File({name, size, image, onContextMenu }) {
-  const [showSelectedFile, setShowSelectedFile] = useState(false);
-
-
-  
+function File({name, size, image, onContextMenu }) {  
   return (
     <div className={styles.file}
      onContextMenu={onContextMenu}>
