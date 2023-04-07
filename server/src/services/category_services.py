@@ -1,4 +1,4 @@
-from utils.files_utils import is_allowed_format
+from utils.file_utils import is_allowed_format
 from models.file import File
 
 
