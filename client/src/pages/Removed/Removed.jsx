@@ -1,44 +1,19 @@
-import React, { useState, useEffect } from "react";
-import axios from "../../axios";
+import React from "react";
 
-import File from "../../components/File/File";
+import MovedFiles from "../../components/MovedFiles/MovedFiles"
 
-import Cookies from "js-cookie";
-
-function Basket() {
-  const [files, setFiles] = useState([]);
-  const access_token = Cookies.get('access_token')
-
-
-  useEffect(() => {
-    async function getBasketFiles() {
-      try {
-        const response = await axios.get("/get_basket_files", {
-          headers: {
-            Authorization: `Bearer ${access_token}`
-          }
-        });
-        setFiles(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getBasketFiles();
-  }, []);
-
+function Removed() {
   return (
     <div>
-        {files.map((file) => (
-          <File
-          key={file.file_id}
-          onContextMenu={null}
-          image={`../img/categories/${file.content_type}.png`}
-          name={file.name}
-          size={`${Math.floor(file.size / 1000)} КБ`}
-        />
-        ))}
+      <MovedFiles
+        url={'get_favorites_files'}
+        title={'Здесь хранятся ваши удалённые файлы'}
+        titleIcon={<img src="img/categories/delete.png" alt="removed" />}
+        labelTitle={'удаленным файлам'}
+        background='rgb(243 217 220 / 60%)'
+      />
     </div>
   );
 };
 
-export default Basket;
+export default Removed;

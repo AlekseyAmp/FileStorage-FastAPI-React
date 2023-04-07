@@ -1,42 +1,17 @@
-import React, { useState, useEffect } from "react";
-import axios from "../../axios";
+import React from "react";
 
-import File from "../../components/File/File";
-
-import Cookies from "js-cookie";
+import MovedFiles from "../../components/MovedFiles/MovedFiles"
 
 function Favoties() {
-  const [files, setFiles] = useState([]);
-  const access_token = Cookies.get('access_token')
-
-
-  useEffect(() => {
-    async function getFavoritesFiles() {
-      try {
-        const response = await axios.get("/get_favorites_files", {
-          headers: {
-            Authorization: `Bearer ${access_token}`
-          }
-        });
-        setFiles(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getFavoritesFiles();
-  }, []);
-
   return (
     <div>
-        {files.map((file) => (
-          <File
-          key={file.file_id}
-          onContextMenu={null}
-          image={`../img/categories/${file.content_type}.png`}
-          name={file.name}
-          size={`${Math.floor(file.size / 1000)} КБ`}
-        />
-        ))}
+      <MovedFiles
+        url={'get_favorites_files'}
+        title={'Здесь хранятся ваши любимые файлы'}
+        titleIcon={<img src="img/categories/heart.png" alt="favorite" />}
+        labelTitle = {'по избранным файлам'}
+        background='rgb(196 255 229 / 60%)'
+      />
     </div>
   );
 };
