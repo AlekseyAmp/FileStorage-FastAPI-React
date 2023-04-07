@@ -7,6 +7,13 @@ from starlette.responses import StreamingResponse
 from beanie import PydanticObjectId
 
 from models.file import File
+from constants.category_constants import ALLOWED_FORMATS
+
+def get_file_category(fileformat):
+    for category in ALLOWED_FORMATS:
+        if fileformat in ALLOWED_FORMATS[category]:
+            return category
+    return 0
 
 
 async def get_file(file_id: str, user_id: str):
@@ -21,6 +28,23 @@ async def get_file(file_id: str, user_id: str):
     return file
 
 
+async def get_moved_files(condition: str, user_id: str):
+    files = []
+    async for file in File.find():
+        if file.user_id == user_id and file.metadata[condition] == True:
+            file_dict = {
+                "file_id": str(file.id),
+                "name": file.name,
+                "size": file.size,
+                "content_type": file.content_type,
+                "is_favorite": file.metadata["is_favorite"],
+                "is_deleted": file.metadata["is_deleted"],
+                "created_at": file.metadata["created_at"],
+            }
+            files.append(file_dict)
+    return files
+
+
 async def upload_file(file: UploadFile, user_id: str):
     directory = os.path.join("file_storage", user_id)
     if not os.path.exists(directory):
@@ -33,7 +57,7 @@ async def upload_file(file: UploadFile, user_id: str):
     new_file = File(
         user_id=user_id,
         name=file.filename,
-        content_type=file.content_type,
+        content_type=get_file_category((file.content_type).split('/')[1]),
         path=file_path,
         size=file.size,
         metadata={
@@ -51,9 +75,6 @@ async def upload_file(file: UploadFile, user_id: str):
 async def download_file(file_id: str, user_id: str):
     file = await get_file(file_id, user_id)
     file_path = file.path
-
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="Файл не найден")
 
     filename = urllib.parse.quote(file.name)
 
@@ -88,10 +109,6 @@ async def delete_file(file_id: str, user_id: str):
 
     if file.metadata["is_deleted"] == False:
         raise HTTPException(status_code=403, detail="Файл должен находиться в корзине")
-
-
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="Файл не найден")
 
     os.remove(file_path)
     await file.delete()
