@@ -9,11 +9,23 @@ from beanie import PydanticObjectId
 from models.file import File
 from constants.category_constants import ALLOWED_FORMATS
 
-def get_file_category(fileformat):
+
+
+
+def set_file_category(fileformat):
     for category in ALLOWED_FORMATS:
         if fileformat in ALLOWED_FORMATS[category]:
             return category
     return 0
+
+
+async def files_info(user_id: str):
+    files = await File.find().to_list(None)
+    
+    count = len(files)
+    size = sum(file.size for file in files)
+    
+    return {"count": count, "size": round(size / 1_000_000, 1)}
 
 
 async def get_file(file_id: str, user_id: str):
@@ -57,7 +69,7 @@ async def upload_file(file: UploadFile, user_id: str):
     new_file = File(
         user_id=user_id,
         name=file.filename,
-        content_type=get_file_category((file.content_type).split('/')[1]),
+        content_type=set_file_category(file.filename.split('.')[1]),
         path=file_path,
         size=file.size,
         metadata={
