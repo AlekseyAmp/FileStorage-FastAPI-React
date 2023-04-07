@@ -2,10 +2,33 @@ import { React, useState, useEffect } from 'react';
 import styles from './SidebarRight.module.scss';
 import '../../../assets/variables.scss';
 import Cookie from 'js-cookie'
-import { useNavigate } from 'react-router-dom';
+import axios from '../../../axios';
 
 function SidebarRight() {
   const username = Cookie.get('logged_in') === 'true' ? Cookie.get('email').slice(0, Cookie.get('email').indexOf('@')) : 'none'
+
+  const access_token = Cookie.get('access_token')
+
+  const [countFiles, setCountFiles] = useState(0)
+  const [sizeFiles, setSizeFiles] = useState(0)
+
+  useEffect(() => {
+    async function getFilesInfo() {
+      try {
+        const response = await axios.get(`/files_info`, {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+        setCountFiles(response.data.count);
+        setSizeFiles(response.data.size)
+      } catch (error) {
+        console.log(error.response.data.detail);
+      }
+    }
+    getFilesInfo();
+  }, []);
+
   return (
     <div className={styles.sidebarRight}>
       <div className={styles.user}>
@@ -28,11 +51,11 @@ function SidebarRight() {
       </div>
 
       <div className={styles.diskSpace}>
-        <p className={`dark-text`}>Общее количество файлов на диске: N</p>
+        <p className={`dark-text`}>Общее количество файлов на диске: {countFiles}</p>
         <div className={styles.diskSpaceGraphic}>
           test
         </div>
-        <p className={`small-text`}>Занято 0 гб из 15 гб</p>
+        <p className={`small-text`}>Занято {sizeFiles} гб из 15 гб</p>
       </div>
 
       <div onClick={() => (window.location.href = '/')} className={styles.upgradeSpace}>
