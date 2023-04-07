@@ -10,10 +10,16 @@ from services.file_services import (
                                     in_basket_file, 
                                     in_favorite_file,
                                     get_moved_files,
+                                    files_info,
                                     )
 
 
 router = APIRouter()
+
+
+@router.get("/files_info")
+async def files_info_endpoint(user_id: get_user_id = Depends()):
+    return await files_info(user_id)
 
 
 @router.post("/upload_file")
