@@ -97,12 +97,13 @@ function Category({ categoryName, title, titleIcon, labelTitle, background }) {
           'Authorization': `Bearer ${access_token}`
         }
       });
-      console.log(response.data)
+      console.log(response.data);
+      setFiles(files.filter(file => file.file_id !== selectedFile.file_id));
     } catch (error) {
       console.log(error.response.data.detail);
     }
   }
-
+  
   async function handleInFavorite() {
     try {
       const response = await axios.patch(`in_favorite_file/${selectedFile.file_id}`, {}, {
@@ -147,8 +148,8 @@ function Category({ categoryName, title, titleIcon, labelTitle, background }) {
         )}
 
         <SearchInput title={`Поиск по ${labelTitle}`} />
-
-        <div className={styles.files}>
+            
+        <div className={styles.files}>    
           {files.map((file) => {
             if (file.is_deleted) {
               return null;
