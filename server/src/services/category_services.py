@@ -1,11 +1,5 @@
-from constants.category_constants import ALLOWED_FORMATS
+from utils.files_utils import is_allowed_format
 from models.file import File
-
-
-def is_allowed_format(fileformat, category):
-    if fileformat in ALLOWED_FORMATS[category]:
-        return True
-    return False
 
 
 async def get_files_by_category(category: str, user_id: str):
