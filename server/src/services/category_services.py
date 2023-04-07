@@ -1,6 +1,7 @@
 from constants.category_constants import ALLOWED_FORMATS
 from models.file import File
 
+
 def is_allowed_format(fileformat, category):
     if fileformat in ALLOWED_FORMATS[category]:
         return True
