@@ -2,7 +2,6 @@ from fastapi import Response, status, Depends, HTTPException
 from datetime import datetime, timedelta
 
 from models.user import User, Login, Register
-from models.history import UserHistory
 from config.jwt_config import AuthJWT
 from constants import auth_constants
 from utils import auth_utils
@@ -54,7 +53,7 @@ async def create_new_user(credentials: Register):
         is_premium=False
     )
     await new_user.insert()
-    
+
     return new_user
 
 
