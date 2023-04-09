@@ -71,7 +71,7 @@ function Category({ categoryName, title, titleIcon, labelTitle, background }) {
       console.log(error.response.data.detail);
     }
   }
-
+  
   async function handleRename(newName) {
     try {
       const response = await axios.patch(`rename_file/${selectedFile.file_id}/${newName}`, newName, {
@@ -79,7 +79,6 @@ function Category({ categoryName, title, titleIcon, labelTitle, background }) {
           'Authorization': `Bearer ${access_token}`
         }
       });
-      console.log(response.data)
     } catch (error) {
       console.log(error.response.data.detail);
     }
@@ -132,6 +131,7 @@ function Category({ categoryName, title, titleIcon, labelTitle, background }) {
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleRename(showRenameInput);
+                setFiles(files.filter(file => file.file_id === selectedFile.file_id));
               }
             }}
           />
