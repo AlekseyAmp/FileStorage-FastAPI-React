@@ -8,6 +8,7 @@ import Music from './pages/Categories/Music';
 import Videos from './pages/Categories/Videos';
 import Favorites from './pages/Favorites/Favorites';
 import Removed from './pages/Removed/Removed';
+import History from './pages/History/History';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Main from './pages/Main/Main';
@@ -48,6 +49,10 @@ const routes = [
     {
         path: '/basket',
         component: Removed,
+    },
+    {
+        path: '/history',
+        component: History,
     },
     {
         path: '/register',
