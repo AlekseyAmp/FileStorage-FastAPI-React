@@ -6,7 +6,7 @@ function Removed() {
   return (
     <div>
       <MovedFiles
-        url={'get_favorites_files'}
+        url={'get_basket_files'}
         title={'Здесь хранятся ваши удалённые файлы'}
         titleIcon={<img src="img/categories/delete.png" alt="removed" />}
         labelTitle={'удаленным файлам'}
