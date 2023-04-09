@@ -4,10 +4,11 @@ import urllib
 import os
 
 from starlette.responses import StreamingResponse
-from beanie import PydanticObjectId
 
 from models.file import File
-from utils.file_utils import set_file_category 
+from models.history import FileHistory
+from services.history_services import get_history_files_today
+from utils.file_utils import set_file_category, get_file
 
 
 async def files_info(user_id: str):
@@ -16,36 +17,7 @@ async def files_info(user_id: str):
     count = len(files)
     size = sum(file.size for file in files)
     
-    return {"count": count, "size": round(size / 1_000_000, 1)}
-
-
-async def get_file(file_id: str, user_id: str):
-    file = await File.get(PydanticObjectId(file_id))
-
-    if not file:
-        raise HTTPException(status_code=404, detail="Файл не найден")
-
-    if file.user_id != user_id:
-        raise HTTPException(status_code=403, detail="Отказано в доступе")
-
-    return file
-
-
-async def get_moved_files(condition: str, user_id: str):
-    files = []
-    async for file in File.find():
-        if file.user_id == user_id and file.metadata[condition] == True:
-            file_dict = {
-                "file_id": str(file.id),
-                "name": file.name,
-                "size": file.size,
-                "content_type": file.content_type,
-                "is_favorite": file.metadata["is_favorite"],
-                "is_deleted": file.metadata["is_deleted"],
-                "created_at": file.metadata["created_at"],
-            }
-            files.append(file_dict)
-    return files
+    return {"count": count, "size": round(size / 1_073_741_824, 3)}
 
 
 async def upload_file(file: UploadFile, user_id: str):
@@ -71,6 +43,30 @@ async def upload_file(file: UploadFile, user_id: str):
     )
 
     await new_file.insert()
+    
+    try:
+        history = await get_history_files_today(FileHistory, user_id)
+    except HTTPException as e:
+        if e.status_code == 404:
+            new_history = FileHistory(
+                    user_id=user_id,
+                    history_list_today=[
+                        {
+                            "file_id": str(new_file.id),
+                            "title": "Загрузка файла",
+                            "description": f"Файл {file.filename} был успешно загружен на диск"
+                        }
+                    ]
+                )
+            await new_history.insert()
+        else:
+            history_dict = {
+                "file_id": str(new_file.id),
+                "title": "Загрузка файла",
+                "description": f"Файл {new_file.name} успешно загружен на диск"
+            }
+            history.history_list_today.append(history_dict)
+            await history.save()
 
     return {"file_id": new_file.id}
 
@@ -81,6 +77,15 @@ async def download_file(file_id: str, user_id: str):
 
     filename = urllib.parse.quote(file.name)
 
+    history_dict = {
+        "file_id": str(file.id),
+        "title": "Скачивание файла",
+        "description": f"Файл {file.name} успешно скачан"
+    }
+    history = await get_history_files_today(FileHistory, user_id)
+    history.history_list_today.append(history_dict)
+    await history.save()
+    
     return StreamingResponse(
         open(file_path, "rb"),
         media_type="application/octet-stream",
@@ -89,7 +94,7 @@ async def download_file(file_id: str, user_id: str):
             "Content-Type": file.content_type,
         }
     )
-
+    
 
 async def rename_file(file_id: str, new_name: str, user_id: str):
     file = await get_file(file_id, user_id)
@@ -102,7 +107,18 @@ async def rename_file(file_id: str, new_name: str, user_id: str):
     os.rename(file_path, new_file_path)
     file.name = new_name + ext
     file.path = f"file_storage/{user_id}/{file.name}"
+    
+    history_dict = {
+        "file_id": str(file.id),
+        "title": "Переименование файла",
+        "description": f"Файл {file.name} переименован на {new_name}"
+    }
+    history = await get_history_files_today(FileHistory, user_id)
+    history.history_list_today.append(history_dict)
+    
     await file.save()
+    await history.save()
+
     return {"new_name": file.name}
 
 
@@ -112,9 +128,20 @@ async def delete_file(file_id: str, user_id: str):
 
     if file.metadata["is_deleted"] == False:
         raise HTTPException(status_code=403, detail="Файл должен находиться в корзине")
-
+    
     os.remove(file_path)
+
+    history_dict = {
+        "file_id": str(file.id),
+        "title": "Удаление файла",
+        "description": f"Файл {file.name} был удалён"
+    }
+    history = await get_history_files_today(FileHistory, user_id)
+    history.history_list_today.append(history_dict)
+
     await file.delete()
+    await history.save()
+
     return {"status": "succes"}
 
 
@@ -122,7 +149,17 @@ async def in_basket_file(file_id: str, user_id: str):
     file = await get_file(file_id, user_id)
 
     file.metadata["is_deleted"] = True
+
+    history_dict = {
+        "file_id": str(file.id),
+        "title": "Перемещение файла в корзину",
+        "description": f"Файл {file.name} был перемещён в корзину"
+    }
+    history = await get_history_files_today(FileHistory, user_id)
+    history.history_list_today.append(history_dict)
+
     await file.save()
+    await history.save()
 
     return {"status": "succes"}
 
@@ -131,6 +168,24 @@ async def in_favorite_file(file_id: str, user_id: str):
     file = await get_file(file_id, user_id)
 
     file.metadata["is_favorite"] = True
+
+    history_dict = {
+        "file_id": str(file.id),
+        "title": "Перемещние файла в избранное",
+        "description": f"Файл {file.name} был перемещён в избранное"
+    }
+    history = await get_history_files_today(FileHistory, user_id)
+    history.history_list_today.append(history_dict)
+
     await file.save()
+    await history.save()
 
     return {"status": "succes"}
+
+
+async def get_moved_files(condition: str, user_id: str):
+    files = []
+    async for file in File.find():
+        if file.user_id == user_id and file.metadata[condition] == True:
+            files.append(file)
+    return files
