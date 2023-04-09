@@ -37,7 +37,7 @@ function SidebarLeft() {
 
           <li>
             <img src="../img/sidebarLeft/history.png" alt="history" />
-            <a className={`link-text`} href="">История</a>
+            <Link to='/history' className={`link-text`}>История</Link>
           </li>
 
           <li>
