@@ -1,13 +1,13 @@
 import React from 'react';
-import AuthForm from '../../components/AuthForm/AuthForm';
-import styles from './Auth.module.scss';
 import { useNavigate } from 'react-router-dom';
+
 import axios from '../../axios';
 import Cookie from 'js-cookie'
 
+import AuthForm from '../../components/AuthForm/AuthForm';
+import styles from './Auth.module.scss';
 
-const Login = () => {
-
+function Login() {
 
   const inputConfigs = [
     { title: "Адрес электронной почты", type: 'email', name: 'email' },
@@ -21,7 +21,7 @@ const Login = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     try {
-      const response = await axios.post('/login', {
+      const response = await axios.post('/auth/login', {
         email,
         password
       });

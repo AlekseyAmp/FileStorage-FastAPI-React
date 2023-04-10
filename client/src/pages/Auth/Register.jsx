@@ -1,10 +1,12 @@
 import React from 'react';
-import AuthForm from '../../components/AuthForm/AuthForm';
-import styles from './Auth.module.scss';
 import { useNavigate } from 'react-router-dom';
+
 import axios from '../../axios';
 
-const Register = () => {
+import AuthForm from '../../components/AuthForm/AuthForm';
+import styles from './Auth.module.scss';
+
+function Register() {
 
     const inputConfigs = [
         { title: "Адрес электронной почты", type: 'email', name: 'email' },
@@ -20,7 +22,7 @@ const Register = () => {
         const password = e.target.password.value;
         const password_repeat = e.target.password_repeat.value;
         try {
-          const response = await axios.post('/register', { email, password, password_repeat });
+          const response = await axios.post('/auth/register', { email, password, password_repeat });
           if (response.data) {
             navigate('/login')
           }

@@ -1,14 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import axios from '../../axios';
 import Cookie from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
 
 function Logout() {
   const navigate = useNavigate();
 
   async function handleSubmit() {
     try {
-      const response = await axios.get('/logout');
+      const response = await axios.get('/auth/logout');
 
       if (response.data.status === 'success') {
         Cookie.remove('access_token');
