@@ -1,14 +1,23 @@
 from fastapi import Depends, HTTPException
+from fastapi_jwt_auth.exceptions import MissingTokenError
+from beanie import PydanticObjectId
+
 from config.jwt_config import AuthJWT
+from models.user import User
 
 
-async def get_user_id(Authorize: AuthJWT = Depends()):
+async def get_user_info(user_id: str):
+    user = await User.get(PydanticObjectId(user_id))
+    return {"email": user.email}
+
+
+async def get_user_id(authorize: AuthJWT = Depends()):
     try:
-        Authorize.jwt_required()
-        user_id = Authorize.get_jwt_subject()
+        authorize.jwt_required()
+        user_id = authorize.get_jwt_subject()
         return user_id
-    except:
-        raise HTTPException(status_code=401,
-                            detail="Не авторизован")
-
-
+    except (MissingTokenError):
+        raise HTTPException(
+            status_code=401,
+            detail="Не авторизован"
+        )
