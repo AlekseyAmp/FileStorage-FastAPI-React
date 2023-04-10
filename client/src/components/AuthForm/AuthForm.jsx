@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import Input from '../Input/Input'
-import Button from '../Button/Button'
 import styles from './AuthForm.module.scss'
 import '../../assets/variables.scss'
+
+import Input from '../Input/Input'
+import Button from '../Button/Button'
 
 
 const AuthForm = ({ inputConfigs, buttonTitle, authHelpText, authHelpLink, link, onSubmit }) => {
