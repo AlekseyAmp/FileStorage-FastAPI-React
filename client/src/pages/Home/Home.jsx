@@ -6,8 +6,8 @@ import '../../assets/variables.scss'
 
 import Button from '../../components/Button/Button'
 import SearchInput from '../../components/SearchInput/SearchInput'
-
 import DragAndDropFile from '../../components/DragAndDropFile'
+
 
 function Home() {
   return (
