@@ -7,8 +7,7 @@ import '../../assets/variables.scss'
 import Input from '../Input/Input'
 import Button from '../Button/Button'
 
-
-const AuthForm = ({ inputConfigs, buttonTitle, authHelpText, authHelpLink, link, onSubmit }) => {
+async function AuthForm({ inputConfigs, buttonTitle, authHelpText, authHelpLink, link, onSubmit }) {
   return (
     <form className={styles.authForm} onSubmit={onSubmit}>
       {inputConfigs.map((inputConfig, index) => (
