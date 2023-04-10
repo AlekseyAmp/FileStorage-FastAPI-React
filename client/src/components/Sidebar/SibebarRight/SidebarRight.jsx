@@ -1,8 +1,11 @@
 import { React, useState, useEffect } from 'react';
-import styles from './SidebarRight.module.scss';
-import '../../../assets/variables.scss';
+
 import Cookie from 'js-cookie'
 import axios from '../../../axios';
+
+import styles from './SidebarRight.module.scss';
+import '../../../assets/variables.scss';
+
 
 function SidebarRight() {
   const username = Cookie.get('logged_in') === 'true' ? Cookie.get('email').slice(0, Cookie.get('email').indexOf('@')) : 'none'
@@ -15,7 +18,7 @@ function SidebarRight() {
   useEffect(() => {
     async function getFilesInfo() {
       try {
-        const response = await axios.get(`/files_info`, {
+        const response = await axios.get(`/files/info`, {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
