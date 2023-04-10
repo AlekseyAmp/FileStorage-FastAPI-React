@@ -10,11 +10,11 @@ class DbSettings(BaseSettings):
     async def initialize_database(self):
         client = AsyncIOMotorClient(settings.DATABASE_URL)
         database = client[settings.DATABASE_NAME]
-        await init_beanie(database=database, document_models=[user.User, 
-                                                              file.File, 
-                                                              history.FileHistory, 
-                                                              history.UserHistory]
-                                                              )
+        await init_beanie(database=database,
+                          document_models=[user.User,
+                                           file.File,
+                                           history.FileHistory,
+                                           history.UserHistory])
 
     class Config:
         env_file = ".env"
