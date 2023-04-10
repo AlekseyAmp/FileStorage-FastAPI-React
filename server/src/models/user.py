@@ -1,12 +1,13 @@
-
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field
 from beanie import Document
+
 
 class Register(BaseModel):
     email: EmailStr
     password: str
     password_repeat: str
+
 
 class Login(BaseModel):
     email: EmailStr
@@ -14,7 +15,6 @@ class Login(BaseModel):
 
 
 class User(Document):
-
     email: EmailStr
     password: str
     created_at: datetime = datetime.now
