@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, status, Depends
+from fastapi import APIRouter, Response, Depends
 
 from models.user import Login, Register
 from config.jwt_config import AuthJWT
