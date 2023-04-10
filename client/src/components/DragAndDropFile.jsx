@@ -1,7 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import '../assets/variables.scss'
+
 import axios from '../axios'
 import Cookie from 'js-cookie'
+
+import '../assets/variables.scss'
 
 function DragAndDropFile() {
     const [isDragging, setIsDragging] = useState(false);
@@ -30,7 +32,7 @@ function DragAndDropFile() {
         });
         try {
             const response = await Promise.all(formDataArray.map((formData) => {
-                return axios.post('/upload_file', formData, {
+                return axios.post('/files/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'Authorization': `Bearer ${access_token}`
