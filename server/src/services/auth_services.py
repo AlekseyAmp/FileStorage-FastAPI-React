@@ -1,4 +1,4 @@
-from fastapi import Response, status, Depends, HTTPException
+from fastapi import Response, Depends, HTTPException
 from datetime import datetime, timedelta
 
 from models.user import User, Login, Register
@@ -29,7 +29,7 @@ async def create_refresh_token(authorize: AuthJWT, user_id: str):
 async def create_new_user(credentials: Register):
     if not auth_utils.is_valid_email(credentials.email):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Неверный адрес электронной почты"
         )
 
@@ -39,13 +39,13 @@ async def create_new_user(credentials: Register):
 
     if email_exists:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
+            status_code=409,
             detail="Аккаунт уже существует"
         )
 
     if credentials.password != credentials.password_repeat:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Пароли не совпадают"
         )
 
@@ -77,13 +77,13 @@ async def login_user(credentials: Login, response: Response,
 
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=404,
             detail="Аккаунт не найден"
         )
 
     if not auth_utils.verify_password(credentials.password, user.password):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Неверная почта или пароль"
         )
 
