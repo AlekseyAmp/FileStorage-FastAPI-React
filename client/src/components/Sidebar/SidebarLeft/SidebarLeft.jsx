@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Logout from '../../../pages/Auth/Logout';
 
 import styles from './SidebarLeft.module.scss';
 import '../../../assets/variables.scss';
 
+import Logout from '../../../pages/Auth/Logout';
 
 function SidebarLeft() {
 
@@ -32,7 +32,7 @@ function SidebarLeft() {
         <ul>
           <li>
             <img src="../img/sidebarLeft/favorite.png" alt="favorite" />
-            <Link to='/favorites' className={`link-text`}>Избранное</Link>
+            <Link to='/favorite' className={`link-text`}>Избранное</Link>
           </li>
 
           <li>
