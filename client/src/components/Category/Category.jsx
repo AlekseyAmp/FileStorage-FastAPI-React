@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
+
 import axios from '../../axios';
 import Cookie from 'js-cookie';
 
 import '../../assets/variables.scss';
-
-import File from '../File/File';
-import SearchInput from '../SearchInput/SearchInput';
-import Input from '../Input/Input'
 import styles from './Category.module.scss';
 
+import SearchInput from '../SearchInput/SearchInput';
+import Input from '../Input/Input'
+import File from '../File/File';
 
-function Category({ categoryName, title, titleIcon, labelTitle, background }) {
+function Category({ url, title, titleIcon, labelTitle, background }) {
   const categoryStyle = {
     background: background,
   };
@@ -29,12 +29,12 @@ function Category({ categoryName, title, titleIcon, labelTitle, background }) {
   useEffect(() => {
     async function getCategoryFiles() {
       try {
-        const response = await axios.get(`/category/${categoryName}`, {
+        const response = await axios.get(`${url}`, {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
         });
-        setFiles(response.data.files);
+        setFiles(response.data);
       } catch (error) {
         console.log(error.response.data.detail);
       }
@@ -56,7 +56,7 @@ function Category({ categoryName, title, titleIcon, labelTitle, background }) {
 
   async function handleDownload() {
     try {
-      const response = await axios.get(`download_file/${selectedFile.file_id}`, {
+      const response = await axios.get(`files/download/${selectedFile.file_id}`, {
         headers: {
           'Authorization': `Bearer ${access_token}`
         }
@@ -74,7 +74,7 @@ function Category({ categoryName, title, titleIcon, labelTitle, background }) {
   
   async function handleRename(newName) {
     try {
-      const response = await axios.patch(`rename_file/${selectedFile.file_id}/${newName}`, newName, {
+      const response = await axios.patch(`files/rename/${selectedFile.file_id}/${newName}`, newName, {
         headers: {
           'Authorization': `Bearer ${access_token}`
         }
@@ -91,7 +91,7 @@ function Category({ categoryName, title, titleIcon, labelTitle, background }) {
 
   async function handleInBasket() {
     try {
-      const response = await axios.patch(`in_basket_file/${selectedFile.file_id}`, {}, {
+      const response = await axios.patch(`files/in_basket/${selectedFile.file_id}`, {}, {
         headers: {
           'Authorization': `Bearer ${access_token}`
         }
@@ -102,10 +102,10 @@ function Category({ categoryName, title, titleIcon, labelTitle, background }) {
       console.log(error.response.data.detail);
     }
   }
-  
+
   async function handleInFavorite() {
     try {
-      const response = await axios.patch(`in_favorite_file/${selectedFile.file_id}`, {}, {
+      const response = await axios.patch(`files/in_favorite/${selectedFile.file_id}`, {}, {
         headers: {
           'Authorization': `Bearer ${access_token}`
         }
