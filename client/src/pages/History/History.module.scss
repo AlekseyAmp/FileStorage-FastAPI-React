@@ -1,0 +1,23 @@
+@import '../../assets/variables.scss';
+
+.history {
+    padding: 80px 50px;
+    background-color: $cloud_blue;
+
+    &Content {
+        position: relative;
+        margin-top: 50px;
+    }
+
+    &Elem {
+        margin-top: 20px;
+        &Content {
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+        &Description {
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+    }
+}
