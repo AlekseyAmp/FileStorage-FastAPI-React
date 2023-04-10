@@ -1,7 +1,7 @@
 import { React } from 'react';
+
 import '../../assets/variables.scss';
 import styles from './File.module.scss'
-
 
 function File({name, size, image, onContextMenu }) {
   return (
