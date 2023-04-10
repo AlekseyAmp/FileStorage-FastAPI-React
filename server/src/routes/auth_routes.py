@@ -2,28 +2,32 @@ from fastapi import APIRouter, Response, status, Depends
 
 from models.user import Login, Register
 from config.jwt_config import AuthJWT
+from services import auth_services as a_s
 from services.user_services import get_user_id
-from services.auth_services import create_new_user, login_user, refresh_access_token, logout_user
 
 
 router = APIRouter()
 
 
-@router.post('/register')
+@router.post("/auth/register")
 async def register(credentials: Register):
-    return await create_new_user(credentials)
+    return await a_s.create_new_user(credentials)
 
 
-@router.post('/login')
-async def login(credentials: Login, response: Response, Authorize: AuthJWT = Depends()):
-    return await login_user(credentials, response, Authorize)
+@router.post("/auth/login")
+async def login(credentials: Login,
+                response: Response,
+                authorize: AuthJWT = Depends()):
+    return await a_s.login_user(credentials, response, authorize)
 
 
-@router.get('/refresh')
-async def refresh_token(response: Response, Authorize: AuthJWT = Depends(), user_id: get_user_id = Depends()):
-    return await refresh_access_token(Authorize, response, str(user_id))
+@router.get("/auth/refresh_token")
+async def refresh_token(response: Response,
+                        authorize: AuthJWT = Depends(),
+                        user_id: get_user_id = Depends()):
+    return await a_s.refresh_token(authorize, response, str(user_id))
 
 
-@router.get('/logout', status_code=status.HTTP_200_OK)
-async def logout(response: Response, Authorize: AuthJWT = Depends()):
-    return await logout_user(response, Authorize)
+@router.get("/auth/logout")
+async def logout(response: Response, authorize: AuthJWT = Depends()):
+    return await a_s.logout_user(response, authorize)
