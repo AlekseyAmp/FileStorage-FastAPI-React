@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 
 from models.user import User, Login, Register
 from config.jwt_config import AuthJWT
-from constants import auth_constants
-from constants.history_constants import today_time
 from models.history import UserHistory
 from services.history_services import set_history_today
+from constants import auth_constants
+from constants.history_constants import today_time
 from utils import auth_utils
 
 
