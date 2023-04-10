@@ -29,7 +29,6 @@ $red: rgb(239 7 7);
     color: $blue; // or blue
 }
 
-
 .link-text-blue {
     font-family: 'Montserrat';
     font-size: 17px;
@@ -78,6 +77,14 @@ $red: rgb(239 7 7);
     color: $red;
     text-decoration: none;
     transition: 0.3s;
+}
+
+.bold-text {
+    text-decoration: none;
+    font-family: 'Montserrat';
+    font-size: 16px;
+    font-weight: bold;
+    color: $dark;
 }
 
 .small-text {
