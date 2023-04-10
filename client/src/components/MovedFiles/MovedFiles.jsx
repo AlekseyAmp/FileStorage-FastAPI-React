@@ -8,7 +8,6 @@ import File from '../File/File';
 import SearchInput from '../SearchInput/SearchInput';
 import styles from './MovedFiles.module.scss';
 
-
 function MovedFiles({ url, title, titleIcon, labelTitle, background }) {
 
     const categoryStyle = {
@@ -27,7 +26,6 @@ function MovedFiles({ url, title, titleIcon, labelTitle, background }) {
                         Authorization: `Bearer ${access_token}`,
                     },
                 });
-                console.log(response.data)
                 setFiles(response.data);
             } catch (error) {
                 console.log(error.response.data.detail);
