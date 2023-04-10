@@ -6,7 +6,7 @@ import Documents from './pages/Categories/Documents';
 import Images from './pages/Categories/Images';
 import Music from './pages/Categories/Music';
 import Videos from './pages/Categories/Videos';
-import Favorites from './pages/Favorites/Favorites';
+import Favorite from './pages/Favorite/Favorite';
 import Removed from './pages/Removed/Removed';
 import History from './pages/History/History';
 import Login from './pages/Auth/Login';
@@ -43,8 +43,8 @@ const routes = [
         component: Videos,
     },
     {
-        path: '/favorites',
-        component: Favorites,
+        path: '/favorite',
+        component: Favorite,
     },
     {
         path: '/basket',
