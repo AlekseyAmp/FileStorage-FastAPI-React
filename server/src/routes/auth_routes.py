@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Response, Depends
 
-from models.user import Login, Register
 from config.jwt_config import AuthJWT
-from services import auth_services as a_s
+from models.user import Login, Register
 from services.user_services import get_user_id
+from services import auth_services as a_s
 
 
 router = APIRouter()
