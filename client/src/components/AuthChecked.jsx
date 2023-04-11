@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Cookie from 'js-cookie';
-import useNavigate from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function AuthChecked({ children }) {
     const navigate = useNavigate();
