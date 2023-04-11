@@ -1,5 +1,5 @@
 from typing import Any
-from constants.history_constants import today_date
+from datetime import datetime
 from models.history import FileHistory, UserHistory
 
 
@@ -43,7 +43,7 @@ async def get_users_history(user_id: str):
 async def set_history_today(model: Any, history_dict: dict, user_id: str):
     history_elem = await model.find_one({
         "user_id": user_id,
-        "date": today_date
+        "date": datetime.now().strftime("%d-%m-%Y")
     })
 
     if not history_elem:

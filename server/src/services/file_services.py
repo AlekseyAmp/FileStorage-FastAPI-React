@@ -10,7 +10,6 @@ from models.file import File
 from models.history import FileHistory
 from services.history_services import set_history_today
 from utils.file_utils import set_file_category
-from constants.history_constants import today_time
 
 
 async def get_file(file_id: str, user_id: str):
@@ -69,7 +68,7 @@ async def create_new_file(file: UploadFile, user_id: str):
         "file_id": str(new_file.id),
         "title": "Загрузка файла",
         "description": f"Файл {new_file.name} загружен на диск",
-        "time": today_time
+        "time": datetime.now().strftime("%H:%M:%S")
     }
     await set_history_today(FileHistory, history_dict, user_id)
 
@@ -86,7 +85,7 @@ async def download_file(file_id: str, user_id: str):
         "file_id": str(file_id),
         "title": "Скачивание файла",
         "description": f"Файл {file.name} скачан с диска",
-        "time": today_time
+        "time": datetime.now().strftime("%H:%M:%S")
     }
     await set_history_today(FileHistory, history_dict, user_id)
 
@@ -116,7 +115,7 @@ async def rename_file(file_id: str, new_name: str, user_id: str):
         "file_id": str(file_id),
         "title": "Переименование файла",
         "description": f"Файл {file.name} переиенован на {new_name}",
-        "time": today_time
+        "time": datetime.now().strftime("%H:%M:%S")
     }
     await set_history_today(FileHistory, history_dict, user_id)
 
@@ -141,7 +140,7 @@ async def delete_file(file_id: str, user_id: str):
         "file_id": str(file_id),
         "title": "Удаление файла",
         "description": f"Файл {file.name} был удалён с диска",
-        "time": today_time
+        "time": datetime.now().strftime("%H:%M:%S")
     }
     await set_history_today(FileHistory, history_dict, user_id)
 
@@ -171,7 +170,7 @@ async def add_to_basket_file(file_id: str, user_id: str):
         "file_id": str(file_id),
         "title": "Добавление файла в корзину",
         "description": f"Файл {file.name} был перемещён в корзину",
-        "time": today_time
+        "time": datetime.now().strftime("%H:%M:%S")
     }
     await set_history_today(FileHistory, history_dict, user_id)
 
@@ -201,7 +200,7 @@ async def add_to_favorite_file(file_id: str, user_id: str):
         "file_id": str(file_id),
         "title": "Добавление файла в избранное",
         "description": f"Файл {file.name} был перемещён в избранное",
-        "time": today_time
+        "time": datetime.now().strftime("%H:%M:%S")
     }
     await set_history_today(FileHistory, history_dict, user_id)
 
