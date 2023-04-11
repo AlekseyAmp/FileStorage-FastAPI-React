@@ -1,5 +1,3 @@
-
-
 import Home from './pages/Home/Home';
 import Folders from './pages/Categories/Folders';
 import Documents from './pages/Categories/Documents';
