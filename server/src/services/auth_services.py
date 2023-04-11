@@ -6,7 +6,6 @@ from config.jwt_config import AuthJWT
 from models.history import UserHistory
 from services.history_services import set_history_today
 from constants import auth_constants
-from constants.history_constants import today_time
 from utils import auth_utils
 
 
@@ -62,7 +61,7 @@ async def create_new_user(credentials: Register):
     history_dict = {
         "title": "Регистрация",
         "description": f"Регистрация под почтой {new_user.email}",
-        "time": today_time
+        "time": datetime.now().strftime("%H:%M:%S")
     }
     await set_history_today(UserHistory, history_dict, str(new_user.id))
 
@@ -124,7 +123,7 @@ async def login_user(credentials: Login, response: Response,
     history_dict = {
         "title": "Вход",
         "description": f"Вход в диск",
-        "time": today_time
+        "time": datetime.now().strftime("%H:%M:%S")
     }
     await set_history_today(UserHistory, history_dict, str(user.id))
 
