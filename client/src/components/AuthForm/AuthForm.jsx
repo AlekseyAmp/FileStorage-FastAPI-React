@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import Link  from 'react-router-dom'
 
 import styles from './AuthForm.module.scss'
 import '../../assets/variables.scss'
@@ -7,7 +7,7 @@ import '../../assets/variables.scss'
 import Input from '../Input/Input'
 import Button from '../Button/Button'
 
-async function AuthForm({ inputConfigs, buttonTitle, authHelpText, authHelpLink, link, onSubmit }) {
+function AuthForm ({ inputConfigs, buttonTitle, authHelpText, authHelpLink, link, onSubmit }) {
   return (
     <form className={styles.authForm} onSubmit={onSubmit}>
       {inputConfigs.map((inputConfig, index) => (
