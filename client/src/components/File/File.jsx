@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 
 import '../../assets/variables.scss';
 import styles from './File.module.scss'
