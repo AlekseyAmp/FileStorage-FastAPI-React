@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import useNavigate from 'react-router-dom';
 
 import axios from '../../axios';
 import Cookie from 'js-cookie'
@@ -8,7 +8,7 @@ import AuthForm from '../../components/AuthForm/AuthForm';
 import styles from './Auth.module.scss';
 
 function Login() {
-
+  
   const inputConfigs = [
     { title: "Адрес электронной почты", type: 'email', name: 'email' },
     { title: "Пароль", type: 'password', name: 'password' },
