@@ -1,12 +1,11 @@
-from typing import Any, Dict, List
 from beanie import Document
-
-from constants.history_constants import today_date
+from datetime import datetime
+from typing import Any, Dict, List
 
 
 class FileHistory(Document):
     user_id: str
-    date: str = today_date
+    date: str = datetime.now().strftime("%d-%m-%Y")
     history_list: List[Dict[str, Any]] = []
 
     class Settings:
@@ -15,7 +14,7 @@ class FileHistory(Document):
 
 class UserHistory(Document):
     user_id: str
-    date: str = today_date
+    date: str = datetime.now().strftime("%d-%m-%Y")
     history_list: List[Dict[str, Any]] = []
 
     class Settings:
