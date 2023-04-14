@@ -59,14 +59,18 @@ function Category({ url, title, titleIcon, labelTitle, background }) {
       const response = await axios.get(`files/download/${selectedFile.file_id}`, {
         headers: {
           'Authorization': `Bearer ${access_token}`
-        }
+        },
+        responseType: 'blob'
       });
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: selectedFile.content_type }));
+      const blob = new Blob([response.data], { type: selectedFile.content_type });
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', selectedFile.name);
       document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link); 
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.log(error.response.data.detail);
     }
