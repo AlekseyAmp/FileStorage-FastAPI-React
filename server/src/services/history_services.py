@@ -42,6 +42,7 @@ async def get_last_five_files_history(user_id: str):
     return history
 
 
+
 async def get_user_history(user_id: str):
     history = {}
     async for history_elem in UserHistory.find({
