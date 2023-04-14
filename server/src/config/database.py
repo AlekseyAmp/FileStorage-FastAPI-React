@@ -17,5 +17,6 @@ class DbSettings(BaseSettings):
                                            history.UserHistory,
                                            statistic.TodayStatistic])
 
+
     class Config:
         env_file = ".env"
