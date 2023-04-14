@@ -12,7 +12,6 @@ async def get_files_history(user_id: get_user_id = Depends()):
     return await h_s.get_files_history(user_id)
 
 
-
 @router.get("/history/files/last_five")
 async def get_last_five_files_history(user_id: get_user_id = Depends()):
     return await h_s.get_last_five_files_history(user_id)
