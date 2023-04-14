@@ -38,8 +38,8 @@ function History() {
           <div className={styles.historyElem} key={date}>
             <h3 className={'bold-text'}>Дата: {date}</h3>
 
-            {history_elems.map((history_elem) => (
-              <div className={styles.historyElemContent} key={history_elem.history_id}>
+            {history_elems.map((history_elem, i) => (
+              <div className={styles.historyElemContent} key={i + 1}>
                 <p className={'dark-text'}>
                   {history_elem.time}
                   <span className={`dark-text ${styles.historyElemDescription}`}>{history_elem.description}</span>
