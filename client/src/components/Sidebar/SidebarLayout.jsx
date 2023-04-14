@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SidebarRight from './SibebarRight/SidebarRight';
+import SidebarRight from './SidebarRight/SidebarRight';
 import SidebarLeft from './SidebarLeft/SidebarLeft';
 
 function SidebarLayout(props) {
