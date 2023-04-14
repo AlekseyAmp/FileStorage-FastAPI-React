@@ -25,7 +25,6 @@ async def create_refresh_token(authorize: AuthJWT, user_id: str):
     return refresh_token
 
 
-
 async def create_new_user(credentials: Register):
     if not auth_utils.is_valid_email(credentials.email):
         raise HTTPException(
