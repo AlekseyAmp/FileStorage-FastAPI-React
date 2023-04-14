@@ -8,6 +8,5 @@ class TodayStatistic(Document):
     date: str = datetime.now().strftime("%d-%m-%Y")
     actions: dict
 
-
     class Settings:
         name = "today_statistic"
