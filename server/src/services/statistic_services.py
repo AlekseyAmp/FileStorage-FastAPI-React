@@ -15,6 +15,7 @@ async def get_statistic_today(user_id: str):
         "date": datetime.now().strftime("%d-%m-%Y")
     })
 
+
     if statistic_elem:
         statistic_dict = {
             "date": statistic_elem.date,
