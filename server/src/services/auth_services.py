@@ -51,10 +51,13 @@ async def create_new_user(credentials: Register):
     new_user = User(
         email=credentials.email.lower(),
         password=auth_utils.hash_password(credentials.password),
-        created_at=datetime.now(),
-        storage_used=0,
-        max_storage=15,
-        is_premium=False
+        metadata={
+            "is_premium": False,
+            "storage_used": 0,
+            "max_storage": 15,
+            "date_created": datetime.now().strftime("%d-%m-%Y"),
+            "time_created": datetime.now().strftime("%H:%M:%S")
+        }
     )
     await new_user.insert()
 

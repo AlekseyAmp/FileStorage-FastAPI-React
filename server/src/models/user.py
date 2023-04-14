@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any, Dict
 from pydantic import BaseModel, EmailStr, Field
 from beanie import Document
 
@@ -17,10 +18,7 @@ class Login(BaseModel):
 class User(Document):
     email: EmailStr
     password: str
-    created_at: datetime = datetime.now
-    storage_used: float = Field(default=0, ge=0, lt=15)
-    max_storage: float = Field(default=15, ge=0, le=15)
-    is_premium: bool = Field(default=False)
+    metadata: Dict[str, Any] = {}
 
     class Settings:
         name = "users"

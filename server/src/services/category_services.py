@@ -15,7 +15,9 @@ async def get_files_by_category(category: str, user_id: str):
                 "content_type": category,
                 "is_favorite": file.metadata["is_favorite"],
                 "is_deleted": file.metadata["is_deleted"],
-                "created_at": file.metadata["created_at"],
+                "date_created": file.metadata["date_created"],
+                "time_created": file.metadata["time_created"]
             }
             files.append(file_dict)
-    return files
+
+    return files[::-1]
