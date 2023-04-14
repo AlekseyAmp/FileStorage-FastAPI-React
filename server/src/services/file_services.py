@@ -49,6 +49,7 @@ async def get_files_info(user_id: str):
     return files_info
 
 
+
 async def create_new_file(file: UploadFile, user_id: str):
     directory = os.path.join("file_storage", user_id)
     if not os.path.exists(directory):
