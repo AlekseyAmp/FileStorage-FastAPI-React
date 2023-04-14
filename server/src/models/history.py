@@ -17,5 +17,6 @@ class UserHistory(Document):
     date: str = datetime.now().strftime("%d-%m-%Y")
     history_list: List[Dict[str, Any]] = []
 
+
     class Settings:
         name = "users_history"
