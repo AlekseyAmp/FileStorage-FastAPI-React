@@ -8,11 +8,6 @@ from services import file_services as f_s
 router = APIRouter()
 
 
-@router.get("/files/info")
-async def get_files_info(user_id: get_user_id = Depends()):
-    return await f_s.get_files_info(user_id)
-
-
 @router.post("/files/upload")
 async def upload_file(file: UploadFile,
                       user_id: get_user_id = Depends()):
