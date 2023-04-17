@@ -26,6 +26,7 @@ async def get_last_five_files_history(user_id: str):
     history = []
     async for history_elem in FileHistory.find({
         "user_id": user_id,
+        "date": datetime.now().strftime("%d-%m-%Y"),
     }):
         for history_list_elem in history_elem.history_list[-1:-6:-1]:
             history_dict = {

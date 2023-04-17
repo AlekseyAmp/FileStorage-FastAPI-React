@@ -31,24 +31,6 @@ async def get_file(file_id: str, user_id: str):
     return file
 
 
-async def get_files_info(user_id: str):
-    files_info = {
-        "total_count": 0,
-        "total_size": 0
-    }
-
-    files = await File.find({
-        "user_id": user_id
-    }).to_list()
-
-    if files:
-        files_info["total_count"] = len(files)
-        files_info["total_size"] = round(sum(file.size for file in files)
-                                         / 1_073_741_824, 6)
-
-    return files_info
-
-
 async def create_new_file(file: UploadFile, user_id: str):
     directory = os.path.join("file_storage", user_id)
     if not os.path.exists(directory):
