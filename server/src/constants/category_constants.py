@@ -3,5 +3,5 @@ ALLOWED_FORMATS = {
     'images': {'jpeg', 'png', 'gif', 'tiff', 'psd', 'eps', 'ai', 'indd', 'raw',
                'jpg', 'webp', 'apng', 'avif', 'svg', 'bmp', 'ico'},
     'videos': {'mp4', 'avi', 'mov', 'wmv'},
-    'music': {'mp3', 'mp4', 'avi', 'mov', 'wmv'},
+    'music': {'mp3'},
 }
