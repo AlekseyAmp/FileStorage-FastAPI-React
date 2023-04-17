@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import Cookie from 'js-cookie'
 import axios from '../../axios'
+import formatFileSize from '../../utils'
 
 import styles from './Home.module.scss'
 import '../../assets/variables.scss'
@@ -12,23 +13,66 @@ import SearchInput from '../../components/SearchInput/SearchInput'
 import DragAndDropFile from '../../components/DragAndDropFile'
 
 function Home() {
+  const [categoryInfo, setCategoryInfo] = useState({
+    documents: [0, 0],
+    images: [0, 0],
+    music: [0, 0],
+    videos: [0, 0]
+  });
+
   const [history, setHistory] = useState([]);
   const access_token = Cookie.get('access_token');
 
   const [showFullFileName, setShowFullFileName] = useState([]);
 
   useEffect(() => {
-    const initialState = history.map(() => false);
-    setShowFullFileName(initialState);
-  }, [history]);
+    async function getCategoryInfo() {
+      try {
 
-  function handleNameClick(index) {
-    setShowFullFileName(prevState => {
-      const newState = [...prevState];
-      newState[index] = !newState[index];
-      return newState;
-    });
-  }
+        const documentsResponse = await axios.get('/info/category/documents', {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+
+        const imagesResponse = await axios.get('/info/category/images', {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+
+        const musicResponse = await axios.get('/info/category/music', {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+
+        const videosResponse = await axios.get('/info/category/videos', {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+
+        setCategoryInfo({
+          documents: [documentsResponse.data.total_count,
+          formatFileSize(documentsResponse.data.total_size)],
+
+          images: [imagesResponse.data.total_count,
+          formatFileSize(imagesResponse.data.total_size)],
+
+          music: [musicResponse.data.total_count,
+          formatFileSize(musicResponse.data.total_size)],
+
+          videos: [videosResponse.data.total_count,
+          formatFileSize(videosResponse.data.total_size)],
+        });
+      } catch (error) {
+        console.error(error.response.data);
+      }
+    };
+
+    getCategoryInfo();
+  }, []);
 
   useEffect(() => {
     async function getLastFiveFilesHistory() {
@@ -45,6 +89,19 @@ function Home() {
     }
     getLastFiveFilesHistory();
   }, []);
+
+  useEffect(() => {
+    const initialState = history.map(() => false);
+    setShowFullFileName(initialState);
+  }, [history]);
+
+  function handleNameClick(index) {
+    setShowFullFileName(prevState => {
+      const newState = [...prevState];
+      newState[index] = !newState[index];
+      return newState;
+    });
+  }
 
   return (
     <div className="drag-and-drop">
@@ -74,7 +131,9 @@ function Home() {
                 <p className={`dark-text`}>Документы</p>
               </div>
               <div className={styles.categoriesElemSpace}>
-                <p className={`small-text`}>N файлов на N гб</p>
+                <p className={`small-text`}>{categoryInfo["documents"][0]
+                  + " файл(ов) на "} {categoryInfo["documents"][1]}
+                </p>
               </div>
             </Link>
 
@@ -84,7 +143,9 @@ function Home() {
                 <p className={`dark-text`}>Картинки</p>
               </div>
               <div className={styles.categoriesElemSpace}>
-                <p className={`small-text`}>N файлов на N гб</p>
+                <p className={`small-text`}>{categoryInfo["images"][0]
+                  + " файл(ов) на "} {categoryInfo["images"][1]}
+                </p>
               </div>
             </Link>
 
@@ -94,7 +155,9 @@ function Home() {
                 <p className={`dark-text`}>Музыка</p>
               </div>
               <div className={styles.categoriesElemSpace}>
-                <p className={`small-text`}>N файлов на N гб</p>
+                <p className={`small-text`}>{categoryInfo["music"][0]
+                  + " файл(ов) на "} {categoryInfo["music"][1]}
+                </p>
               </div>
             </Link>
 
@@ -104,14 +167,15 @@ function Home() {
                 <p className={`dark-text`}>Видео</p>
               </div>
               <div className={styles.categoriesElemSpace}>
-                <p className={`small-text`}>N файлов на N гб</p>
-              </div>
+                <p className={`small-text`}>{categoryInfo["videos"][0]
+                  + " файл(ов) на "} {categoryInfo["videos"][1]}
+                </p>              </div>
             </Link>
           </div>
         </div>
 
         <div className={styles.recent}>
-          <div className={`title`}>Последние действия</div>
+          <div className={`title`}>Последние действия за сегодня</div>
           <div className={styles.recentList}>
             <div className={styles.recentHeadlines}>
               <p className={`gray-text`}>Название</p>
