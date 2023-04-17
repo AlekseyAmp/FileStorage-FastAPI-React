@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import Cookie from 'js-cookie'
 import axios from '../../../axios';
+import formatFileSize from '../../../utils';
 
 import styles from './SidebarRight.module.scss';
 import '../../../assets/variables.scss';
@@ -22,13 +23,13 @@ function SidebarRight() {
   useEffect(() => {
     async function getFilesInfo() {
       try {
-        const response = await axios.get(`/files/info`, {
+        const response = await axios.get(`/info/files`, {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
         });
         setCountFiles(response.data.total_count);
-        setSizeFiles(response.data.total_size)
+        setSizeFiles(response.data.total_size);
       } catch (error) {
         console.log(error.response.data.detail);
       }
@@ -53,6 +54,8 @@ function SidebarRight() {
     }
     getStatisticToday();
   }, []);
+
+  const progressWidth = Math.min((sizeFiles / (15 * 1024 ** 3)) * 100, 100);
   return (
     <div className={styles.sidebarRight}>
       <div className={styles.user}>
@@ -79,11 +82,11 @@ function SidebarRight() {
         <div className={styles.diskSpaceGraphic}>
           <div
             className={styles.diskSpaceProgress}
-            style={{ width: `${(sizeFiles / 15) * 100}%` }}
+            style={{ width: `${progressWidth}%` }}
           />
         </div>
         <p style={{ marginTop: '10px' }} className={`small-text`}>
-          Занято {sizeFiles} гб из 15 гб
+          Занято {formatFileSize(sizeFiles)} гб из 15 гб
         </p>
       </div>
 
