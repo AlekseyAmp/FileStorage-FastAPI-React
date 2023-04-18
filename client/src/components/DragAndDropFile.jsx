@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-import axios from '../axios'
+import axios from '../utils/axios'
 import Cookie from 'js-cookie'
 
 import '../assets/variables.scss'
