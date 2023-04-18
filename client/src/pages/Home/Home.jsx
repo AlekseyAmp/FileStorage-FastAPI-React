@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import Cookie from 'js-cookie'
-import axios from '../../axios'
-import formatFileSize from '../../utils'
+import axios from '../../utils/axios'
+import formatFileSize from '../../utils/formatFile'
 
 import styles from './Home.module.scss'
 import '../../assets/variables.scss'
@@ -188,33 +188,49 @@ function Home() {
                 Последние изменения
               </p>
             </div>
-            {history.map((history_elem, i) => (
-              <div className={styles.recentElem} key={i + 1}>
-                <div className={styles.recentElemTitle}>
-                  <img src={`img/categories/${history_elem.file_contentType}.png`} alt="file" />
+            {history.map((history_elem, i) => {
+              const [name, extension] = history_elem.file_name.split(".");
+              return (
+                <div className={styles.recentElem} key={i + 1}>
+                  <div className={styles.recentElemTitle}>
+                    <img
+                      src={`img/categories/${history_elem.file_contentType}.png`}
+                      alt="file"
+                    />
 
-                  <p className={`dark-text`} onClick={() => handleNameClick(i)}>
-                    {showFullFileName[i] ? history_elem.file_name : (
-                      <>
-                        {history_elem.file_name.slice(0, 5)}
-                        <span className={`bold-text`}>...</span>
-                        {history_elem.file_name.lastIndexOf('.') !== -1 && `.${history_elem.file_name.slice(history_elem.file_name.lastIndexOf('.') + 1)}`}
-                      </>
-                    )}
-                  </p>
+                    <p className={`dark-text`} onClick={() => handleNameClick(i)}>
+                      {showFullFileName[i] ? (
+                        <>
+                          {name}.{extension}
+                        </>
+                      ) : (
+                        <>
+                          {name.length > 10 ? (
+                            <>
+                              {name.substring(0, 10)}
+                              <span className={`bold-text`}>...</span>
+                            </>
+                          ) : (
+                            name
+                          )}
+                          .{extension}
+                        </>
+                      )}
+                    </p>
+                  </div>
 
+                  <div className={styles.recentElemAction}>
+                    <p className={`dark-text`}>{history_elem.title}</p>
+                  </div>
+
+                  <div className={styles.recentElemDate}>
+                    <p className={`dark-text`}>Дата: {history_elem.date}</p>
+                    <p className={`dark-text`}>Время: {history_elem.time}</p>
+                  </div>
                 </div>
+              );
+            })}
 
-                <div className={styles.recentElemAction}>
-                  <p className={`dark-text`}>{history_elem.title}</p>
-                </div>
-
-                <div className={styles.recentElemDate}>
-                  <p className={`dark-text`}>Дата: {history_elem.date}</p>
-                  <p className={`dark-text`}>Время: {history_elem.time}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>
