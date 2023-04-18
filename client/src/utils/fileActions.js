@@ -80,4 +80,18 @@ async function addToFavorite(selectedFile, setFiles, files) {
   }
 }
 
-export { downloadFile, deleteFile, renameFile, addToBasket, addToFavorite };
+async function revertMovedFile(selectedFile, setFiles, files) {
+  try {
+    const response = await axios.patch(`files/revert/${selectedFile.file_id}`, {}, {
+      headers: {
+        'Authorization': `Bearer ${access_token}`
+      }
+    });
+    console.log(response.data)
+    setFiles(files.filter(file => file.file_id !== selectedFile.file_id));
+  } catch (error) {
+    console.log(error.response.data.detail);
+  }
+}
+
+export { downloadFile, deleteFile, renameFile, addToBasket, addToFavorite, revertMovedFile };
