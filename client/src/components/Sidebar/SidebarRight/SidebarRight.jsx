@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import Cookie from 'js-cookie'
-import axios from '../../../axios';
-import formatFileSize from '../../../utils';
+import axios from '../../../utils/axios';
+import formatFileSize from '../../../utils/formatFile';
 
 import styles from './SidebarRight.module.scss';
 import '../../../assets/variables.scss';
