@@ -26,7 +26,9 @@ async def get_files_info_by_category(category: str, user_id: str):
     }
 
     async for file in File.find({
-        "user_id": user_id
+        "user_id": user_id,
+        "metadata.is_deleted": False,
+        "metadata.is_favorite": False
     }):
         if is_allowed_format(file.name.split('.')[1], category):
             category_info["total_count"] += 1
