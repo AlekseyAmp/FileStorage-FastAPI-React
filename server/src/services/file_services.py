@@ -228,6 +228,41 @@ async def add_to_favorite_file(file_id: str, user_id: str):
     return {"status": "succes"}
 
 
+async def revert_moved_file_back(file_id: str, user_id: str):
+    file = await get_file(file_id, user_id)
+
+    file_location = ''
+
+    if file.metadata["is_deleted"]:
+        file.metadata["is_deleted"] = False
+        file_location = "корзины"
+
+    elif file.metadata["is_favorite"]:
+        file.metadata["is_favorite"] = False
+        file_location = "избранного"
+
+    elif (not file.metadata["is_favorite"]) \
+            and (not file.metadata["is_deleted"]):
+        raise HTTPException(
+            status_code=403,
+            detail="Файл не находится ни в корзине, ни в избранном"
+        )
+
+    history_dict = {
+        "file_id": str(file_id),
+        "file_name": file.name,
+        "file_contentType": file.content_type,
+        "title": f"Удаление файла из {file_location}",
+        "description": f"Файл {file.name} был убран из {file_location}",
+        "time": datetime.now().strftime("%H:%M:%S")
+    }
+    await set_history_today(FileHistory, history_dict, user_id)
+
+    await file.save()
+
+    return {"status": "succes"}
+
+
 async def get_moved_files(condition: str, user_id: str):
     files = []
     async for file in File.find({
