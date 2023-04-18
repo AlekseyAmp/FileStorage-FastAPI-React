@@ -11,6 +11,8 @@ function Removed() {
         titleIcon={<img src="img/categories/delete.png" alt="removed" />}
         labelTitle={'удаленным файлам'}
         background='rgb(243 217 220 / 60%)'
+        contextMenuBack='Убрать из корзины'
+        isFavorite={false}
       />
     </div>
   );
