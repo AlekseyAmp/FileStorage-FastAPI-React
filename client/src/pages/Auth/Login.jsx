@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import axios from '../../axios';
+import axios from '../../utils/axios';
 import Cookie from 'js-cookie'
 
 import AuthForm from '../../components/AuthForm/AuthForm';

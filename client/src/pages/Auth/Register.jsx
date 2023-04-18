@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import axios from '../../axios';
+import axios from '../../utils/axios';
 
 import AuthForm from '../../components/AuthForm/AuthForm';
 import styles from './Auth.module.scss';
