@@ -11,6 +11,8 @@ function Favorite() {
         titleIcon={<img src="img/categories/heart.png" alt="favorite" />}
         labelTitle = {'по избранным файлам'}
         background='rgb(196 255 229 / 60%)'
+        contextMenuBack='Убрать из избранного'
+        isFavorite={true}
       />
     </div>
   );

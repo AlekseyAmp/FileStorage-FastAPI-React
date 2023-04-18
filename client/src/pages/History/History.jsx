@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import Cookie from 'js-cookie';
-import axios from '../../axios';
+import axios from '../../utils/axios';
 
 import styles from './History.module.scss';
 import '../../assets/variables.scss';
