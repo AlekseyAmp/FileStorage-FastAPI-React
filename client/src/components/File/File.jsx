@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import '../../assets/variables.scss';
 import styles from './File.module.scss';
 
-function File({ name, size, image, onContextMenu }) {
+function File({ name, extension, size, image, onContextMenu }) {
   const [showFullFileName, setShowFullFileName] = useState(false);
 
-  const fileExtension = name.slice(name.lastIndexOf('.') + 1);
- 
   function handleNameClick() {
     setShowFullFileName(!showFullFileName);
   }
@@ -16,13 +14,22 @@ function File({ name, size, image, onContextMenu }) {
       <img src={image} alt="file" />
       <div className={styles.fileText}>
         <p className={`dark-text`} onClick={handleNameClick}>
-          {showFullFileName ? name : (
+          {showFullFileName ? (
+            `${name}.${extension}`
+          ) : (
             <>
-              {name.slice(0, 5)}
-              <span className={`bold-text`}>...</span>
-              {fileExtension && `.${fileExtension}`}
+              {name.length > 10 ? (
+                <>
+                  {name.substring(0, 10)}
+                  <span className={`bold-text`}>...</span>
+                </>
+              ) : (
+                name
+              )}
+              {extension && `.${extension}`}
             </>
           )}
+
         </p>
         <p className={`small-text`}>Вес: {size}</p>
       </div>
@@ -31,3 +38,4 @@ function File({ name, size, image, onContextMenu }) {
 }
 
 export default File;
+
