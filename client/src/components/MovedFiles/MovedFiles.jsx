@@ -5,7 +5,8 @@ import { useContextMenu } from '../../utils/contextMenu'
 import {
     downloadFile,
     deleteFile,
-    renameFile
+    renameFile,
+    revertMovedFile
 } from '../../utils/fileActions';
 import Cookie from 'js-cookie';
 
@@ -82,7 +83,7 @@ function MovedFiles({ url, title, titleIcon, labelTitle, background, contextMenu
 
             {showContextMenu && (
                 <div className={styles.contextMenu} onClick={handleCloseContextMenu} style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}>
-                    <div className={styles.contextMenuItem} >{contextMenuBack}</div>
+                    <div className={styles.contextMenuItem} onClick={() => revertMovedFile(selectedFile, setFiles, files)}>{contextMenuBack}</div>
                     <div className={styles.contextMenuItem} onClick={() => downloadFile(selectedFile)}>Скачать</div>
                     <div className={styles.contextMenuItem} onClick={handleRenameInput}>Переименовать</div>
                     <div className={styles.contextMenuItem}>Поделиться</div>
