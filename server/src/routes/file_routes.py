@@ -45,6 +45,12 @@ async def add_to_favorite_file(file_id: str,
     return await f_s.add_to_favorite_file(file_id, user_id)
 
 
+@router.patch("/files/revert/{file_id}")
+async def revert_moved_file_back(file_id: str,
+                                 user_id: get_user_id = Depends()):
+    return await f_s.revert_moved_file_back(file_id, user_id)
+
+
 @router.get("/files/basket")
 async def get_basket_files(user_id: get_user_id = Depends()):
     return await f_s.get_moved_files("is_deleted", user_id)
