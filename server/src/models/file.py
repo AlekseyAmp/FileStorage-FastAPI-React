@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from beanie import Document
 
 
@@ -7,6 +7,7 @@ class File(Document):
     name: str
     size: float
     content_type: str
+    category_name: Optional[str]
     path: str
     metadata: Dict[str, Any] = {}
 
