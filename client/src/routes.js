@@ -5,7 +5,7 @@ import Images from './pages/Categories/Images';
 import Music from './pages/Categories/Music';
 import Videos from './pages/Categories/Videos';
 import Favorite from './pages/Favorite/Favorite';
-import Removed from './pages/Removed/Removed';
+import Basket from './pages/Basket/Basket';
 import History from './pages/History/History';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
@@ -46,7 +46,7 @@ const routes = [
     },
     {
         path: '/basket',
-        component: Removed,
+        component: Basket,
     },
     {
         path: '/history',
