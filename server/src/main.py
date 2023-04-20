@@ -7,6 +7,7 @@ from routes import (
     user_routes,
     file_routes,
     category_routes,
+    condition_routes,
     info_routes,
     history_routes,
     statistic_routes,
@@ -37,10 +38,12 @@ app.add_middleware(
 app.include_router(auth_routes.router, tags=['auth'], prefix='/api')
 app.include_router(user_routes.router, tags=['users'], prefix='/api')
 app.include_router(file_routes.router, tags=['files'], prefix='/api')
-app.include_router(category_routes.router, tags=['category'], prefix='/api')
+app.include_router(category_routes.router, tags=['categories'], prefix='/api')
+app.include_router(condition_routes.router, tags=['conditions'], prefix='/api')
 app.include_router(info_routes.router, tags=['info'], prefix='/api')
 app.include_router(history_routes.router, tags=['history'], prefix='/api')
 app.include_router(statistic_routes.router, tags=['statistic'], prefix='/api')
+
 
 db_settings = DbSettings()
 
