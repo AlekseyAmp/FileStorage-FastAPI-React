@@ -71,8 +71,7 @@ async def create_new_user(credentials: Register):
     return new_user
 
 
-async def login_user(credentials: Login, response: Response,
-                     authorize: AuthJWT = Depends()):
+async def login_user(credentials: Login, response: Response, authorize: AuthJWT = Depends()):
     user = await User.find_one({
         'email': credentials.email.lower()
     })
@@ -133,9 +132,7 @@ async def login_user(credentials: Login, response: Response,
     return {"refresh_token": refresh_token, "access_token": access_token}
 
 
-async def refresh_token(authorize: AuthJWT,
-                        response: Response,
-                        user_id: str):
+async def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
     access_token = await create_access_token(authorize, user_id)
 
     response.set_cookie("access_token",
