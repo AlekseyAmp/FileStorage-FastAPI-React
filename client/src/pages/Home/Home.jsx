@@ -115,13 +115,13 @@ function Home() {
         <div className={styles.categories}>
           <div className={`title`}>Категории</div>
           <div className={styles.categoriesList}>
-            <Link to="/category/folders" className={styles.categoriesElem}>
+          <Link to="/category/folders" className={styles.categoriesElem}>
               <div className={styles.categoriesElemTitle}>
                 <img src="img/categories/folder.png" alt="folder" />
-                <p className={`dark-text`}>Папки</p>
+                <p className={`dark-text`}>Категории</p>
               </div>
               <div className={styles.categoriesElemSpace}>
-                <p className={`small-text`}>N файлов на N гб</p>
+                <p className={`small-text`}>N категорий на N гб</p>
               </div>
             </Link>
 
