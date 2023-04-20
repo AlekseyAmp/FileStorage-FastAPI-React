@@ -15,16 +15,12 @@ async def register(credentials: Register):
 
 
 @router.post("/auth/login")
-async def login(credentials: Login,
-                response: Response,
-                authorize: AuthJWT = Depends()):
+async def login(credentials: Login, response: Response, authorize: AuthJWT = Depends()):
     return await a_s.login_user(credentials, response, authorize)
 
 
 @router.get("/auth/refresh_token")
-async def refresh_token(response: Response,
-                        authorize: AuthJWT = Depends(),
-                        user_id: get_user_id = Depends()):
+async def refresh_token(response: Response, authorize: AuthJWT = Depends(), user_id: get_user_id = Depends()):
     return await a_s.refresh_token(authorize, response, str(user_id))
 
 
