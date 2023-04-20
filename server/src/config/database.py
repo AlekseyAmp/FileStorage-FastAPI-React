@@ -2,7 +2,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
 from pydantic import BaseSettings
 
-from models import user, file, history, statistic
+from models import user, file, category, history, statistic
 from config.settings import settings
 
 
@@ -13,7 +13,9 @@ class DbSettings(BaseSettings):
         await init_beanie(database=database,
                           document_models=[user.User,
                                            file.File,
+                                           category.Category,
                                            history.FileHistory,
+                                           history.CategoryHistory,
                                            history.UserHistory,
                                            statistic.TodayStatistic])
 
