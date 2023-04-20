@@ -6,7 +6,7 @@ function Favorite() {
   return (
     <div>
       <MovedFiles
-        url={'files/favorite'}
+        url={'favorite'}
         title={'Здесь хранятся ваши любимые файлы'}
         titleIcon={<img src="img/categories/heart.png" alt="favorite" />}
         labelTitle = {'по избранным файлам'}
