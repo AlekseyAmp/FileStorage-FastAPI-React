@@ -1,5 +1,7 @@
 from fastapi import HTTPException, UploadFile
+from fastapi.responses import FileResponse
 from beanie import PydanticObjectId
+from typing import Optional
 from datetime import datetime
 import urllib
 import os
@@ -10,41 +12,45 @@ from models.file import File
 from models.history import FileHistory
 from services.history_services import set_history_today
 from services.statistic_services import set_statistic_today
-from utils.file_utils import set_file_category
+from services.category_services import create_new_category, change_size_category
+from utils.file_utils import get_file
+from utils.category_utils import get_category, set_file_category
 
 
-async def get_file(file_id: str, user_id: str):
-    file = await File.get(PydanticObjectId(file_id))
+async def create_new_file(file: UploadFile, category_name: str, user_id: str):
+    default_categories = ("images", "documents", "music", "videos")
 
-    if not file:
-        raise HTTPException(
-            status_code=404,
-            detail="Файл не найден"
-        )
-
-    if file.user_id != user_id:
+    if category_name in default_categories:
         raise HTTPException(
             status_code=403,
-            detail="Отказано в доступе"
+            detail="Используйте DEFAULT_CATEGORY, для того, чтобы загрузить файл в категорию по умолчанию"
         )
 
-    return file
+    directory = os.path.join("STORAGE", user_id, category_name)
+    category_path = os.path.join(directory)
 
+    # Default categories(images, documents, music, videos) are abstract,
+    # all files associated with them are in the DEFAULT_CATEGORY folder
+    if category_name == "DEFAULT_CATEGORY":
+        if not os.path.isdir(category_path):
+            await create_new_category(category_name, user_id)
+        category_name = set_file_category(file.filename.split('.')[1])
 
-async def create_new_file(file: UploadFile, user_id: str):
-    directory = os.path.join("file_storage", user_id)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    if not os.path.isdir(category_path):
+        raise HTTPException(
+            status_code=404,
+            detail="Такой категории не существует"
+        )
 
     file_name = file.filename
     file_path = os.path.join(directory, file_name)
 
     if os.path.isfile(file_path):
-        file_name, file_extension = os.path.splitext(file_name)
+        file_name, ext = os.path.splitext(file_name)
         suffix = 1
-        while os.path.isfile(os.path.join(directory, f"{file_name} ({suffix}){file_extension}")):
+        while os.path.isfile(os.path.join(directory, f"{file_name} ({suffix}){ext}")):
             suffix += 1
-        file_name = f"{file_name} ({suffix}){file_extension}"
+        file_name = f"{file_name} ({suffix}){ext}"
         file_path = os.path.join(directory, file_name)
 
     with open(file_path, "wb") as buffer:
@@ -54,21 +60,25 @@ async def create_new_file(file: UploadFile, user_id: str):
         user_id=user_id,
         name=file_name,
         content_type=set_file_category(file_name.split('.')[1]),
+        category_name=category_name,
         path=file_path,
         size=file.size,
         metadata={
             "is_favorite": False,
-            "is_deleted": False,
+            "is_basket": False,
             "date_created": datetime.now().strftime("%d-%m-%Y"),
             "time_created": datetime.now().strftime("%H:%M:%S")
         }
     )
     await new_file.insert()
 
+    await change_size_category(category_name, "upload", new_file.size, user_id)
+
     history_dict = {
         "file_id": str(new_file.id),
         "file_name": new_file.name,
         "file_contentType": new_file.content_type,
+        "file_categoryName": new_file.category_name,
         "title": "Загрузка файла",
         "description": f"Файл {new_file.name} загружен на диск",
         "time": datetime.now().strftime("%H:%M:%S")
@@ -80,17 +90,24 @@ async def create_new_file(file: UploadFile, user_id: str):
     return {"file_id": new_file.id}
 
 
-async def download_file(file_id: str, user_id: str):
+async def read_file(file_id: str, user_id: str):
     file = await get_file(file_id, user_id)
 
     file_path = file.path
-    filename = urllib.parse.quote(file.name)
+    return FileResponse(file_path)
+
+
+async def download_file(file_id: str, user_id: str):
+    file = await get_file(file_id, user_id)
+
+    file_name = urllib.parse.quote(file.name)
 
     history_dict = {
         "file_id": str(file_id),
         "title": "Скачивание файла",
         "file_name": file.name,
         "file_contentType": file.content_type,
+        "file_categoryName": file.category_name,
         "description": f"Файл {file.name} скачан с диска",
         "time": datetime.now().strftime("%H:%M:%S")
     }
@@ -99,10 +116,10 @@ async def download_file(file_id: str, user_id: str):
     await set_statistic_today("download", user_id)
 
     return StreamingResponse(
-        open(file_path, "rb"),
+        open(file.path, "rb"),
         media_type="application/octet-stream",
         headers={
-            "Content-Disposition": f"attachment; filename*=UTF-8''{filename}",
+            "Content-Disposition": f"attachment; filename*=UTF-8''{file_name}",
             "Content-Type": file.content_type,
         }
     )
@@ -111,174 +128,61 @@ async def download_file(file_id: str, user_id: str):
 async def rename_file(file_id: str, new_name: str, user_id: str):
     file = await get_file(file_id, user_id)
 
-    file_path = file.path
-    dir_path = os.path.dirname(file_path)
-    ext = os.path.splitext(file_path)[1]
+    dir_path = os.path.dirname(file.path)
+    ext = os.path.splitext(file.path)[1]
     new_file_path = os.path.join(dir_path, new_name + ext)
 
-    os.rename(file_path, new_file_path)
-    file.name = new_name + ext
-    file.path = f"file_storage/{user_id}/{file.name}"
-
+    os.rename(file.path, new_file_path)
+  
     history_dict = {
         "file_id": str(file_id),
-        "file_name": file.name,
+        "file_name": new_name,
         "file_contentType": file.content_type,
+        "file_categoryName": file.category_name,
         "title": "Переименование файла",
         "description": f"Файл {file.name} переиенован на {new_name}",
         "time": datetime.now().strftime("%H:%M:%S")
     }
+    await file.update({"$set": {"path": new_file_path}})
+    await file.update({"$set": {"name": new_name + ext}})
+
     await set_history_today(FileHistory, history_dict, user_id)
 
-    await file.save()
-
-    return {"new_name": file.name}
+    return {"new_name": new_name}
 
 
 async def delete_file(file_id: str, user_id: str):
     file = await get_file(file_id, user_id)
 
-    if not file.metadata["is_deleted"]:
+    if not file.metadata["is_basket"]:
         raise HTTPException(
             status_code=403,
             detail="Файл должен находиться в корзине"
         )
 
-    file_path = file.path
-    os.remove(file_path)
+    try:
+        os.remove(file.path)
 
-    history_dict = {
-        "file_id": str(file_id),
-        "file_name": file.name,
-        "file_contentType": file.content_type,
-        "title": "Удаление файла",
-        "description": f"Файл {file.name} был удалён с диска",
-        "time": datetime.now().strftime("%H:%M:%S")
-    }
-    await set_history_today(FileHistory, history_dict, user_id)
+        await change_size_category(file.category_name, "upload", file.size, user_id)
 
-    await set_statistic_today("deleted", user_id)
+        history_dict = {
+            "file_id": str(file_id),
+            "file_name": file.name,
+            "file_contentType": file.content_type,
+            "file_categoryName": file.category_name,
+            "title": "Удаление файла",
+            "description": f"Файл {file.name} был удалён с диска",
+            "time": datetime.now().strftime("%H:%M:%S")
+        }
+        await file.delete()
+        
+        await set_history_today(FileHistory, history_dict, user_id)
 
-    await file.delete()
+        await set_statistic_today("deleted", user_id)
 
+    except Exception:
+        raise HTTPException(
+            status_code=500,
+            detail="Попробуйте чуть позже"
+        )
     return {"status": "succes"}
-
-
-async def add_to_basket_file(file_id: str, user_id: str):
-    file = await get_file(file_id, user_id)
-
-    if file.metadata["is_favorite"]:
-        raise HTTPException(
-            status_code=403,
-            detail="Файл находится в избранном"
-        )
-
-    if file.metadata["is_deleted"]:
-        raise HTTPException(
-            status_code=403,
-            detail="Файл уже находится в корзине"
-        )
-
-    file.metadata["is_deleted"] = True
-
-    history_dict = {
-        "file_id": str(file_id),
-        "file_name": file.name,
-        "file_contentType": file.content_type,
-        "title": "Добавление файла в корзину",
-        "description": f"Файл {file.name} был перемещён в корзину",
-        "time": datetime.now().strftime("%H:%M:%S")
-    }
-    await set_history_today(FileHistory, history_dict, user_id)
-
-    await file.save()
-
-    return {"status": "succes"}
-
-
-async def add_to_favorite_file(file_id: str, user_id: str):
-    file = await get_file(file_id, user_id)
-
-    if file.metadata["is_deleted"]:
-        raise HTTPException(
-            status_code=403,
-            detail="Файл находится в корзине"
-        )
-
-    if file.metadata["is_favorite"]:
-        raise HTTPException(
-            status_code=403,
-            detail="Файл уже находится в избранном"
-        )
-
-    file.metadata["is_favorite"] = True
-
-    history_dict = {
-        "file_id": str(file_id),
-        "file_name": file.name,
-        "file_contentType": file.content_type,
-        "title": "Добавление файла в избранное",
-        "description": f"Файл {file.name} был перемещён в избранное",
-        "time": datetime.now().strftime("%H:%M:%S")
-    }
-    await set_history_today(FileHistory, history_dict, user_id)
-
-    await file.save()
-
-    return {"status": "succes"}
-
-
-async def revert_moved_file_back(file_id: str, user_id: str):
-    file = await get_file(file_id, user_id)
-
-    file_location = ''
-
-    if file.metadata["is_deleted"]:
-        file.metadata["is_deleted"] = False
-        file_location = "корзины"
-
-    elif file.metadata["is_favorite"]:
-        file.metadata["is_favorite"] = False
-        file_location = "избранного"
-
-    elif (not file.metadata["is_favorite"]) \
-            and (not file.metadata["is_deleted"]):
-        raise HTTPException(
-            status_code=403,
-            detail="Файл не находится ни в корзине, ни в избранном"
-        )
-
-    history_dict = {
-        "file_id": str(file_id),
-        "file_name": file.name,
-        "file_contentType": file.content_type,
-        "title": f"Удаление файла из {file_location}",
-        "description": f"Файл {file.name} был убран из {file_location}",
-        "time": datetime.now().strftime("%H:%M:%S")
-    }
-    await set_history_today(FileHistory, history_dict, user_id)
-
-    await file.save()
-
-    return {"status": "succes"}
-
-
-async def get_moved_files(condition: str, user_id: str):
-    files = []
-    async for file in File.find({
-        "user_id": user_id
-    }):
-        if file.metadata[condition]:
-            file_dict = {
-                "file_id": str(file.id),
-                "name": file.name,
-                "size": file.size,
-                "content_type": file.content_type,
-                "is_favorite": file.metadata["is_favorite"],
-                "is_deleted": file.metadata["is_deleted"],
-                "date_created": file.metadata["date_created"],
-                "time_created": file.metadata["time_created"]
-            }
-            files.append(file_dict)
-
-    return files[::-1]
