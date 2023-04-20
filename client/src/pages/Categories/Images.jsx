@@ -5,7 +5,7 @@ import Category from '../../components/Category/Category'
 function Images() {
   return (
     <Category
-    url={'category/images'}
+    url={'categories/images'}
     title={'Изображения'}
     labelTitle = {'изображениям'}
      background='rgb(220 227 245 / 60%)'

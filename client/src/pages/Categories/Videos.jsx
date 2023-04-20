@@ -5,7 +5,7 @@ import Category from '../../components/Category/Category'
 function Videos() {
   return (
     <Category
-    url={'category/videos'}
+    url={'categories/videos'}
     title={'Видео'}
     labelTitle = {'видео'}
     background='rgb(220 227 245 / 60%)'
