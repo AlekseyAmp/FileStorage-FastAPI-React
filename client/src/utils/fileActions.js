@@ -18,7 +18,7 @@ async function downloadFile(selectedFile) {
     link.setAttribute('download', selectedFile.name);
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link); 
+    document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   } catch (error) {
     console.log(error.response.data.detail);
@@ -54,7 +54,7 @@ async function renameFile(selectedFile, newName) {
 
 async function addToBasket(selectedFile, setFiles, files) {
   try {
-    const response = await axios.patch(`files/in_basket/${selectedFile.file_id}`, {}, {
+    const response = await axios.patch(`basket/add/file/${selectedFile.file_id}`, {}, {
       headers: {
         'Authorization': `Bearer ${access_token}`
       }
@@ -68,7 +68,7 @@ async function addToBasket(selectedFile, setFiles, files) {
 
 async function addToFavorite(selectedFile, setFiles, files) {
   try {
-    const response = await axios.patch(`files/in_favorite/${selectedFile.file_id}`, {}, {
+    const response = await axios.patch(`favorite/add/file/${selectedFile.file_id}`, {}, {
       headers: {
         'Authorization': `Bearer ${access_token}`
       }
@@ -82,7 +82,7 @@ async function addToFavorite(selectedFile, setFiles, files) {
 
 async function revertMovedFile(selectedFile, setFiles, files) {
   try {
-    const response = await axios.patch(`files/revert/${selectedFile.file_id}`, {}, {
+    const response = await axios.patch(`revert/file/${selectedFile.file_id}`, {}, {
       headers: {
         'Authorization': `Bearer ${access_token}`
       }
