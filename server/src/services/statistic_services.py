@@ -26,7 +26,7 @@ async def get_statistic_today(user_id: str):
     return statistic_dict
 
 
-async def set_statistic_today(action_name: str, user_id: str):
+async def set_statistic_today(action: str, user_id: str):
     statistic_elem = await TodayStatistic.find_one({
         "user_id": user_id,
         "date": datetime.now().strftime("%d-%m-%Y")
@@ -36,11 +36,11 @@ async def set_statistic_today(action_name: str, user_id: str):
         new_statistic = TodayStatistic(
             user_id=user_id,
             date=datetime.now().strftime("%d-%m-%Y"),
-            actions={action_name: 1}
+            actions={action: 1}
         )
         await new_statistic.insert()
     else:
         await statistic_elem.update({"$inc":
-                                     {f"actions.{action_name}": 1}})
+                                     {f"actions.{action}": 1}})
 
     return statistic_elem
