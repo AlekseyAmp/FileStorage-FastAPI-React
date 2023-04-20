@@ -25,6 +25,8 @@ function Category({ url, title, titleIcon, labelTitle, background }) {
 
   const [files, setFiles] = useState([]);
 
+  const [fileImage, setFileImage] = useState()
+
   const {
     handleContextMenu,
     handleCloseContextMenu,
@@ -41,6 +43,23 @@ function Category({ url, title, titleIcon, labelTitle, background }) {
     e.preventDefault();
     setShowRenameInput(selectedFile.name.split('.')[0]);
   }
+
+  // useEffect(() => {
+  //   async function readFile() {
+  //     try {
+  //       const response = await axios.get(`files/read/${selectedFile.file_id}`, {
+  //         headers: {
+  //           'Authorization': `Bearer ${access_token}`
+  //         }
+  //       });
+  //       setFileImage(response.data)
+  //       console.log(response.data)
+  //     } catch (error) {
+  //       console.log(error.response.data.detail);
+  //     }
+  //   }
+  //   readFile();
+  // }, []);
 
   useEffect(() => {
     async function getCategoryFiles() {
@@ -100,7 +119,7 @@ function Category({ url, title, titleIcon, labelTitle, background }) {
               <File
                 key={file.file_id}
                 onContextMenu={(e) => handleContextMenu(e, file)}
-                image={`../img/categories/${file.content_type}.png`}
+                image={fileImage}
                 name={file.name.split('.')[0]}
                 extension={file.name.split('.')[1]}
                 size={`${Math.floor(file.size / 1000)} КБ`}
