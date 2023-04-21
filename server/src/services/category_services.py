@@ -92,7 +92,7 @@ async def delete_category(category_name: str, user_id: str):
     default_categories = ("DEFAULT_CATEGORY", "images",
                           "documents", "music", "videos")
 
-    if category.name in default_categories:
+    if category_name in default_categories:
         raise HTTPException(
             status_code=403,
             detail="Невозможно удалить эту категорию, так как она установлена по умолчанию"
@@ -106,10 +106,16 @@ async def rename_category(category_name: str, new_name, user_id: str):
     default_categories = ("DEFAULT_CATEGORY", "images",
                           "documents", "music", "videos")
 
-    if new_name in default_categories:
+    if category_name in default_categories:
         raise HTTPException(
             status_code=403,
             detail="Невозможно переименовать эту категорию, так как она установлена по умолчанию"
+        )
+
+    if new_name in default_categories:
+        raise HTTPException(
+            status_code=403,
+            detail="Невозможно переименовать эту категорию, так как новое имя является категорией по умолчанию"
         )
 
     category = await get_category(category_name, user_id)

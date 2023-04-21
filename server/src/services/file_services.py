@@ -29,10 +29,8 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
 
     # Default categories(images, documents, music, videos) are abstract,
     # all files associated with them are in the DEFAULT_CATEGORY folder
-    if category_name == "DEFAULT_CATEGORY":
-        if not os.path.isdir(category_path):
-            await create_new_category(category_name, user_id)
-        category_name = set_file_category(file.filename.split('.')[1])
+    if category_name == "DEFAULT_CATEGORY" and not os.path.isdir(category_path):
+        await create_new_category(category_name, user_id)
 
     if not os.path.isdir(category_path):
         raise HTTPException(
