@@ -53,9 +53,10 @@ async def add_to_basket_file(file_id: str, user_id: str):
         "description": f"Файл {file.name} был перемещён в корзину",
         "time": datetime.now().strftime("%H:%M:%S")
     }
-    await set_history_today(FileHistory, history_dict, user_id)
 
     await file.update({"$set": {"metadata.is_basket": True}})
+
+    await set_history_today(FileHistory, history_dict, user_id)
 
     return {"status": "succes"}
 
@@ -84,9 +85,10 @@ async def add_to_favorite_file(file_id: str, user_id: str):
         "description": f"Файл {file.name} был перемещён в избранное",
         "time": datetime.now().strftime("%H:%M:%S")
     }
-    await set_history_today(FileHistory, history_dict, user_id)
 
     await file.update({"$set": {"metadata.is_favorite": True}})
+
+    await set_history_today(FileHistory, history_dict, user_id)
 
     return {"status": "succes"}
 

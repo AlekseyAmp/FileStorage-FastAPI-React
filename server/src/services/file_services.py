@@ -23,7 +23,7 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
     if category_name in default_categories:
         raise HTTPException(
             status_code=403,
-            detail="Используйте DEFAULT_CATEGORY, для того, чтобы загрузить файл в категорию по умолчанию"
+            detail="Используйте DEFAULT_CATEGORY, чтобы загрузить файл в категорию по умолчанию"
         )
 
     directory = os.path.join("STORAGE", user_id, category_name)
@@ -71,7 +71,6 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
         }
     )
     await new_file.insert()
-
     await change_size_category(category_name, "upload", new_file.size, user_id)
 
     history_dict = {
@@ -132,8 +131,6 @@ async def rename_file(file_id: str, new_name: str, user_id: str):
     ext = os.path.splitext(file.path)[1]
     new_file_path = os.path.join(dir_path, new_name + ext)
 
-    os.rename(file.path, new_file_path)
-  
     history_dict = {
         "file_id": str(file_id),
         "file_name": new_name,
@@ -143,6 +140,8 @@ async def rename_file(file_id: str, new_name: str, user_id: str):
         "description": f"Файл {file.name} переиенован на {new_name}",
         "time": datetime.now().strftime("%H:%M:%S")
     }
+
+    os.rename(file.path, new_file_path)
     await file.update({"$set": {"path": new_file_path}})
     await file.update({"$set": {"name": new_name + ext}})
 
@@ -161,10 +160,6 @@ async def delete_file(file_id: str, user_id: str):
         )
 
     try:
-        os.remove(file.path)
-
-        await change_size_category(file.category_name, "upload", file.size, user_id)
-
         history_dict = {
             "file_id": str(file_id),
             "file_name": file.name,
@@ -174,8 +169,11 @@ async def delete_file(file_id: str, user_id: str):
             "description": f"Файл {file.name} был удалён с диска",
             "time": datetime.now().strftime("%H:%M:%S")
         }
+
+        os.remove(file.path)
+        await change_size_category(file.category_name, "upload", file.size, user_id)
         await file.delete()
-        
+
         await set_history_today(FileHistory, history_dict, user_id)
 
         await set_statistic_today("deleted", user_id)
