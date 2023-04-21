@@ -5,7 +5,13 @@ from models.category import Category
 from constants.category_constants import ALLOWED_FORMATS
 
 
-async def get_category(category_id: str, user_id: str):
+async def get_category(category_name: str, user_id: str):
+    async for category in Category.find({
+        "user_id": user_id,
+        "name": category_name
+    }):
+        category_id = str(category.id)
+
     category = await Category.get(PydanticObjectId(category_id))
 
     if not category:
