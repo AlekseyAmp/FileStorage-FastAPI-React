@@ -8,7 +8,7 @@ from constants.category_constants import ALLOWED_FORMATS
 async def get_category(category_name: str, user_id: str):
     category = await Category.find_one({
         "user_id": user_id,
-        "name": category_name
+        "name_for_search": category_name.lower()
     })
 
     if not category:
