@@ -1,5 +1,4 @@
 from fastapi import HTTPException
-from beanie import PydanticObjectId
 from datetime import datetime
 import os
 

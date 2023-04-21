@@ -1,7 +1,5 @@
 from fastapi import HTTPException, UploadFile
 from fastapi.responses import FileResponse
-from beanie import PydanticObjectId
-from typing import Optional
 from datetime import datetime
 import urllib
 import os
