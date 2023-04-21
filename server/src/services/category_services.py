@@ -86,8 +86,8 @@ async def create_new_category(category_name: str, user_id: str):
     return {"category_id": new_category.id}
 
 
-async def delete_category(category_id: str, user_id: str):
-    category = await get_category(category_id, user_id)
+async def delete_category(category_name: str, user_id: str):
+    category = await get_category(category_name, user_id)
 
     default_categories = ("DEFAULT_CATEGORY", "images",
                           "documents", "music", "videos")
@@ -102,7 +102,7 @@ async def delete_category(category_id: str, user_id: str):
     await category.delete()
 
 
-async def rename_category(category_id: str, new_name, user_id: str):
+async def rename_category(category_name: str, new_name, user_id: str):
     default_categories = ("DEFAULT_CATEGORY", "images",
                           "documents", "music", "videos")
 
@@ -112,7 +112,7 @@ async def rename_category(category_id: str, new_name, user_id: str):
             detail="Невозможно переименовать эту категорию, так как она установлена по умолчанию"
         )
 
-    category = await get_category(category_id, user_id)
+    category = await get_category(category_name, user_id)
 
     category_path = category.path
     dir_path = os.path.dirname(category_path)
@@ -138,13 +138,7 @@ async def rename_category(category_id: str, new_name, user_id: str):
 
 
 async def change_size_category(category_name: str, action: str, size: int, user_id: str):
-    async for category in Category.find({
-        "user_id": user_id,
-        "name": category_name
-    }):
-        category_id = str(category.id)
-
-    category = await get_category(category_id, user_id)
+    category = await get_category(category_name, user_id)
 
     if action == "upload":
         await category.update({"$inc": {"size": size}})
