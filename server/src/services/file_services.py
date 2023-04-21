@@ -29,7 +29,7 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
 
     # Default categories(images, documents, music, videos) are abstract,
     # all files associated with them are in the DEFAULT_CATEGORY folder
-    if category_name == "DEFAULT_CATEGORY" and not os.path.isdir(category_path):
+    if category_name.lower() == "default_category" and not os.path.isdir(category_path):
         await create_new_category(category_name, user_id)
 
     if not os.path.isdir(category_path):
@@ -133,7 +133,7 @@ async def rename_file(file_id: str, new_name: str, user_id: str):
         "file_contentType": file.content_type,
         "file_categoryName": file.category_name,
         "title": "Переименование файла",
-        "description": f"Файл {file.name} переиенован на {new_name}",
+        "description": f"Файл {file.name} была переименован на {new_name}",
         "time": datetime.now().strftime("%H:%M:%S")
     }
 
@@ -167,13 +167,12 @@ async def delete_file(file_id: str, user_id: str):
         }
 
         os.remove(file.path)
-        await change_size_category(file.category_name, "upload", file.size, user_id)
         await file.delete()
+        await change_size_category(file.category_name, "upload", file.size, user_id)
 
         await set_history_today(FileHistory, history_dict, user_id)
 
         await set_statistic_today("deleted", user_id)
-
     except Exception:
         raise HTTPException(
             status_code=500,
