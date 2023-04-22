@@ -1,5 +1,5 @@
 import Home from './pages/Home/Home';
-import Folders from './pages/Categories/Folders';
+import CustomCategories from './pages/Categories/CustomCategories/CustomCategories';
 import Documents from './pages/Categories/Documents';
 import Images from './pages/Categories/Images';
 import Music from './pages/Categories/Music';
@@ -21,8 +21,8 @@ const routes = [
         component: Home,
     },
     {
-        path: '/category/folders',
-        component: Folders,
+        path: '/category/custom',
+        component: CustomCategories,
     },
     {
         path: '/category/documents',
