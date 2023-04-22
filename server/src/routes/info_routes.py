@@ -11,6 +11,11 @@ async def get_files_info(user_id: get_user_id = Depends()):
     return await i_s.get_files_info(user_id)
 
 
-@router.get("/info/category/{category_name}")
-async def get_documents_info_category(category_name: str, user_id: get_user_id = Depends()):
+@router.get("/info/categories")
+async def get_custom_categories_info(user_id: get_user_id = Depends()):
+    return await i_s.get_custom_categories_info(user_id)
+
+
+@router.get("/info/categories/{category_name}")
+async def get_files_info_by_category(category_name: str, user_id: get_user_id = Depends()):
     return await i_s.get_files_info_by_category(category_name, user_id)

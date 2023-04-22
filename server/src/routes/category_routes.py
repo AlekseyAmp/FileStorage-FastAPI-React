@@ -7,7 +7,12 @@ from services import category_services as categ_s
 router = APIRouter()
 
 
-@router.get("/categories/{category_name}")
+@router.get("/categories")
+async def get_custom_categories(user_id: get_user_id = Depends()):
+    return await categ_s.get_custom_categories(user_id)
+
+
+@router.get("/categories/files/{category_name}")
 async def get_files_from_category(category_name: str, user_id: get_user_id = Depends()):
     return await categ_s.get_files_from_category(category_name, user_id)
 
