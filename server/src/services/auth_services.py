@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 
 from models.user import User, Login, Register
 from config.jwt_config import AuthJWT
-from models.history import UserHistory
 from services.history_services import set_history_today
 from constants import auth_constants
 from utils import auth_utils
@@ -50,11 +49,12 @@ async def create_new_user(credentials: Register):
 
     new_user = User(
         email=credentials.email.lower(),
+        username=credentials.email.lower().split('@')[0],
         password=auth_utils.hash_password(credentials.password),
         metadata={
             "is_premium": False,
             "storage_used": 0,
-            "max_storage": 15,
+            "max_storage": 16106127360,
             "date_created": datetime.now().strftime("%d-%m-%Y"),
             "time_created": datetime.now().strftime("%H:%M:%S")
         }
@@ -66,7 +66,7 @@ async def create_new_user(credentials: Register):
         "description": f"Регистрация под почтой {new_user.email}",
         "time": datetime.now().strftime("%H:%M:%S")
     }
-    await set_history_today(UserHistory, history_dict, str(new_user.id))
+    await set_history_today(history_dict, str(new_user.id))
 
     return new_user
 
@@ -127,7 +127,7 @@ async def login_user(credentials: Login, response: Response, authorize: AuthJWT 
         "description": f"Вход в диск",
         "time": datetime.now().strftime("%H:%M:%S")
     }
-    await set_history_today(UserHistory, history_dict, str(user.id))
+    await set_history_today(history_dict, str(user.id))
 
     return {"refresh_token": refresh_token, "access_token": access_token}
 
