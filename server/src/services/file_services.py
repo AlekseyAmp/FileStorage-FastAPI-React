@@ -7,7 +7,6 @@ import os
 from starlette.responses import StreamingResponse
 
 from models.file import File
-from models.history import FileHistory
 from services.history_services import set_history_today
 from services.statistic_services import set_statistic_today
 from services.category_services import create_new_category, change_size_category
@@ -16,6 +15,10 @@ from utils.category_utils import get_category, set_file_category
 
 
 async def create_new_file(file: UploadFile, category_name: str, user_id: str):
+    category_name = category_name.lower()
+
+    # Default categories(images, documents, music, videos) are abstract,
+    # all files associated with them are in the DEFAULT_CATEGORY folder
     default_categories = ("images", "documents", "music", "videos")
 
     if category_name in default_categories:
@@ -27,10 +30,12 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
     directory = os.path.join("STORAGE", user_id, category_name)
     category_path = os.path.join(directory)
 
-    # Default categories(images, documents, music, videos) are abstract,
-    # all files associated with them are in the DEFAULT_CATEGORY folder
-    if category_name.lower() == "default_category" and not os.path.isdir(category_path):
-        await create_new_category(category_name, user_id)
+
+    if category_name == "default_category":
+        if not os.path.isdir(category_path):
+            await create_new_category(category_name, user_id)
+        await change_size_category(category_name, "upload", file.size, user_id)
+        category_name = set_file_category(file.filename.split('.')[1])
 
     if not os.path.isdir(category_path):
         raise HTTPException(
@@ -67,18 +72,20 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
         }
     )
     await new_file.insert()
-    await change_size_category(category_name, "upload", new_file.size, user_id)
+
+    if category_name not in default_categories:
+        await change_size_category(category_name, "upload", file.size, user_id)
 
     history_dict = {
         "file_id": str(new_file.id),
         "file_name": new_file.name,
-        "file_contentType": new_file.content_type,
-        "file_categoryName": new_file.category_name,
+        "file_content_type": new_file.content_type,
+        "file_category_name": new_file.category_name,
         "title": "Загрузка файла",
         "description": f"Файл {new_file.name} загружен на диск",
         "time": datetime.now().strftime("%H:%M:%S")
     }
-    await set_history_today(FileHistory, history_dict, user_id)
+    await set_history_today(history_dict, user_id)
 
     await set_statistic_today("upload", user_id)
 
@@ -99,14 +106,14 @@ async def download_file(file_id: str, user_id: str):
 
     history_dict = {
         "file_id": str(file_id),
-        "title": "Скачивание файла",
         "file_name": file.name,
-        "file_contentType": file.content_type,
-        "file_categoryName": file.category_name,
+        "file_content_type": file.content_type,
+        "file_category_name": file.category_name,
+        "title": "Скачивание файла",
         "description": f"Файл {file.name} скачан с диска",
         "time": datetime.now().strftime("%H:%M:%S")
     }
-    await set_history_today(FileHistory, history_dict, user_id)
+    await set_history_today(history_dict, user_id)
 
     await set_statistic_today("download", user_id)
 
@@ -130,8 +137,8 @@ async def rename_file(file_id: str, new_name: str, user_id: str):
     history_dict = {
         "file_id": str(file_id),
         "file_name": new_name,
-        "file_contentType": file.content_type,
-        "file_categoryName": file.category_name,
+        "file_content_type": file.content_type,
+        "file_category_name": file.category_name,
         "title": "Переименование файла",
         "description": f"Файл {file.name} была переименован на {new_name}",
         "time": datetime.now().strftime("%H:%M:%S")
@@ -141,13 +148,18 @@ async def rename_file(file_id: str, new_name: str, user_id: str):
     await file.update({"$set": {"path": new_file_path}})
     await file.update({"$set": {"name": new_name + ext}})
 
-    await set_history_today(FileHistory, history_dict, user_id)
+    await set_history_today(history_dict, user_id)
 
     return {"new_name": new_name}
 
 
 async def delete_file(file_id: str, user_id: str):
+    default_categories = ("images", "documents", "music", "videos")
+
     file = await get_file(file_id, user_id)
+
+    if file.category_name in default_categories:
+        category_name = "default_category"
 
     if not file.metadata["is_basket"]:
         raise HTTPException(
@@ -155,27 +167,23 @@ async def delete_file(file_id: str, user_id: str):
             detail="Файл должен находиться в корзине"
         )
 
-    try:
-        history_dict = {
-            "file_id": str(file_id),
-            "file_name": file.name,
-            "file_contentType": file.content_type,
-            "file_categoryName": file.category_name,
-            "title": "Удаление файла",
-            "description": f"Файл {file.name} был удалён с диска",
-            "time": datetime.now().strftime("%H:%M:%S")
-        }
+    history_dict = {
+        "file_id": str(file_id),
+        "file_name": file.name,
+        "file_content_type": file.content_type,
+        "file_category_name": file.category_name,
+        "title": "Удаление файла",
+        "description": f"Файл {file.name} был удалён с диска",
+        "time": datetime.now().strftime("%H:%M:%S")
+    }
 
-        os.remove(file.path)
-        await file.delete()
-        await change_size_category(file.category_name, "upload", file.size, user_id)
+    os.remove(file.path)
+    await file.delete()
 
-        await set_history_today(FileHistory, history_dict, user_id)
+    await change_size_category(category_name, "delete", file.size, user_id)
 
-        await set_statistic_today("deleted", user_id)
-    except Exception:
-        raise HTTPException(
-            status_code=500,
-            detail="Попробуйте чуть позже"
-        )
+    await set_history_today(history_dict, user_id)
+
+    await set_statistic_today("deleted", user_id)
+
     return {"status": "succes"}
