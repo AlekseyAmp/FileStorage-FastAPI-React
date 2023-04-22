@@ -14,9 +14,7 @@ class DbSettings(BaseSettings):
                           document_models=[user.User,
                                            file.File,
                                            category.Category,
-                                           history.FileHistory,
-                                           history.CategoryHistory,
-                                           history.UserHistory,
+                                           history.History,
                                            statistic.TodayStatistic])
 
     class Config:
