@@ -1,30 +1,29 @@
 import { useState } from "react";
 
 export function useContextMenu() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showContextMenuForItem, setShowContextMenuForItem] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
-  function handleContextMenu(e, file) {
+  function handleContextMenuForItem(e, item) {
     e.preventDefault();
-    setSelectedFile(file);
-    setShowContextMenu(true);
+    setSelectedItem(item);
+    setShowContextMenuForItem(true);
     setContextMenuPosition({ x: e.pageX, y: e.pageY });
   }
 
-  function handleCloseContextMenu(e) {
-    e.preventDefault();
-    setShowContextMenu(false);
-  }
-
+  const handleCloseContextMenu = () => {
+      setShowContextMenuForItem(false);
+  };
+  
   return {
-    selectedFile,
-    setSelectedFile,
-    showContextMenu,
-    setShowContextMenu,
+    selectedItem,
+    setSelectedItem,
+    showContextMenuForItem,
+    setShowContextMenuForItem,
     contextMenuPosition,
     setContextMenuPosition,
-    handleContextMenu,
+    handleContextMenuForItem,
     handleCloseContextMenu,
   };
 }
