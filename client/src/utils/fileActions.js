@@ -11,15 +11,28 @@ async function downloadFile(selectedFile) {
       },
       responseType: 'blob'
     });
-    const blob = new Blob([response.data], { type: selectedFile.content_type });
+    const blob = new Blob([response.data], { type: selectedFile.file_content_type });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', selectedFile.name);
+    link.setAttribute('download', selectedFile.file_name);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.log(error.response.data.detail);
+  }
+}
+
+async function renameFile(selectedFile, newName) {
+  try {
+    const response = await axios.patch(`files/rename/${selectedFile.file_id}/${newName}`, newName, {
+      headers: {
+        'Authorization': `Bearer ${access_token}`
+      }
+    });
+    console.log(response.data)
   } catch (error) {
     console.log(error.response.data.detail);
   }
@@ -33,19 +46,6 @@ async function deleteFile(selectedFile, setFiles, files) {
       }
     });
     setFiles(files.filter(file => file.file_id !== selectedFile.file_id));
-    console.log(response.data)
-  } catch (error) {
-    console.log(error.response.data.detail);
-  }
-}
-
-async function renameFile(selectedFile, newName) {
-  try {
-    const response = await axios.patch(`files/rename/${selectedFile.file_id}/${newName}`, newName, {
-      headers: {
-        'Authorization': `Bearer ${access_token}`
-      }
-    });
     console.log(response.data)
   } catch (error) {
     console.log(error.response.data.detail);
