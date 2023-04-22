@@ -1,25 +1,42 @@
 from models.file import File
+from models.category import Category
 
 
 async def get_files_info(user_id: str):
-    files_info = {
+    files_info_dict = {
         "total_count": 0,
         "total_size": 0
     }
 
-    files = await File.find({
-        "user_id": user_id
-    }).to_list()
+    async for file in Category.find({
+        "user_id": user_id,
+    }):
+        files_info_dict["total_count"] += 1
+        files_info_dict["total_size"] += file.size
 
-    if files:
-        files_info["total_count"] = len(files)
-        files_info["total_size"] = sum(file.size for file in files)
+    return files_info_dict
 
-    return files_info
+
+async def get_custom_categories_info(user_id: str):
+    category_info_dict = {
+        "total_count": 0,
+        "total_size": 0
+    }
+
+    async for category in Category.find({
+        "user_id": user_id,
+    }):
+        if category.name == "default_category":
+            continue
+
+        category_info_dict["total_count"] += 1
+        category_info_dict["total_size"] += category.size
+
+    return category_info_dict
 
 
 async def get_files_info_by_category(category_name: str, user_id: str):
-    category_info = {
+    category_info_dict = {
         "total_count": 0,
         "total_size": 0
     }
@@ -30,7 +47,7 @@ async def get_files_info_by_category(category_name: str, user_id: str):
         "metadata.is_basket": False,
         "metadata.is_favorite": False
     }):
-        category_info["total_count"] += 1
-        category_info["total_size"] += file.size
+        category_info_dict["total_count"] += 1
+        category_info_dict["total_size"] += file.size
 
-    return category_info
+    return category_info_dict
