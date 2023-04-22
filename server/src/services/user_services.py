@@ -8,7 +8,14 @@ from models.user import User
 
 async def get_user_info(user_id: str):
     user = await User.get(PydanticObjectId(user_id))
-    return {"email": user.email}
+
+    user_dict = {
+        "user_id": user.id,
+        "email": user.email,
+        "username": user.username
+    }
+
+    return user_dict
 
 
 async def get_user_id(authorize: AuthJWT = Depends()):
