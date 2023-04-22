@@ -8,6 +8,8 @@ import {
     renameFile,
     revertMovedFile
 } from '../../utils/fileActions';
+import formatFileSize from '../../utils/formatFile'
+
 import Cookie from 'js-cookie';
 
 import '../../assets/variables.scss';
@@ -15,11 +17,9 @@ import '../../assets/variables.scss';
 import File from '../File/File';
 import Input from '../Input/Input'
 import SearchInput from '../SearchInput/SearchInput';
-import styles from './MovedFiles.module.scss';
+import styles from './MovedItems.module.scss';
 
-
-
-function MovedFiles({ url, title, titleIcon, labelTitle, background, contextMenuBack, isFavorite }) {
+function MovedItems({ url, title, titleIcon, labelTitle, background, contextMenuBack, isFavorite }) {
 
     const categoryStyle = {
         background: background,
@@ -27,21 +27,21 @@ function MovedFiles({ url, title, titleIcon, labelTitle, background, contextMenu
 
     const [files, setFiles] = useState([]);
 
-    const {
-        handleContextMenu,
-        handleCloseContextMenu,
-        selectedFile,
-        showContextMenu,
-        contextMenuPosition,
-    } = useContextMenu();
-
-    const [showRenameInput, setShowRenameInput] = useState(false);
-
+    const [showRenameInput, setShowRenameInput] = useState(null);
+    
     const access_token = Cookie.get('access_token');
 
-    async function handleRenameInput(e) {
+    const {
+        selectedItem,
+        showContextMenuForItem,
+        contextMenuPosition,
+        handleContextMenuForItem,
+        handleCloseContextMenu,
+      } = useContextMenu();
+
+    function handleRenameInput(e) {
         e.preventDefault();
-        setShowRenameInput(selectedFile.name.split('.')[0]);
+        setShowRenameInput(selectedItem.file_name.split('.')[0]);
     }
 
     useEffect(() => {
@@ -62,46 +62,43 @@ function MovedFiles({ url, title, titleIcon, labelTitle, background, contextMenu
 
     return (
         <div className={styles.movedFiles} style={categoryStyle}>
-
             <div className={`title ${styles.movedFilesTitle}`}>
                 {titleIcon}
                 {title}
             </div>
 
-            {showRenameInput && (
+            {showContextMenuForItem && (
+                <div className={styles.contextMenu} onClick={handleCloseContextMenu} style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}>
+                    <div className={styles.contextMenuItem} onClick={() => revertMovedFile(selectedItem, setFiles, files)}>{contextMenuBack}</div>
+                    <div className={styles.contextMenuItem} onClick={() => downloadFile(selectedItem)}>Скачать</div>
+                    <div className={styles.contextMenuItem} onClick={handleRenameInput}>Переименовать</div>
+                    {isFavorite ? null : <div className={styles.contextMenuItem} onClick={() => deleteFile(selectedItem, setFiles, files)}>Удалить</div>}
+                </div>
+            )}
+            <SearchInput title={`Поиск по ${labelTitle}`} />
+
+            {showRenameInput != null && (
                 <Input
                     value={showRenameInput}
                     onChange={(e) => setShowRenameInput(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                            renameFile(selectedFile, showRenameInput);
-                            setFiles(files.filter(file => file.file_id === selectedFile.file_id));
+                            renameFile(selectedItem, showRenameInput);
+                            setShowRenameInput(null)
                         }
                     }}
                 />
             )}
-
-            {showContextMenu && (
-                <div className={styles.contextMenu} onClick={handleCloseContextMenu} style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}>
-                    <div className={styles.contextMenuItem} onClick={() => revertMovedFile(selectedFile, setFiles, files)}>{contextMenuBack}</div>
-                    <div className={styles.contextMenuItem} onClick={() => downloadFile(selectedFile)}>Скачать</div>
-                    <div className={styles.contextMenuItem} onClick={handleRenameInput}>Переименовать</div>
-                    <div className={styles.contextMenuItem}>Поделиться</div>
-                    {isFavorite ? null : <div className={styles.contextMenuItem} onClick={() => deleteFile(selectedFile, setFiles, files)}>Удалить</div>}
-                </div>
-            )}
-
-            <SearchInput title={`Поиск по ${labelTitle}`} />
-
+            
             <div className={styles.files}>
                 {files.map((file) => (
                     <File
                         key={file.file_id}
-                        onContextMenu={(e) => handleContextMenu(e, file)}
+                        onContextMenu={(e) => handleContextMenuForItem(e, file)}
                         image={`../img/categories/${file.content_type}.png`}
-                        name={file.name.split('.')[0]}
-                        extension={file.name.split('.')[1]}
-                        size={`${Math.floor(file.size / 1000)} КБ`}
+                        name={file.file_name.split('.')[0]}
+                        extension={file.file_name.split('.')[1]}
+                        size={formatFileSize(file.file_size)}
                     />
                 ))}
             </div>
@@ -109,4 +106,4 @@ function MovedFiles({ url, title, titleIcon, labelTitle, background, contextMenu
     )
 }
 
-export default MovedFiles
+export default MovedItems;

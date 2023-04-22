@@ -21,4 +21,4 @@ function Input({title, placeholder, type, name, value, onChange, onKeyDown}) {
   )
 }
 
-export default Input
+export default Input;

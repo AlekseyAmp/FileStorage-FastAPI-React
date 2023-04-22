@@ -9,9 +9,10 @@ import '../../../assets/variables.scss';
 
 
 function SidebarRight() {
-  const username = Cookie.get('logged_in') === 'true' ? Cookie.get('email').slice(0, Cookie.get('email').indexOf('@')) : 'none'
-
+    
   const access_token = Cookie.get('access_token')
+
+  const [username, setUsername] = useState()
 
   const [countFiles, setCountFiles] = useState()
   const [sizeFiles, setSizeFiles] = useState()
@@ -20,6 +21,23 @@ function SidebarRight() {
   const [downloadToday, setDownloadToday] = useState()
   const [deletedToday, setDeletedToday] = useState()
 
+
+  useEffect(() => {
+    async function getUsername() {
+      try {
+        const response = await axios.get(`/users/me`, {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+        setUsername(response.data.username);
+      } catch (error) {
+        console.log(error.response.data.detail);
+      }
+    }
+    getUsername();
+  }, []);
+  
   useEffect(() => {
     async function getFilesInfo() {
       try {
@@ -61,7 +79,7 @@ function SidebarRight() {
       <div className={styles.user}>
         <div onClick={() => (window.location.href = '/')} className={styles.userInfo} href="#">
           <img src="../img/avatar.png" alt="avatar" />
-          <p className={`dark-text`}>{username}</p>
+          <p className="dark-text">{username}</p>
         </div>
         <div onClick={() => (window.location.href = '/')} className={styles.userNotifications} href="#">
           <img src="../img/sidebarRight/notification.png" alt="notification" />

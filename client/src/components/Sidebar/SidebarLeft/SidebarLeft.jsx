@@ -65,4 +65,4 @@ function SidebarLeft() {
   )
 }
 
-export default SidebarLeft
+export default SidebarLeft;
