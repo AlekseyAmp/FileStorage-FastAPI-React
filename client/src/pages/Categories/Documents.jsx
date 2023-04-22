@@ -1,11 +1,11 @@
 import React from 'react'
 
-import Category from '../../components/Category/Category'
+import Category from '../../components/DefaultCategory/DefaultCategory'
 
 function Documents() {
   return (
     <Category
-      url={'categories/documents'}
+      url={'categories/files/documents'}
       title={'Документы'}
       labelTitle={'документам'}
       background='rgb(220 227 245 / 60%)'
@@ -13,4 +13,4 @@ function Documents() {
   )
 }
 
-export default Documents
+export default Documents;

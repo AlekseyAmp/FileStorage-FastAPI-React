@@ -29,7 +29,6 @@ function Login() {
       Cookie.set('access_token', response.data.access_token);
       Cookie.set('refresh_token', response.data.refresh_token);
       Cookie.set('logged_in', true);
-      Cookie.set('email', email)
       navigate('/home')
     } catch (error) {
       console.log(error.response.data.detail);
@@ -51,6 +50,6 @@ function Login() {
       </div>
     </div>
   )
-};
+}
 
 export default Login;

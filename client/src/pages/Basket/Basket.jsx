@@ -1,11 +1,11 @@
 import React from "react";
 
-import MovedFiles from "../../components/MovedFiles/MovedFiles"
+import MovedItems from "../../components/MovedItems/MovedItems"
 
 function Basket() {
   return (
     <div>
-      <MovedFiles
+      <MovedItems
         url={'basket'}
         title={'Здесь хранятся ваши удалённые файлы'}
         titleIcon={<img src="img/categories/delete.png" alt="removed" />}

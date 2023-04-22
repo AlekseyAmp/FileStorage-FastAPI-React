@@ -1,11 +1,11 @@
 import React from 'react'
 
-import Category from '../../components/Category/Category'
+import Category from '../../components/DefaultCategory/DefaultCategory'
 
 function Images() {
   return (
     <Category
-    url={'categories/images'}
+    url={'categories/files/images'}
     title={'Изображения'}
     labelTitle = {'изображениям'}
      background='rgb(220 227 245 / 60%)'
@@ -13,4 +13,4 @@ function Images() {
   )
 }
 
-export default Images
+export default Images;

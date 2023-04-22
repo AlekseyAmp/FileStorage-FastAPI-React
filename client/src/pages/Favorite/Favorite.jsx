@@ -1,11 +1,11 @@
 import React from "react";
 
-import MovedFiles from "../../components/MovedFiles/MovedFiles"
+import MovedItems from "../../components/MovedItems/MovedItems"
 
 function Favorite() {
   return (
     <div>
-      <MovedFiles
+      <MovedItems
         url={'favorite'}
         title={'Здесь хранятся ваши любимые файлы'}
         titleIcon={<img src="img/categories/heart.png" alt="favorite" />}
