@@ -5,11 +5,32 @@ import os
 
 from models.category import Category
 from models.file import File
-from models.history import CategoryHistory
 from services.history_services import set_history_today
 from services.statistic_services import set_statistic_today
 from utils.file_utils import get_file
 from utils.category_utils import get_category
+
+
+async def get_custom_categories(user_id: str):
+    categories = []
+    async for category in Category.find({
+        "user_id": user_id,
+    }):
+        if category.name == "default_category":
+            continue
+
+        category_dict = {
+            "category_id": str(category.id),
+            "category_name": category.name,
+            "category_size": category.size,
+            "is_favorite": category.metadata["is_favorite"],
+            "is_basket": category.metadata["is_basket"],
+            "date_created": category.metadata["date_created"],
+            "time_created": category.metadata["time_created"]
+        }
+        categories.append(category_dict)
+
+    return categories[::-1]
 
 
 async def get_files_from_category(category_name: str, user_id: str):
@@ -21,8 +42,8 @@ async def get_files_from_category(category_name: str, user_id: str):
         file_dict = {
             "file_id": str(file.id),
             "user_id": file.user_id,
-            "name": file.name,
-            "size": file.size,
+            "file_name": file.name,
+            "file_size": file.size,
             "content_type": file.content_type,
             "category_name": file.category_name,
             "is_favorite": file.metadata["is_favorite"],
@@ -36,7 +57,6 @@ async def get_files_from_category(category_name: str, user_id: str):
 
 
 async def create_new_category(category_name: str, user_id: str):
-
     # Default categories(images, documents, music, videos) are abstract,
     # all files associated with them are in the DEFAULT_CATEGORY folder
     default_categories = ("images", "documents", "music", "videos")
@@ -87,14 +107,13 @@ async def create_new_category(category_name: str, user_id: str):
         "description": f"Категория {new_category.name} была создана",
         "time": datetime.now().strftime("%H:%M:%S")
     }
-    await set_history_today(CategoryHistory, history_dict, user_id)
+    await set_history_today(history_dict, user_id)
 
-    return {"category_id": new_category.id}
+    return {"category_name": new_category.name}
 
 
 async def rename_category(category_name: str, new_name: str, user_id: str):
-    default_categories = ("default_category", "images",
-                          "documents", "music", "videos")
+    default_categories = ("default_category", "images", "documents", "music", "videos")
 
     if category_name.lower() in default_categories:
         raise HTTPException(
@@ -110,8 +129,7 @@ async def rename_category(category_name: str, new_name: str, user_id: str):
 
     category = await get_category(category_name, user_id)
 
-    category_path = category.path
-    dir_path = os.path.dirname(category_path)
+    dir_path = os.path.dirname(category.path)
 
     new_category_path = os.path.join(dir_path, new_name)
 
@@ -133,27 +151,26 @@ async def rename_category(category_name: str, new_name: str, user_id: str):
         "time": datetime.now().strftime("%H:%M:%S")
     }
 
-    os.rename(category_path, new_category_path)
+    os.rename(category.path, new_category_path)
     await category.update({"$set": {"path": new_category_path}})
     await category.update({"$set": {"name": new_name}})
     await category.update({"$set": {"name_for_search": new_name.lower()}})
 
-    await set_history_today(CategoryHistory, history_dict, user_id)
+    await set_history_today(history_dict, user_id)
 
     return {"new_name": new_name}
 
 
 async def delete_category(category_name: str, user_id: str):
-    category = await get_category(category_name.lower(), user_id)
-
-    default_categories = ("default_category", "images",
-                          "documents", "music", "videos")
+    default_categories = ("default_category", "images", "documents", "music", "videos")
 
     if category_name.lower() in default_categories:
         raise HTTPException(
             status_code=403,
             detail="Невозможно удалить эту категорию, так как она установлена по умолчанию"
         )
+    
+    category = await get_category(category_name.lower(), user_id)
 
     files = await get_files_from_category(category_name, user_id)
     for file_dict in files:
@@ -172,7 +189,9 @@ async def delete_category(category_name: str, user_id: str):
     shutil.rmtree(category.path)
     await category.delete()
 
-    await set_history_today(CategoryHistory, history_dict, user_id)
+    await set_history_today(history_dict, user_id)
+
+    return {"status": "succes"}
 
 
 async def change_size_category(category_name: str, action: str, size: int, user_id: str):
@@ -182,4 +201,6 @@ async def change_size_category(category_name: str, action: str, size: int, user_
         await category.update({"$inc": {"size": size}})
 
     elif action == "delete":
-        await category.update({"$dec": {"size": size}})
+        await category.update({"$inc": {"size": -size}})
+
+    return {"status": "succes"}
