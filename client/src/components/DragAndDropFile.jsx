@@ -32,7 +32,7 @@ function DragAndDropFile() {
         });
         try {
             const response = await Promise.all(formDataArray.map((formData) => {
-                return axios.post('/files/upload/DEFAULT_CATEGORY', formData, {
+                return axios.post('/files/upload/default_category', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'Authorization': `Bearer ${access_token}`
