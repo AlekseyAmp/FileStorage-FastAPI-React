@@ -2,9 +2,9 @@ import React from 'react'
 
 import './Button.module.scss'
 
-function Button({title, marginTop}) {
+function Button({title, marginTop, onClick}) {
   return (
-    <div className='button-block' style={{ marginTop }}>
+    <div onClick={onClick} className='button-block' style={{ marginTop }}>
       <button>
         {title}
       </button>
@@ -12,4 +12,4 @@ function Button({title, marginTop}) {
   )
 }
 
-export default Button
+export default Button;
