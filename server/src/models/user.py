@@ -17,6 +17,7 @@ class Login(BaseModel):
 
 class User(Document):
     email: EmailStr
+    username: str
     password: str
     metadata: Dict[str, Any] = {}
 
