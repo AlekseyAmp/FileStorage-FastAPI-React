@@ -25,14 +25,26 @@ async function downloadFile(selectedFile) {
   }
 }
 
-async function renameFile(selectedFile, newName) {
+async function renameFile(selectedFile, newName, setFiles, files) {
   try {
-    const response = await axios.patch(`files/rename/${selectedFile.file_id}/${newName}`, newName, {
+    const fileExtension = selectedFile.file_name.split('.')[1]; 
+    const newFileName = `${newName}.${fileExtension}`; 
+
+    const response = await axios.patch(`files/rename/${selectedFile.file_id}/${newFileName}`, newFileName, {
       headers: {
         'Authorization': `Bearer ${access_token}`
       }
     });
     console.log(response.data)
+
+    const updatedFiles = files.map((file) => {
+      if (file.file_id === selectedFile.file_id) {
+        return { ...file, file_name: newFileName };
+      } else {
+        return file;
+      }
+    });
+    setFiles(updatedFiles);
   } catch (error) {
     console.log(error.response.data.detail);
   }
