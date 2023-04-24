@@ -8,7 +8,7 @@ async def get_files_info(user_id: str):
         "total_size": 0
     }
 
-    async for file in Category.find({
+    async for file in File.find({
         "user_id": user_id,
     }):
         files_info_dict["total_count"] += 1
