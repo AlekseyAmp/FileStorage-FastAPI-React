@@ -125,10 +125,10 @@ function Home() {
         <div className={styles.categories}>
           <div className={`title`}>Категории</div>
           <div className={styles.categoriesList}>
-            <Link to="/category/custom" className={styles.categoriesElem}>
+            <Link to="/categories/custom" className={styles.categoriesElem}>
               <div className={styles.categoriesElemTitle}>
                 <img src="img/categories/folder.png" alt="folder" />
-                <p className={`dark-text`}>Категории</p>
+                <p className={`dark-text`}>Мои категории</p>
               </div>
               <div className={styles.categoriesElemSpace}>
                 <p className={`small-text`}>{categoriesInfo["customCategories"][0]
@@ -137,7 +137,7 @@ function Home() {
               </div>
             </Link>
 
-            <Link to="/category/documents" className={styles.categoriesElem}>
+            <Link to="/categories/default/documents" className={styles.categoriesElem}>
               <div className={styles.categoriesElemTitle}>
                 <img src="img/categories/documents.png" alt="documents" />
                 <p className={`dark-text`}>Документы</p>
@@ -149,7 +149,7 @@ function Home() {
               </div>
             </Link>
 
-            <Link to="/category/images" className={styles.categoriesElem}>
+            <Link to="/categories/default/images" className={styles.categoriesElem}>
               <div className={styles.categoriesElemTitle}>
                 <img src="img/categories/images.png" alt="images" />
                 <p className={`dark-text`}>Картинки</p>
@@ -161,7 +161,7 @@ function Home() {
               </div>
             </Link>
 
-            <Link to="/category/music" className={styles.categoriesElem}>
+            <Link to="/categories/default/music" className={styles.categoriesElem}>
               <div className={styles.categoriesElemTitle}>
                 <img src="img/categories/music.png" alt="music" />
                 <p className={`dark-text`}>Музыка</p>
@@ -173,7 +173,7 @@ function Home() {
               </div>
             </Link>
 
-            <Link to="/category/videos" className={styles.categoriesElem}>
+            <Link to="/categories/default/videos" className={styles.categoriesElem}>
               <div className={styles.categoriesElemTitle}>
                 <img src="img/categories/videos.png" alt="video" />
                 <p className={`dark-text`}>Видео</p>
@@ -201,13 +201,15 @@ function Home() {
               </p>
             </div>
             {history.map((history_elem, i) => {
-              const name = history_elem.name
+              const name = history_elem.name;
               return (
                 <div className={styles.recentElem} key={i + 1}>
                   <div className={styles.recentElemTitle}>
-                    <p className={`dark-text`} onClick={handleNameClick}>
-                      {showFullName ? (
-                        `${name}`
+                    <p className={`dark-text`} onClick={() => handleNameClick(i)}>
+                    {showFullName[i] ? (
+                        <>
+                          {name}
+                        </>
                       ) : (
                         <>
                           {name.length > 10 ? (
