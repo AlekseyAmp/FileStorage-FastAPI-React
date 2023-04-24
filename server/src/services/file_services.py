@@ -1,4 +1,5 @@
 from fastapi import HTTPException, UploadFile
+from beanie import PydanticObjectId
 from fastapi.responses import FileResponse
 from datetime import datetime
 import urllib
@@ -7,14 +8,23 @@ import os
 from starlette.responses import StreamingResponse
 
 from models.file import File
+from models.user import User
 from services.history_services import set_history_today
 from services.statistic_services import set_statistic_today
 from services.category_services import create_new_category, change_size_category
 from utils.file_utils import get_file
-from utils.category_utils import get_category, set_file_category
+from utils.category_utils import set_file_category
 
 
 async def create_new_file(file: UploadFile, category_name: str, user_id: str):
+    user = await User.get(PydanticObjectId(user_id))
+
+    if user.metadata["storage_used"] >= user.metadata["max_storage"]:
+        raise HTTPException(
+            status_code=403,
+            detail="Место на диске переполнено"
+        )
+
     category_name = category_name.lower()
 
     # Default categories(images, documents, music, videos) are abstract,
@@ -29,7 +39,6 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
 
     directory = os.path.join("STORAGE", user_id, category_name)
     category_path = os.path.join(directory)
-
 
     if category_name == "default_category":
         if not os.path.isdir(category_path):
@@ -73,6 +82,9 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
     )
     await new_file.insert()
 
+    await user.update({"$inc":
+                      {f"metadata.storage_used": file.size}})
+
     if category_name not in default_categories:
         await change_size_category(category_name, "upload", file.size, user_id)
 
@@ -86,17 +98,9 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
         "time": datetime.now().strftime("%H:%M:%S")
     }
     await set_history_today(history_dict, user_id)
-
+    
     await set_statistic_today("upload", user_id)
-
     return {"file_id": new_file.id}
-
-
-async def read_file(file_id: str, user_id: str):
-    file = await get_file(file_id, user_id)
-
-    file_path = file.path
-    return FileResponse(file_path)
 
 
 async def download_file(file_id: str, user_id: str):
@@ -154,11 +158,15 @@ async def rename_file(file_id: str, new_name: str, user_id: str):
 
 
 async def delete_file(file_id: str, user_id: str):
+    user = await User.get(PydanticObjectId(user_id))
+
     default_categories = ("images", "documents", "music", "videos")
 
     file = await get_file(file_id, user_id)
 
-    if file.category_name in default_categories:
+    category_name = file.category_name
+
+    if category_name in default_categories:
         category_name = "default_category"
 
     if not file.metadata["is_basket"]:
@@ -179,6 +187,9 @@ async def delete_file(file_id: str, user_id: str):
 
     os.remove(file.path)
     await file.delete()
+
+    await user.update({"$inc":
+                      {f"metadata.storage_used": -file.size}})
 
     await change_size_category(category_name, "delete", file.size, user_id)
 
