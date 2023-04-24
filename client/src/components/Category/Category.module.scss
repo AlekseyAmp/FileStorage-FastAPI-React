@@ -1,0 +1,49 @@
+@import '../../assets/variables.scss';
+
+.category {
+    padding: 80px 50px;
+    background-color: $background_blue;
+    &Title {
+        gap: 15px;
+        display: flex;
+        align-items: center;
+
+        img {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    &Content {
+        position: relative;
+        margin-top: 50px;
+    }
+
+    .files {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap: 10px;
+        margin-top: 50px;
+    }
+
+    .contextMenu {
+        position: fixed;
+        background-color: $white;
+        border: 1px solid $light_gray;
+        border-radius: 4px;
+        padding: 8px;
+        box-shadow: 0 4px 8px $light_dark;
+        z-index: 1;
+        user-select: none;
+    }
+
+    .contextMenuItem {
+        padding: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+
+        &:hover {
+            background-color: $light_gray;
+        }
+    }
+}
