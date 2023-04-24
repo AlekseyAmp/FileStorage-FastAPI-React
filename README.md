@@ -2,6 +2,8 @@
 
 FileStorage is a web application for storing files, built with FastAPI (Python) for the API backend and ReactJS for the user interface. It uses MongoDB as the database and allows users to store files in different categories (folders). Users can create, rename, and delete their own custom categories, as well as upload, download, rename, and delete files. Additionally, users can move files to trash or favorites, and view their history of actions on the site. The project also features a sidebar that displays useful information and options for users.
 
+---
+
 ### Running the project 
 
 - git clone https://github.com/AlekseyAmp/FileStorage-FastAPI-React.git
@@ -32,6 +34,8 @@ FileStorage is a web application for storing files, built with FastAPI (Python) 
 - npm install dotenv
 - npm start
 
+---
+
 ### The stack
 
 - **Python** - FastAPI framework for API design
@@ -39,6 +43,8 @@ FileStorage is a web application for storing files, built with FastAPI (Python) 
 - **MongoDB** - Database
 - **Beanie** library to connect database and FastAPI
 - **File storage** - the local folder "STORAGE" which must be in the server/src directory
+
+---
 
 ### Project description
 
