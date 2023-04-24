@@ -1,5 +1,6 @@
 import Home from './pages/Home/Home';
 import CustomCategories from './pages/Categories/CustomCategories/CustomCategories';
+import Category from './components/Category/Category';
 import Documents from './pages/Categories/Documents';
 import Images from './pages/Categories/Images';
 import Music from './pages/Categories/Music';
@@ -21,25 +22,29 @@ const routes = [
         component: Home,
     },
     {
-        path: '/category/custom',
+        path: '/categories/custom',
         component: CustomCategories,
     },
     {
-        path: '/category/documents',
+        path: '/categories/default/documents',
         component: Documents,
     },
     {
-        path: '/category/images',
+        path: '/categories/default/images',
         component: Images,
     },
     {
-        path: '/category/music',
+        path: '/categories/default/:music',
         component: Music,
     },
     {
-        path: '/category/videos',
+        path: '/categories/default/videos',
         component: Videos,
     },
+    {
+        path: '/categories/custom/:category_name',
+        component: Category,
+    },  
     {
         path: '/favorite',
         component: Favorite,

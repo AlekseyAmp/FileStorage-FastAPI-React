@@ -9,7 +9,7 @@ import SidebarLayout from './components/Sidebar/SidebarLayout';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Main from './pages/Main/Main';
-
+import Category from './components/Category/Category';
 
 import AuthChecked from './components/AuthChecked';
 
@@ -20,7 +20,6 @@ function App() {
         <Route path="/login" element={<AuthChecked><Login /></AuthChecked>} />
         <Route path="/register" element={<AuthChecked><Register /></AuthChecked>} />
         <Route path="/" element={<AuthChecked><Main /></AuthChecked>} />
-
         {routes.map((route) => (
           <Route
             key={route.path}
