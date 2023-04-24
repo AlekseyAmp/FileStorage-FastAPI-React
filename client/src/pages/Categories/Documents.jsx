@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Category from '../../components/DefaultCategory/DefaultCategory'
+import Category from '../../components/Category/Category'
 
 function Documents() {
   return (
@@ -8,7 +8,6 @@ function Documents() {
       url={'categories/files/documents'}
       title={'Документы'}
       labelTitle={'документам'}
-      background='rgb(220 227 245 / 60%)'
     />
   )
 }

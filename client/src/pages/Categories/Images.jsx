@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Category from '../../components/DefaultCategory/DefaultCategory'
+import Category from '../../components/Category/Category'
 
 function Images() {
   return (
@@ -8,7 +8,6 @@ function Images() {
     url={'categories/files/images'}
     title={'Изображения'}
     labelTitle = {'изображениям'}
-     background='rgb(220 227 245 / 60%)'
      />
   )
 }
