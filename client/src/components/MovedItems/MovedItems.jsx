@@ -26,6 +26,10 @@ function MovedItems({ url, title, titleIcon, labelTitle, background, contextMenu
     };
 
     const [files, setFiles] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const filteredFiles = files.filter((file) =>
+    file.file_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const [showRenameInput, setShowRenameInput] = useState(null);
     
@@ -38,6 +42,10 @@ function MovedItems({ url, title, titleIcon, labelTitle, background, contextMenu
         handleContextMenuForItem,
         handleCloseContextMenu,
       } = useContextMenu();
+    
+    function handleSearch(query) {
+        setSearchQuery(query);
+      };
 
     function handleRenameInput(e) {
         e.preventDefault();
@@ -75,7 +83,7 @@ function MovedItems({ url, title, titleIcon, labelTitle, background, contextMenu
                     {isFavorite ? null : <div className={styles.contextMenuItem} onClick={() => deleteFile(selectedItem, setFiles, files)}>Удалить</div>}
                 </div>
             )}
-            <SearchInput title={`Поиск по ${labelTitle}`} />
+            <SearchInput title={`Поиск по ${labelTitle}`} onSearch={handleSearch} />
 
             {showRenameInput != null && (
                 <Input
@@ -83,7 +91,7 @@ function MovedItems({ url, title, titleIcon, labelTitle, background, contextMenu
                     onChange={(e) => setShowRenameInput(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                            renameFile(selectedItem, showRenameInput);
+                            renameFile(selectedItem, showRenameInput, setFiles, files);
                             setShowRenameInput(null)
                         }
                     }}
@@ -91,11 +99,11 @@ function MovedItems({ url, title, titleIcon, labelTitle, background, contextMenu
             )}
             
             <div className={styles.files}>
-                {files.map((file) => (
+                {filteredFiles.map((file) => (
                     <File
                         key={file.file_id}
                         onContextMenu={(e) => handleContextMenuForItem(e, file)}
-                        image={`../img/categories/${file.content_type}.png`}
+                        image={`../img/categories/${file.file_content_type}.png`}
                         name={file.file_name.split('.')[0]}
                         extension={file.file_name.split('.')[1]}
                         size={formatFileSize(file.file_size)}
