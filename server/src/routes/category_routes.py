@@ -22,6 +22,11 @@ async def create_new_category(category_name: str, user_id: get_user_id = Depends
     return await categ_s.create_new_category(category_name, user_id)
 
 
+@router.get("/categories/download/{category_name}")
+async def download_category(category_name: str, user_id: get_user_id = Depends()):
+    return await categ_s.download_category(category_name, user_id)
+
+
 @router.patch("/categories/rename/{category_name}/{new_name}")
 async def rename_category(category_name: str, new_name: str, user_id: get_user_id = Depends()):
     return await categ_s.rename_category(category_name, new_name, user_id)
