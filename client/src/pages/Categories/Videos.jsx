@@ -5,9 +5,8 @@ import Category from '../../components/Category/Category'
 function Videos() {
   return (
     <Category
-    url={'categories/files/videos'}
     title={'Видео'}
-    labelTitle = {'видео'}
+    url={'categories/files/videos'}
     />
   )
 }

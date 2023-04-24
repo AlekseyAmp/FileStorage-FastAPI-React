@@ -5,9 +5,8 @@ import Category from '../../components/Category/Category'
 function Music() {
   return (
     <Category
-     url={'categories/files/music'}
      title={'Музыка'}
-     labelTitle = {'музыке'}
+     url={'categories/files/music'}
      />
   )
 }
