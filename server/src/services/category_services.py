@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from datetime import datetime
 import shutil
+import zipfile
 import os
 
 from models.category import Category
@@ -23,8 +24,6 @@ async def get_custom_categories(user_id: str):
             "category_id": str(category.id),
             "category_name": category.name,
             "category_size": category.size,
-            "is_favorite": category.metadata["is_favorite"],
-            "is_basket": category.metadata["is_basket"],
             "date_created": category.metadata["date_created"],
             "time_created": category.metadata["time_created"]
         }
@@ -44,7 +43,7 @@ async def get_files_from_category(category_name: str, user_id: str):
             "user_id": file.user_id,
             "file_name": file.name,
             "file_size": file.size,
-            "content_type": file.content_type,
+            "file_content_type": file.content_type,
             "category_name": file.category_name,
             "is_favorite": file.metadata["is_favorite"],
             "is_basket": file.metadata["is_basket"],
@@ -92,8 +91,6 @@ async def create_new_category(category_name: str, user_id: str):
         size=0,
         path=category_path,
         metadata={
-            "is_favorite": False,
-            "is_basket": False,
             "date_created": datetime.now().strftime("%d-%m-%Y"),
             "time_created": datetime.now().strftime("%H:%M:%S")
         }
@@ -113,7 +110,8 @@ async def create_new_category(category_name: str, user_id: str):
 
 
 async def rename_category(category_name: str, new_name: str, user_id: str):
-    default_categories = ("default_category", "images", "documents", "music", "videos")
+    default_categories = ("default_category", "images",
+                          "documents", "music", "videos")
 
     if category_name.lower() in default_categories:
         raise HTTPException(
@@ -162,14 +160,15 @@ async def rename_category(category_name: str, new_name: str, user_id: str):
 
 
 async def delete_category(category_name: str, user_id: str):
-    default_categories = ("default_category", "images", "documents", "music", "videos")
+    default_categories = ("default_category", "images",
+                          "documents", "music", "videos")
 
     if category_name.lower() in default_categories:
         raise HTTPException(
             status_code=403,
             detail="Невозможно удалить эту категорию, так как она установлена по умолчанию"
         )
-    
+
     category = await get_category(category_name.lower(), user_id)
 
     files = await get_files_from_category(category_name, user_id)
