@@ -8,8 +8,8 @@ FileStorage is a web application for storing files, built with FastAPI (Python) 
 
 - git clone https://github.com/AlekseyAmp/FileStorage-FastAPI-React.git
 - make .env file 
-    1. cd server/src 
-    2. copy this and paste it into the .env
+    - cd server/src 
+    - copy this and paste it into the .env
     ```.env
     DATABASE_URL=mongodb://localhost:27017/file-storage
     DATABASE_NAME=file-storage
@@ -25,6 +25,13 @@ FileStorage is a web application for storing files, built with FastAPI (Python) 
     ```
 
 - create venv in server/src
+- activate venv
+  - on Windows ```venv
+               venv/scripts/activate
+               ```
+  - on Linux ```venv
+             venv/bin/activate
+             ```
 - pip install -r requirements.txt
 - uvicorn main:app --reload
 
