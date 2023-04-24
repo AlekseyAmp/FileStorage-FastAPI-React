@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContextMenu } from '../../../utils/contextMenu'
 import {
   createCategory,
+  deleteCategory,
   renameCategory,
 } from '../../../utils/categoryActions';
 import formatFileSize from '../../../utils/formatFile'
@@ -20,7 +21,13 @@ import SearchInput from '../../../components/SearchInput/SearchInput'
 import Button from '../../../components/Button/Button'
 
 function CustomCategories() {
+
   const [categories, setCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const filterCategories = categories.filter((category) =>
+    category.category_name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const navigate = useNavigate();
 
   const [showRenameInput, setShowRenameInput] = useState(null);
@@ -35,6 +42,10 @@ function CustomCategories() {
     handleContextMenuForItem,
     handleCloseContextMenu,
   } = useContextMenu();
+
+  function handleSearch(query) {
+    setSearchQuery(query);
+  };
 
   function handleNewCategoryInput(e) {
     e.preventDefault();
@@ -69,7 +80,7 @@ function CustomCategories() {
       </div>
 
       <div className={styles.customCategoryHelp}>
-        <SearchInput title={`Поиск по своим категориям`} />
+        <SearchInput title="Поиск по категориям" onSearch={handleSearch} />
         <Button onClick={handleNewCategoryInput} title={`Создать категорию`} marginTop={`40px`} />
       </div>
 
@@ -80,7 +91,8 @@ function CustomCategories() {
           onChange={(e) => setShowNewCategoryInput(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              createCategory(showNewCategoryInput);
+              createCategory(showNewCategoryInput, setCategories, categories)
+              setShowNewCategoryInput(null)
             }
           }}
         />
@@ -91,9 +103,8 @@ function CustomCategories() {
         {showContextMenuForItem && (
           <div className={styles.contextMenu} onClick={handleCloseContextMenu} style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}>
             <div className={styles.contextMenuItem}>Скачать</div>
-            <div className={styles.contextMenuItem}>Добавить избранное</div>
             <div className={styles.contextMenuItem} onClick={handleRenameInput}>Переименовать</div>
-            <div className={styles.contextMenuItem}>В коризну</div>
+            <div className={styles.contextMenuItem} onClick={() => deleteCategory(selectedItem, setCategories, categories)}>Удалить</div>
           </div>
         )}
 
@@ -103,22 +114,20 @@ function CustomCategories() {
             onChange={(e) => setShowRenameInput(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                renameCategory(selectedItem.category_name, showRenameInput);
+                renameCategory(selectedItem, showRenameInput, setCategories, categories);
+                setShowRenameInput(null)
               }
             }}
           />
         )}
 
         <div className={styles.customCategories}>
-          {categories.map((category) => {
-            if (category.is_basket || category.is_favorite) {
-              return null;
-            }
+          {filterCategories.map((category) => {
             return (
               <CustomCategory
                 key={category.category_id}
                 onContextMenu={(e) => handleContextMenuForItem(e, category)}
-                onDoubleClick={() => navigate(`/category/custom/${category.category_name}`)}
+                onDoubleClick={() => navigate(`/categories/custom/${category.category_name}`)}
                 image={`../img/categories/folder.png`}
                 name={category.category_name}
                 size={formatFileSize(category.category_size)}
