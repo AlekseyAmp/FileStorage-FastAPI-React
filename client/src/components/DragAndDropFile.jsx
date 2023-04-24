@@ -5,7 +5,7 @@ import Cookie from 'js-cookie'
 
 import '../assets/variables.scss'
 
-function DragAndDropFile() {
+function DragAndDropFile({ category_name = 'default_category' }) {
     const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef(null);
     const access_token = Cookie.get('access_token');
@@ -32,7 +32,7 @@ function DragAndDropFile() {
         });
         try {
             const response = await Promise.all(formDataArray.map((formData) => {
-                return axios.post('/files/upload/default_category', formData, {
+                return axios.post(`/files/upload/${category_name}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'Authorization': `Bearer ${access_token}`
