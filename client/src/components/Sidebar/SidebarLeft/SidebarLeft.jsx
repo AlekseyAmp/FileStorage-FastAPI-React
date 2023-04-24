@@ -17,7 +17,7 @@ function SidebarLeft() {
   return (
     <div className={styles.sidebarLeft}>
       <Link to='/home' className={styles.logo}>
-        <img src="../img/sidebarLeft/logo.png" alt="Logo" />
+        <img src="../../img/sidebarLeft/logo.png" alt="Logo" />
         <h3 className={`title`}>CloudBox</h3>
       </Link>
 
@@ -25,23 +25,23 @@ function SidebarLeft() {
         <p className={`dark-text`}>
           Загрузить <br /> файл
         </p>
-        <img src="../img/sidebarLeft/add.png" alt="Upload" />
+        <img src="../../img/sidebarLeft/add.png" alt="Upload" />
       </div>
 
       <div className={styles.menu}>
         <ul>
           <li>
-            <img src="../img/sidebarLeft/favorite.png" alt="favorite" />
+            <img src="../../img/sidebarLeft/favorite.png" alt="favorite" />
             <Link to='/favorite' className={`link-text`}>Избранное</Link>
           </li>
 
           <li>
-            <img src="../img/sidebarLeft/history.png" alt="history" />
+            <img src="../../img/sidebarLeft/history.png" alt="history" />
             <Link to='/history' className={`link-text`}>История</Link>
           </li>
 
           <li>
-            <img src="../img/sidebarLeft/trash.png" alt="basket" />
+            <img src="../../img/sidebarLeft/trash.png" alt="basket" />
             <Link to='/basket' className={`link-text`}>Корзина</Link>
           </li>
         </ul>
@@ -50,12 +50,12 @@ function SidebarLeft() {
       <div className={styles.menu}>
         <ul>
           <li>
-            <img src="../img/sidebarLeft/settings.png" alt="settings" />
+            <img src="../../img/sidebarLeft/settings.png" alt="settings" />
             <a className={`link-text`} href="">Настройки</a>
           </li>
 
           <li>
-            <img src="../img/sidebarLeft/logout.png" alt="logout" />
+            <img src="../../img/sidebarLeft/logout.png" alt="logout" />
             <Logout />
           </li>
         </ul>
