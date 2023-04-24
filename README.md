@@ -10,7 +10,10 @@ FileStorage is a web application for storing files, built with FastAPI (Python) 
 - make .env file 
     - cd server/src 
     - copy this and paste it into the .env
-    
+
+
+
+
     ```.env
     DATABASE_URL=mongodb://localhost:27017/file-storage
     DATABASE_NAME=file-storage
