@@ -31,7 +31,7 @@ FileStorage is a web application for storing files, built with FastAPI (Python) 
   - on Windows ```
                venv/scripts/activate
                ```
-  - on Linux ```venv
+  - on Linux ```
              venv/bin/activate
              ```
 - pip install -r requirements.txt
