@@ -9,6 +9,7 @@ FileStorage is a web application for storing files, built with FastAPI (Python) 
 - git clone https://github.com/AlekseyAmp/FileStorage-FastAPI-React.git
 - make .env file 
     - cd server/src 
+    - nano .env
     - copy this and paste it into the .env
     
     ```.env
@@ -25,7 +26,7 @@ FileStorage is a web application for storing files, built with FastAPI (Python) 
     ACCESS_TOKEN_EXPIRES_IN=60
     ```
 
-- create venv in server/src
+- python -m venv venv
 - activate venv
   - on Windows ```venv
                venv/scripts/activate
@@ -77,4 +78,4 @@ Files are stored in categories (folders), there are 4 default categories (docume
 - Creating, deleting, (in the future - downloading) categories
 - Upload, download, delete, rename, move to favorites or trash, move from favorites or trash
 
-**On** the right side of the page there will always be a sidebar that shows your profile (nickname and notifications), today's statistics (how many downloads, deleted files) and disk space used
+**On** the right side of the page there will always be a sidebar that shows your profile (nickname and notifications), today's statistics (how many uploads, downloads, deleted files) and disk space used
