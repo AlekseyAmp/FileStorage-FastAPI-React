@@ -15,7 +15,7 @@ function History() {
   useEffect(() => {
     async function getFilesHistory() {
       try {
-        const response = await axios.get(`/history/all`, {
+        const response = await axios.get(`/history`, {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },

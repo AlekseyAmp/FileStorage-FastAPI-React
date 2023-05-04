@@ -30,31 +30,31 @@ function Home() {
     async function getCategoriesInfo() {
       try {
 
-        const customCategoriesResponse = await axios.get('/info/categories', {
+        const customCategoriesResponse = await axios.get('/categories/info', {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
         });
 
-        const documentsResponse = await axios.get('/info/categories/documents', {
+        const documentsResponse = await axios.get('/files/info/documents', {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
         });
 
-        const imagesResponse = await axios.get('/info/categories/images', {
+        const imagesResponse = await axios.get('/files/info/images', {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
         });
 
-        const musicResponse = await axios.get('/info/categories/music', {
+        const musicResponse = await axios.get('/files/info/music', {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
         });
 
-        const videosResponse = await axios.get('/info/categories/videos', {
+        const videosResponse = await axios.get('/files/info/videos', {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
@@ -87,7 +87,7 @@ function Home() {
   useEffect(() => {
     async function getLastFiveHistory() {
       try {
-        const response = await axios.get(`/history/last_five`, {
+        const response = await axios.get(`/history/recent`, {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },

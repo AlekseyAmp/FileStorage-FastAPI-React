@@ -1,0 +1,47 @@
+@import '../../assets/variables.scss';
+
+.profile {
+    padding: 80px 50px;
+    background-color: $cloud_blue;
+
+    &Content {
+        position: relative;
+        margin-top: 50px;
+    }
+
+    .userInfo {
+        display: flex;
+
+        &Avatar {
+            img {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        &Change {
+            margin-left: 20px;
+            margin-top: 20px;
+            &Elem {
+                display: flex;
+                gap: 15px;
+                align-items: center;
+                .changeButton {
+                    font-size: 16px;
+                    cursor: pointer;
+                }
+            }
+            
+        }
+    }
+
+    .statistic {
+        margin-top: 50px;
+
+        &Data {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+    }
+}
