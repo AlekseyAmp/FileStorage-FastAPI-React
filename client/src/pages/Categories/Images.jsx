@@ -6,7 +6,7 @@ function Images() {
   return (
     <Category
     title={'Изображения'}
-    url={'categories/files/images'}
+    url={'files/images'}
      />
   )
 }

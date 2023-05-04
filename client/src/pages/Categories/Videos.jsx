@@ -6,7 +6,7 @@ function Videos() {
   return (
     <Category
     title={'Видео'}
-    url={'categories/files/videos'}
+    url={'files/videos'}
     />
   )
 }

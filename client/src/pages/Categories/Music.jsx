@@ -6,7 +6,7 @@ function Music() {
   return (
     <Category
      title={'Музыка'}
-     url={'categories/files/music'}
+     url={'files/music'}
      />
   )
 }

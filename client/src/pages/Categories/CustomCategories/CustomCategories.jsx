@@ -91,7 +91,7 @@ function CustomCategories() {
           onChange={(e) => setShowNewCategoryInput(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              createCategory(showNewCategoryInput, setCategories, categories)
+              createCategory(showNewCategoryInput, setCategories, categories, access_token)
               setShowNewCategoryInput(null)
             }
           }}
@@ -104,7 +104,7 @@ function CustomCategories() {
           <div className={styles.contextMenu} onClick={handleCloseContextMenu} style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}>
             <div className={styles.contextMenuItem}>Скачать</div>
             <div className={styles.contextMenuItem} onClick={handleRenameInput}>Переименовать</div>
-            <div className={styles.contextMenuItem} onClick={() => deleteCategory(selectedItem, setCategories, categories)}>Удалить</div>
+            <div className={styles.contextMenuItem} onClick={() => deleteCategory(selectedItem, setCategories, categories, access_token)}>Удалить</div>
           </div>
         )}
 
@@ -114,7 +114,7 @@ function CustomCategories() {
             onChange={(e) => setShowRenameInput(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                renameCategory(selectedItem, showRenameInput, setCategories, categories);
+                renameCategory(selectedItem, showRenameInput, setCategories, categories, access_token);
                 setShowRenameInput(null)
               }
             }}
