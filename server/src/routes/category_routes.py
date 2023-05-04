@@ -8,13 +8,14 @@ router = APIRouter()
 
 
 @router.get("/categories")
-async def get_custom_categories(user_id: get_user_id = Depends()):
+async def get_all_custom_categories(user_id: get_user_id = Depends()):
     return await categ_s.get_custom_categories(user_id)
 
 
-@router.get("/categories/files/{category_name}")
-async def get_files_from_category(category_name: str, user_id: get_user_id = Depends()):
-    return await categ_s.get_files_from_category(category_name, user_id)
+# Categories are not included by default
+@router.get("/categories/info")
+async def get_all_custom_categories_info(user_id: get_user_id = Depends()):
+    return await categ_s.get_custom_categories_info(user_id)
 
 
 @router.post("/categories/create/{category_name}")
