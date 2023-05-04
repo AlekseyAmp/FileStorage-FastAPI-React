@@ -6,10 +6,17 @@ FileStorage is a web application for storing files, built with FastAPI (Python) 
 
 ### Running the project 
 
-- git clone https://github.com/AlekseyAmp/FileStorage-FastAPI-React.git
+  ```
+  git clone https://github.com/AlekseyAmp/FileStorage-FastAPI-React.git
+  ```
+
+- make STORAGE directory (Files and categories will be stored there)
+  - cd server/src
+  - create folder STORAGE 
+
 - make .env file 
     - cd server/src 
-    - nano .env
+    - create .env
     - copy this and paste it into the .env
     
     ```.env
