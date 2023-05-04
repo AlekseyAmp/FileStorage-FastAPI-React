@@ -1,4 +1,5 @@
 import Home from './pages/Home/Home';
+import Profile from './pages/Profile/Profile';
 import CustomCategories from './pages/Categories/CustomCategories/CustomCategories';
 import Category from './components/Category/Category';
 import Documents from './pages/Categories/Documents';
@@ -20,6 +21,10 @@ const routes = [
     {
         path: '/home',
         component: Home,
+    },
+    {
+        path: '/profile',
+        component: Profile,
     },
     {
         path: '/categories/custom',
