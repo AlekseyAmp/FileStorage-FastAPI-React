@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'
 
 import Cookie from 'js-cookie'
 import axios from '../../../utils/axios';
@@ -9,7 +10,6 @@ import '../../../assets/variables.scss';
 
 
 function SidebarRight() {
-    
   const access_token = Cookie.get('access_token')
 
   const [username, setUsername] = useState()
@@ -25,7 +25,7 @@ function SidebarRight() {
   useEffect(() => {
     async function getUsername() {
       try {
-        const response = await axios.get(`/users/me`, {
+        const response = await axios.get(`/users/info`, {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
@@ -41,7 +41,7 @@ function SidebarRight() {
   useEffect(() => {
     async function getFilesInfo() {
       try {
-        const response = await axios.get(`/info/files`, {
+        const response = await axios.get(`/files/info/total`, {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
@@ -77,10 +77,10 @@ function SidebarRight() {
   return (
     <div className={styles.sidebarRight}>
       <div className={styles.user}>
-        <div onClick={() => (window.location.href = '/')} className={styles.userInfo} href="#">
+        <Link to='/profile' className={styles.userInfo}>
           <img src="../../img/avatar.png" alt="avatar" />
           <p className="dark-text">{username}</p>
-        </div>
+        </Link>
         <div onClick={() => (window.location.href = '/')} className={styles.userNotifications} href="#">
           <img src="../../img/sidebarRight/notification.png" alt="notification" />
         </div>

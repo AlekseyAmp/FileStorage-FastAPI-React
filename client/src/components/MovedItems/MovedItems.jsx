@@ -77,10 +77,10 @@ function MovedItems({ url, title, titleIcon, labelTitle, background, contextMenu
 
             {showContextMenuForItem && (
                 <div className={styles.contextMenu} onClick={handleCloseContextMenu} style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}>
-                    <div className={styles.contextMenuItem} onClick={() => revertMovedFile(selectedItem, setFiles, files)}>{contextMenuBack}</div>
-                    <div className={styles.contextMenuItem} onClick={() => downloadFile(selectedItem)}>Скачать</div>
+                    <div className={styles.contextMenuItem} onClick={() => revertMovedFile(selectedItem, setFiles, files, access_token)}>{contextMenuBack}</div>
+                    <div className={styles.contextMenuItem} onClick={() => downloadFile(selectedItem, access_token)}>Скачать</div>
                     <div className={styles.contextMenuItem} onClick={handleRenameInput}>Переименовать</div>
-                    {isFavorite ? null : <div className={styles.contextMenuItem} onClick={() => deleteFile(selectedItem, setFiles, files)}>Удалить</div>}
+                    {isFavorite ? null : <div className={styles.contextMenuItem} onClick={() => deleteFile(selectedItem, setFiles, files, access_token)}>Удалить</div>}
                 </div>
             )}
             <SearchInput title={`Поиск по ${labelTitle}`} onSearch={handleSearch} />
@@ -91,7 +91,7 @@ function MovedItems({ url, title, titleIcon, labelTitle, background, contextMenu
                     onChange={(e) => setShowRenameInput(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                            renameFile(selectedItem, showRenameInput, setFiles, files);
+                            renameFile(selectedItem, showRenameInput, setFiles, files, access_token);
                             setShowRenameInput(null)
                         }
                     }}

@@ -5,8 +5,8 @@ import { useContextMenu } from '../../utils/contextMenu'
 import {
   downloadFile,
   renameFile,
-  addToBasket,
-  addToFavorite
+  addToBasketFile,
+  addToFavoriteFile
 } from '../../utils/fileActions';
 import formatFileSize from '../../utils/formatFile'
 
@@ -56,7 +56,7 @@ function Category({ title, url }) {
       try {
         let response;
         if (category_name) {
-          response = await axios.get(`/categories/files/${category_name}`, {
+          response = await axios.get(`/files/${category_name}`, {
             headers: {
               Authorization: `Bearer ${access_token}`,
             },
@@ -89,10 +89,10 @@ function Category({ title, url }) {
 
           {showContextMenuForItem && (
             <div className={styles.contextMenu} onClick={handleCloseContextMenu} style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}>
-              <div className={styles.contextMenuItem} onClick={() => downloadFile(selectedItem)}>Скачать</div>
-              <div className={styles.contextMenuItem} onClick={() => addToFavorite(selectedItem, setFiles, files)}>Добавить избранное</div>
+              <div className={styles.contextMenuItem} onClick={() => downloadFile(selectedItem, access_token)}>Скачать</div>
+              <div className={styles.contextMenuItem} onClick={() => addToBasketFile(selectedItem, setFiles, files, access_token)}>Добавить избранное</div>
               <div className={styles.contextMenuItem} onClick={handleRenameInput}>Переименовать</div>
-              <div className={styles.contextMenuItem} onClick={() => addToBasket(selectedItem, setFiles, files)}>В коризну</div>
+              <div className={styles.contextMenuItem} onClick={() => addToFavoriteFile(selectedItem, setFiles, files, access_token)}>В коризну</div>
             </div>
           )}
 
@@ -105,7 +105,7 @@ function Category({ title, url }) {
               onChange={(e) => setShowRenameInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  renameFile(selectedItem, showRenameInput, setFiles, files);
+                  renameFile(selectedItem, showRenameInput, setFiles, files, access_token);
                   setShowRenameInput(null)
                 }
               }}

@@ -51,7 +51,7 @@ function SidebarLeft() {
         <ul>
           <li>
             <img src="../../img/sidebarLeft/settings.png" alt="settings" />
-            <a className={`link-text`} href="">Настройки</a>
+            <Link to='/profile' className={`link-text`}>Настройки</Link>
           </li>
 
           <li>
