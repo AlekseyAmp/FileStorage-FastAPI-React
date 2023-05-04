@@ -7,16 +7,17 @@ import os
 from models.category import Category
 from models.file import File
 from services.history_services import set_history_today
-from services.statistic_services import set_statistic_today
 from utils.file_utils import get_file
 from utils.category_utils import get_category
 
 
 async def get_custom_categories(user_id: str):
     categories = []
+
     async for category in Category.find({
         "user_id": user_id,
     }):
+        # Пропуск категории по умолчанию
         if category.name == "default_category":
             continue
 
@@ -34,6 +35,7 @@ async def get_custom_categories(user_id: str):
 
 async def get_files_from_category(category_name: str, user_id: str):
     files = []
+
     async for file in File.find({
         "user_id": user_id,
         "category_name": category_name.lower()
@@ -55,9 +57,31 @@ async def get_files_from_category(category_name: str, user_id: str):
     return files[::-1]
 
 
+async def get_custom_categories_info(user_id: str):
+    category_info_dict = {
+        "total_count": 0,
+        "total_size": 0
+    }
+
+    async for category in Category.find({
+        "user_id": user_id,
+    }):
+        # Пропуск категории по умолчанию
+        if category.name == "default_category":
+            continue
+
+        category_info_dict["total_count"] += 1
+        category_info_dict["total_size"] += category.size
+
+    return category_info_dict
+
+
 async def create_new_category(category_name: str, user_id: str):
-    # Default categories(images, documents, music, videos) are abstract,
-    # all files associated with them are in the DEFAULT_CATEGORY folder
+    """
+    Default categories(images, documents, music, videos) are abstract,
+    All files associated with them are in the DEFAULT_CATEGORY folder
+    """
+
     default_categories = ("images", "documents", "music", "videos")
 
     if category_name.lower() in default_categories:
