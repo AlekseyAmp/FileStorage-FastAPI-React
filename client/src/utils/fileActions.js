@@ -1,9 +1,6 @@
 import axios from '../utils/axios';
-import Cookie from 'js-cookie';
 
-const access_token = Cookie.get('access_token');
-
-async function downloadFile(selectedFile) {
+async function downloadFile(selectedFile, access_token) {
   try {
     const response = await axios.get(`files/download/${selectedFile.file_id}`, {
       headers: {
@@ -25,7 +22,7 @@ async function downloadFile(selectedFile) {
   }
 }
 
-async function renameFile(selectedFile, newName, setFiles, files) {
+async function renameFile(selectedFile, newName, setFiles, files, access_token) {
   try {
     const fileExtension = selectedFile.file_name.split('.')[1]; 
     const newFileName = `${newName}.${fileExtension}`; 
@@ -50,7 +47,7 @@ async function renameFile(selectedFile, newName, setFiles, files) {
   }
 }
 
-async function deleteFile(selectedFile, setFiles, files) {
+async function deleteFile(selectedFile, setFiles, files, access_token) {
   try {
     const response = await axios.delete(`files/delete/${selectedFile.file_id}`, {
       headers: {
@@ -64,9 +61,9 @@ async function deleteFile(selectedFile, setFiles, files) {
   }
 }
 
-async function addToBasket(selectedFile, setFiles, files) {
+async function addToBasketFile(selectedFile, setFiles, files, access_token) {
   try {
-    const response = await axios.patch(`basket/add/file/${selectedFile.file_id}`, {}, {
+    const response = await axios.patch(`files/to_basket/${selectedFile.file_id}`, {}, {
       headers: {
         'Authorization': `Bearer ${access_token}`
       }
@@ -78,9 +75,9 @@ async function addToBasket(selectedFile, setFiles, files) {
   }
 }
 
-async function addToFavorite(selectedFile, setFiles, files) {
+async function addToFavoriteFile(selectedFile, setFiles, files, access_token) {
   try {
-    const response = await axios.patch(`favorite/add/file/${selectedFile.file_id}`, {}, {
+    const response = await axios.patch(`files/to_favorite/${selectedFile.file_id}`, {}, {
       headers: {
         'Authorization': `Bearer ${access_token}`
       }
@@ -92,9 +89,9 @@ async function addToFavorite(selectedFile, setFiles, files) {
   }
 }
 
-async function revertMovedFile(selectedFile, setFiles, files) {
+async function revertMovedFile(selectedFile, setFiles, files, access_token) {
   try {
-    const response = await axios.patch(`revert/file/${selectedFile.file_id}`, {}, {
+    const response = await axios.patch(`files/revert/${selectedFile.file_id}`, {}, {
       headers: {
         'Authorization': `Bearer ${access_token}`
       }
@@ -106,4 +103,4 @@ async function revertMovedFile(selectedFile, setFiles, files) {
   }
 }
 
-export { downloadFile, deleteFile, renameFile, addToBasket, addToFavorite, revertMovedFile };
+export { downloadFile, deleteFile, renameFile, addToBasketFile, addToFavoriteFile, revertMovedFile };

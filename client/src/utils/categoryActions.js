@@ -1,9 +1,6 @@
 import axios from '../utils/axios';
-import Cookie from 'js-cookie';
 
-const access_token = Cookie.get('access_token');
-
-async function createCategory(categoryName, setCategories, categories) {
+async function createCategory(categoryName, setCategories, categories, access_token) {
   try {
     const response = await axios.post(`categories/create/${categoryName}`, categoryName, {
       headers: {
@@ -24,7 +21,7 @@ async function createCategory(categoryName, setCategories, categories) {
   }
 }
 
-async function renameCategory(selectedCategory, newName, setCategories, categories) {
+async function renameCategory(selectedCategory, newName, setCategories, categories, access_token) {
   try {
     const response = await axios.patch(`categories/rename/${selectedCategory.category_name}/${newName}`, newName, {
       headers: {
@@ -45,7 +42,7 @@ async function renameCategory(selectedCategory, newName, setCategories, categori
   }
 }
 
-async function deleteCategory(selectedCategory, setCategories, categories) {
+async function deleteCategory(selectedCategory, setCategories, categories, access_token) {
   try {
     const response = await axios.delete(`categories/delete/${selectedCategory.category_name}`, {
       headers: {
