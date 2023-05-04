@@ -1,10 +1,26 @@
 from datetime import datetime
 
-from models.file import File
 from models.statistic import TodayStatistic
 
 
-async def get_statistic_today(user_id: str):
+async def get_all_statistic(user_id: str):
+    statistic_dict = {
+        "upload": 0,
+        "download": 0,
+        "deleted": 0
+    }
+
+    async for statistic_elem in TodayStatistic.find({
+        "user_id": user_id
+    }):
+        statistic_dict["upload"] += statistic_elem.actions.get("upload", 0)
+        statistic_dict["download"] += statistic_elem.actions.get("download", 0)
+        statistic_dict["deleted"] += statistic_elem.actions.get("deleted", 0)
+
+    return statistic_dict
+
+
+async def get_today_statistic(user_id: str):
     statistic_dict = {
         "upload": 0,
         "download": 0,
