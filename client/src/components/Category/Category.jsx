@@ -90,9 +90,9 @@ function Category({ title, url }) {
           {showContextMenuForItem && (
             <div className={styles.contextMenu} onClick={handleCloseContextMenu} style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}>
               <div className={styles.contextMenuItem} onClick={() => downloadFile(selectedItem, access_token)}>Скачать</div>
-              <div className={styles.contextMenuItem} onClick={() => addToBasketFile(selectedItem, setFiles, files, access_token)}>Добавить избранное</div>
+              <div className={styles.contextMenuItem} onClick={() => addToFavoriteFile(selectedItem, setFiles, files, access_token)}>Добавить избранное</div>
               <div className={styles.contextMenuItem} onClick={handleRenameInput}>Переименовать</div>
-              <div className={styles.contextMenuItem} onClick={() => addToFavoriteFile(selectedItem, setFiles, files, access_token)}>В коризну</div>
+              <div className={styles.contextMenuItem} onClick={() => addToBasketFile(selectedItem, setFiles, files, access_token)}>В коризну</div>
             </div>
           )}
 
