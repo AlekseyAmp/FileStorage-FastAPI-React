@@ -4,14 +4,14 @@ from datetime import datetime, timedelta
 from models.user import User, Login, Register
 from config.jwt_config import AuthJWT
 from services.history_services import set_history_today
-from constants import auth_constants
-from utils import auth_utils
+from constants.auth_constants import ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN
+from utils.auth_utils import is_valid_email, hash_password, verify_password
 
 
 async def create_access_token(authorize: AuthJWT, user_id: str):
     access_token = authorize.create_access_token(
         subject=user_id,
-        expires_time=timedelta(minutes=auth_constants.ACCESS_TOKEN_EXPIRES_IN)
+        expires_time=timedelta(minutes=ACCESS_TOKEN_EXPIRES_IN)
     )
     return access_token
 
@@ -19,13 +19,13 @@ async def create_access_token(authorize: AuthJWT, user_id: str):
 async def create_refresh_token(authorize: AuthJWT, user_id: str):
     refresh_token = authorize.create_refresh_token(
         subject=user_id,
-        expires_time=timedelta(minutes=auth_constants.REFRESH_TOKEN_EXPIRES_IN)
+        expires_time=timedelta(minutes=REFRESH_TOKEN_EXPIRES_IN)
     )
     return refresh_token
 
 
 async def create_new_user(credentials: Register):
-    if not auth_utils.is_valid_email(credentials.email):
+    if not is_valid_email(credentials.email):
         raise HTTPException(
             status_code=400,
             detail="Неверный адрес электронной почты"
@@ -50,7 +50,7 @@ async def create_new_user(credentials: Register):
     new_user = User(
         email=credentials.email.lower(),
         username=credentials.email.lower().split('@')[0],
-        password=auth_utils.hash_password(credentials.password),
+        password=hash_password(credentials.password),
         metadata={
             "is_premium": False,
             "storage_used": 0,
@@ -82,7 +82,7 @@ async def login_user(credentials: Login, response: Response, authorize: AuthJWT 
             detail="Аккаунт не найден"
         )
 
-    if not auth_utils.verify_password(credentials.password, user.password):
+    if not verify_password(credentials.password, user.password):
         raise HTTPException(
             status_code=400,
             detail="Неверная почта или пароль"
@@ -93,8 +93,8 @@ async def login_user(credentials: Login, response: Response, authorize: AuthJWT 
 
     response.set_cookie("access_token",
                         access_token,
-                        auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60,
-                        auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60,
                         "/",
                         None,
                         False,
@@ -103,8 +103,8 @@ async def login_user(credentials: Login, response: Response, authorize: AuthJWT 
 
     response.set_cookie("refresh_token",
                         refresh_token,
-                        auth_constants.REFRESH_TOKEN_EXPIRES_IN * 60,
-                        auth_constants.REFRESH_TOKEN_EXPIRES_IN * 60,
+                        REFRESH_TOKEN_EXPIRES_IN * 60,
+                        REFRESH_TOKEN_EXPIRES_IN * 60,
                         "/",
                         None,
                         False,
@@ -114,8 +114,8 @@ async def login_user(credentials: Login, response: Response, authorize: AuthJWT 
 
     response.set_cookie("logged_in",
                         True,
-                        auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60,
-                        auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60,
                         "/",
                         None,
                         False,
@@ -137,8 +137,8 @@ async def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
 
     response.set_cookie("access_token",
                         access_token,
-                        auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60,
-                        auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60,
                         "/",
                         None,
                         False,
@@ -147,8 +147,8 @@ async def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
 
     response.set_cookie("logged_in",
                         True,
-                        auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60,
-                        auth_constants.ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60,
+                        ACCESS_TOKEN_EXPIRES_IN * 60,
                         "/",
                         None,
                         False,
