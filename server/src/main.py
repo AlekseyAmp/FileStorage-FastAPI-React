@@ -5,6 +5,7 @@ import uvicorn
 from routes import (
     auth_routes,
     user_routes,
+    settings_routes,
     file_routes,
     category_routes,
     condition_routes,
@@ -36,6 +37,7 @@ app.add_middleware(
 
 app.include_router(auth_routes.router, tags=['auth'], prefix='/api')
 app.include_router(user_routes.router, tags=['users'], prefix='/api')
+app.include_router(settings_routes.router, tags=['settings'], prefix='/api')
 app.include_router(file_routes.router, tags=['files'], prefix='/api')
 app.include_router(category_routes.router, tags=['categories'], prefix='/api')
 app.include_router(condition_routes.router, tags=['conditions'], prefix='/api')
