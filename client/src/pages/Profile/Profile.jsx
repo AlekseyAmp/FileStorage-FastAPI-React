@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react';
 
 import Cookie from 'js-cookie';
 import axios from '../../utils/axios';
+import { changeEmail } from '../../utils/settingsActions';
 
 import styles from './Profile.module.scss';
 import '../../assets/variables.scss';
+
+import Input from '../../components/Input/Input';
 
 function Profile() {
   const access_token = Cookie.get('access_token');
 
   const [email, setEmail] = useState()
+  const [showEmailInput, setShowEmailInput] = useState(null);
 
   const [upload, setUpload] = useState()
   const [download, setDownload] = useState()
@@ -49,6 +53,11 @@ function Profile() {
     getStatisticAll();
   }, []);
 
+  function handleEmailInput(e) {
+    e.preventDefault();
+    setShowEmailInput(email);
+  }
+
   return (
     <div className={styles.profile} >
       <div className={'title'}>Профиль и настройки</div>
@@ -59,11 +68,24 @@ function Profile() {
           </div>
           <div className={styles.userInfoChange}>
             <div className={styles.userInfoChangeElem}>
-              <p className={`dark-text`}><span className={`bold-text`}>Почта:</span> {email}</p>
-              <div className={`${styles.changeButton} link-text-orange`}>
-                Изменить
+              <div className={styles.userInfoChangeElemContent}>
+                <p className={`dark-text`}><span className={`bold-text`}>Почта:</span> {email}</p>
+                <div onClick={handleEmailInput} className={`${styles.changeButton} link-text-orange`}>
+                  Изменить
+                </div>
               </div>
-
+              {showEmailInput !== null && (
+                <Input
+                  value={showEmailInput}
+                  onChange={(e) => setShowEmailInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      changeEmail(showEmailInput, setEmail, access_token);
+                      setShowEmailInput(null)
+                    }
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>
