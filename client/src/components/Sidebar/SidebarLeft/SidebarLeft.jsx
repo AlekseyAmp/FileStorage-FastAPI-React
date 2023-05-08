@@ -1,5 +1,8 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+import Cookie from 'js-cookie';
+import axios from '../../../utils/axios';
 
 import styles from './SidebarLeft.module.scss';
 import '../../../assets/variables.scss';
@@ -7,10 +10,29 @@ import '../../../assets/variables.scss';
 import Logout from '../../../pages/Auth/Logout';
 
 function SidebarLeft() {
+  const access_token = Cookie.get('access_token');
+  const category_name = 'default_category';
 
-  const uploadFile = () => {
+  async function uploadFile() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
+    fileInput.onchange = async () => {
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const response = await axios.post(`/files/upload/${category_name}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${access_token}`
+          }
+        });
+        console.log(response);
+      } catch (error) {
+        console.log(error.response.data.detail);
+      }
+    };
     fileInput.click();
   }
 
