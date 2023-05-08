@@ -3,8 +3,8 @@ import React from 'react';
 import styles from './SearchInput.module.scss';
 
 function SearchInput({ title, onSearch }) {
-  const handleChange = (event) => {
-    onSearch(event.target.value);
+  function handleChange(e) {
+    onSearch(e.target.value);
   };
 
   return (
