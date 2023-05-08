@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Cookie from 'js-cookie';
 import axios from '../../utils/axios';
-import { changeEmail } from '../../utils/settingsActions';
+import { changeEmail, changePassword } from '../../utils/settingsActions';
 
 import styles from './Profile.module.scss';
 import '../../assets/variables.scss';
@@ -14,6 +14,7 @@ function Profile() {
 
   const [email, setEmail] = useState()
   const [showEmailInput, setShowEmailInput] = useState(null);
+  const [showPasswordInput, setShowPasswordInput] = useState(null);
 
   const [upload, setUpload] = useState()
   const [download, setDownload] = useState()
@@ -58,6 +59,11 @@ function Profile() {
     setShowEmailInput(email);
   }
 
+  function handlePasswordInput(e) {
+    e.preventDefault();
+    setShowPasswordInput('');
+  }
+
   return (
     <div className={styles.profile} >
       <div className={'title'}>Профиль и настройки</div>
@@ -82,6 +88,29 @@ function Profile() {
                     if (e.key === 'Enter') {
                       changeEmail(showEmailInput, setEmail, access_token);
                       setShowEmailInput(null)
+                    }
+                  }}
+                />
+              )}
+            </div>
+
+            <div className={styles.userInfoChangeElem}>
+              <div className={styles.userInfoChangeElemContent}>
+                <p className={`dark-text`}><span className={`bold-text`}>Пароль:</span></p>
+                <div onClick={handlePasswordInput} className={`${styles.changeButton} link-text-orange`}>
+                  Изменить
+                </div>
+              </div>
+              {showPasswordInput !== null && (
+                <Input
+                  value={showEmailInput}
+                  placeholder={'Новый пароль'}
+
+                  onChange={(e) => setShowPasswordInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      changePassword(showPasswordInput, access_token);
+                      setShowPasswordInput(null)
                     }
                   }}
                 />

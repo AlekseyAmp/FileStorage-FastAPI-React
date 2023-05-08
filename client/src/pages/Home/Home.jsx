@@ -117,10 +117,7 @@ function Home() {
     <div className="drag-and-drop">
       <DragAndDropFile />
       <div className={styles.home}>
-        <form className={styles.search}>
-          <SearchInput title={'Поиск по всем файлам'} />
-          <Button title={'Найти'} marginTop={'37px'} />
-        </form>
+        <SearchInput title={'Поиск по всем файлам'} />
 
         <div className={styles.categories}>
           <div className={`title`}>Категории</div>
