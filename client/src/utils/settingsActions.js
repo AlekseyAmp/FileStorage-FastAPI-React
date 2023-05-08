@@ -14,4 +14,17 @@ async function changeEmail(newEmail, setEmail, access_token) {
     }
 }
 
-  export { changeEmail };
+async function changePassword(newPassword, access_token) {
+    try {
+        const response = await axios.patch(`settings/password/${newPassword}`, newPassword, {
+            headers: {
+                'Authorization': `Bearer ${access_token}`
+            }
+        });
+        console.log(response.data)
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+
+  export { changeEmail, changePassword };
