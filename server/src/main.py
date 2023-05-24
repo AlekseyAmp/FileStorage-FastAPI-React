@@ -45,9 +45,6 @@ app.include_router(history_routes.router, tags=['history'], prefix='/api')
 app.include_router(statistic_routes.router, tags=['statistic'], prefix='/api')
 
 
-db_settings = DbSettings()
-
-
 @app.on_event("startup")
 async def startup():
     await db_settings.initialize_database()
