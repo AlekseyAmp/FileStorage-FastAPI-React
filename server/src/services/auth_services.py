@@ -93,8 +93,8 @@ async def login_user(credentials: Login, response: Response, authorize: AuthJWT 
 
     response.set_cookie("access_token",
                         access_token,
-                        ACCESS_TOKEN_EXPIRES_IN * 60,
-                        ACCESS_TOKEN_EXPIRES_IN * 60,
+                        settings.ACCESS_TOKEN_EXPIRES_IN * 60,
+                        settings.ACCESS_TOKEN_EXPIRES_IN * 60,
                         "/",
                         None,
                         False,
@@ -103,8 +103,8 @@ async def login_user(credentials: Login, response: Response, authorize: AuthJWT 
 
     response.set_cookie("refresh_token",
                         refresh_token,
-                        REFRESH_TOKEN_EXPIRES_IN * 60,
-                        REFRESH_TOKEN_EXPIRES_IN * 60,
+                        settings.REFRESH_TOKEN_EXPIRES_IN * 60,
+                        settings.REFRESH_TOKEN_EXPIRES_IN * 60,
                         "/",
                         None,
                         False,
@@ -127,8 +127,8 @@ async def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
 
     response.set_cookie("access_token",
                         access_token,
-                        ACCESS_TOKEN_EXPIRES_IN * 60,
-                        ACCESS_TOKEN_EXPIRES_IN * 60,
+                        settings.ACCESS_TOKEN_EXPIRES_IN * 60,
+                        settings.ACCESS_TOKEN_EXPIRES_IN * 60,
                         "/",
                         None,
                         False,
@@ -137,8 +137,8 @@ async def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
 
     response.set_cookie("logged_in",
                         True,
-                        ACCESS_TOKEN_EXPIRES_IN * 60,
-                        ACCESS_TOKEN_EXPIRES_IN * 60,
+                        settings.ACCESS_TOKEN_EXPIRES_IN * 60,
+                        settings.ACCESS_TOKEN_EXPIRES_IN * 60,
                         "/",
                         None,
                         False,
