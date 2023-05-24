@@ -3,15 +3,15 @@ from datetime import datetime, timedelta
 
 from models.user import User, Login, Register
 from config.jwt_config import AuthJWT
+from config.settings import settings
 from services.history_services import set_history_today
-from constants.auth_constants import ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN
 from utils.auth_utils import is_valid_email, hash_password, verify_password
 
 
 async def create_access_token(authorize: AuthJWT, user_id: str):
     access_token = authorize.create_access_token(
         subject=user_id,
-        expires_time=timedelta(minutes=ACCESS_TOKEN_EXPIRES_IN)
+        expires_time=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN)
     )
     return access_token
 
@@ -19,7 +19,7 @@ async def create_access_token(authorize: AuthJWT, user_id: str):
 async def create_refresh_token(authorize: AuthJWT, user_id: str):
     refresh_token = authorize.create_refresh_token(
         subject=user_id,
-        expires_time=timedelta(minutes=REFRESH_TOKEN_EXPIRES_IN)
+        expires_time=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRES_IN)
     )
     return refresh_token
 
