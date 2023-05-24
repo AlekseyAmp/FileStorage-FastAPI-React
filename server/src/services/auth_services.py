@@ -112,16 +112,6 @@ async def login_user(credentials: Login, response: Response, authorize: AuthJWT 
                         "lax"
                         )
 
-    response.set_cookie("logged_in",
-                        True,
-                        ACCESS_TOKEN_EXPIRES_IN * 60,
-                        ACCESS_TOKEN_EXPIRES_IN * 60,
-                        "/",
-                        None,
-                        False,
-                        False,
-                        "lax")
-
     history_dict = {
         "title": "Вход",
         "description": f"Вход в диск",
@@ -160,8 +150,6 @@ async def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
 
 async def logout_user(response: Response, authorize: AuthJWT = Depends()):
     authorize.unset_jwt_cookies()
-    response.set_cookie("logged_in", False)
     response.delete_cookie("access_token")
     response.delete_cookie("refresh_token")
-    response.delete_cookie("email")
     return {"status": "success"}
