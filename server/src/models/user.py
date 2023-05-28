@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Any, Dict
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr
 from beanie import Document
 
 
