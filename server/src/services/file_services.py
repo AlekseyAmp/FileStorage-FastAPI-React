@@ -54,7 +54,7 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
     if user.metadata["storage_used"] >= user.metadata["max_storage"]:
         raise HTTPException(
             status_code=403,
-            detail="Место на диске переполнено"
+            detail="Disk space is full"
         )
 
     category_name = category_name.lower()
@@ -69,7 +69,7 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
     if category_name in default_categories:
         raise HTTPException(
             status_code=403,
-            detail="Используйте DEFAULT_CATEGORY, чтобы загрузить файл в категорию по умолчанию"
+            detail="Use DEFAULT_CATEGORY to load the file into the default category"
         )
 
     directory = os.path.join("STORAGE", user_id, category_name)
@@ -84,7 +84,7 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
     if not os.path.isdir(category_path):
         raise HTTPException(
             status_code=404,
-            detail="Такой категории не существует"
+            detail="There is no such category"
         )
 
     file_name = file.filename
@@ -143,7 +143,9 @@ async def create_new_file(file: UploadFile, category_name: str, user_id: str):
     await set_history_today(history_dict, user_id)
 
     await set_statistic_today("upload", user_id)
-    return {"file_id": new_file.id}
+    return {
+        "file_id": new_file.id
+    }
 
 
 async def download_file(file_id: str, user_id: str):
@@ -197,7 +199,9 @@ async def rename_file(file_id: str, new_name: str, user_id: str):
 
     await set_history_today(history_dict, user_id)
 
-    return {"new_name": new_name}
+    return {
+        "new_name": new_name
+    }
 
 
 async def add_to_basket_file(file_id: str, user_id: str):
@@ -206,13 +210,13 @@ async def add_to_basket_file(file_id: str, user_id: str):
     if file.metadata["is_favorite"]:
         raise HTTPException(
             status_code=403,
-            detail="Файл находится в избранном"
+            detail="The file is in favorites"
         )
 
     if file.metadata["is_basket"]:
         raise HTTPException(
             status_code=403,
-            detail="Файл уже находится в корзине"
+            detail="The file is already in the basket"
         )
 
     default_categories = ("images", "documents", "music", "videos")
@@ -238,7 +242,9 @@ async def add_to_basket_file(file_id: str, user_id: str):
 
     await set_history_today(history_dict, user_id)
 
-    return {"status": "succes"}
+    return {
+        "message": "File moved in basket"
+    }
 
 
 async def add_to_favorite_file(file_id: str, user_id: str):
@@ -247,13 +253,13 @@ async def add_to_favorite_file(file_id: str, user_id: str):
     if file.metadata["is_basket"]:
         raise HTTPException(
             status_code=403,
-            detail="Файл находится в корзине"
+            detail="The file is already in the basket"
         )
 
     if file.metadata["is_favorite"]:
         raise HTTPException(
             status_code=403,
-            detail="Файл уже находится в избранном"
+            detail="The file is in favorites"
         )
 
     default_categories = ("images", "documents", "music", "videos")
@@ -279,7 +285,9 @@ async def add_to_favorite_file(file_id: str, user_id: str):
 
     await set_history_today(history_dict, user_id)
 
-    return {"status": "succes"}
+    return {
+        "message": "File moved in favorites"
+    }
 
 
 async def revert_moved_file_back(file_id: str, user_id: str):
@@ -298,7 +306,7 @@ async def revert_moved_file_back(file_id: str, user_id: str):
     elif (not file.metadata["is_favorite"]) and (not file.metadata["is_basket"]):
         raise HTTPException(
             status_code=403,
-            detail="Файл не находится ни в корзине, ни в избранном"
+            detail="The file is neither in the recycle basket can nor in favorites"
         )
 
     default_categories = ("images", "documents", "music", "videos")
@@ -321,7 +329,9 @@ async def revert_moved_file_back(file_id: str, user_id: str):
 
     await change_size_category(category_name, "upload", file.size, user_id)
 
-    return {"status": "succes"}
+    return {
+        "message": "The file will be returned"
+    }
 
 
 async def delete_file(file_id: str, user_id: str):
@@ -339,7 +349,7 @@ async def delete_file(file_id: str, user_id: str):
     if not file.metadata["is_basket"]:
         raise HTTPException(
             status_code=403,
-            detail="Файл должен находиться в корзине"
+            detail="The file must be in the basket"
         )
 
     history_dict = {
@@ -364,4 +374,6 @@ async def delete_file(file_id: str, user_id: str):
 
     await set_statistic_today("deleted", user_id)
 
-    return {"status": "succes"}
+    return {
+        "message": "File deleted"
+    }

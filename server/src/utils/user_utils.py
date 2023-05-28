@@ -10,13 +10,13 @@ async def get_user(user_id: str):
     if not user:
         raise HTTPException(
             status_code=404,
-            detail="Пользователь не найден"
+            detail="User not found"
         )
 
     if str(user.id) != user_id:
         raise HTTPException(
             status_code=403,
-            detail="Отказано в доступе"
+            detail="Access denied"
         )
 
     return user

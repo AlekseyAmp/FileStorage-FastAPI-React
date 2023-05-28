@@ -28,7 +28,7 @@ async def create_new_user(credentials: Register):
     if not is_valid_email(credentials.email):
         raise HTTPException(
             status_code=400,
-            detail="Неверный адрес электронной почты"
+            detail="Incorrect email address"
         )
 
     email_exists = await User.find_one(
@@ -38,13 +38,13 @@ async def create_new_user(credentials: Register):
     if email_exists:
         raise HTTPException(
             status_code=409,
-            detail="Аккаунт уже существует"
+            detail="The user already exists"
         )
 
     if credentials.password != credentials.password_repeat:
         raise HTTPException(
             status_code=400,
-            detail="Пароли не совпадают"
+            detail="Passwords do not match"
         )
 
     new_user = User(
@@ -79,13 +79,13 @@ async def login_user(credentials: Login, response: Response, authorize: AuthJWT 
     if not user:
         raise HTTPException(
             status_code=404,
-            detail="Аккаунт не найден"
+            detail="User not found"
         )
 
     if not verify_password(credentials.password, user.password):
         raise HTTPException(
             status_code=400,
-            detail="Неверная почта или пароль"
+            detail="Wrong email or password"
         )
 
     access_token = await create_access_token(authorize, str(user.id))
@@ -119,7 +119,10 @@ async def login_user(credentials: Login, response: Response, authorize: AuthJWT 
     }
     await set_history_today(history_dict, str(user.id))
 
-    return {"refresh_token": refresh_token, "access_token": access_token}
+    return {
+        "refresh_token": refresh_token,
+        "access_token": access_token
+    }
 
 
 async def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
@@ -152,4 +155,6 @@ async def logout_user(response: Response, authorize: AuthJWT = Depends()):
     authorize.unset_jwt_cookies()
     response.delete_cookie("access_token")
     response.delete_cookie("refresh_token")
-    return {"status": "success"}
+    return {
+        "message": "You're logout"
+    }

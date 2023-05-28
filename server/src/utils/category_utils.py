@@ -14,13 +14,13 @@ async def get_category(category_name: str, user_id: str):
     if not category:
         raise HTTPException(
             status_code=404,
-            detail="Категория не найдена"
+            detail="Category not found"
         )
 
     if category.user_id != user_id:
         raise HTTPException(
             status_code=403,
-            detail="Отказано в доступе"
+            detail="Access denied"
         )
 
     return category

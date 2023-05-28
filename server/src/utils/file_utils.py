@@ -11,13 +11,13 @@ async def get_file(file_id: str, user_id: str):
     if not file:
         raise HTTPException(
             status_code=404,
-            detail="Файл не найден"
+            detail="File not found"
         )
 
     if file.user_id != user_id:
         raise HTTPException(
             status_code=403,
-            detail="Отказано в доступе"
+            detail="Access denied"
         )
 
     return file

@@ -87,7 +87,7 @@ async def create_new_category(category_name: str, user_id: str):
     if category_name.lower() in default_categories:
         raise HTTPException(
             status_code=403,
-            detail="Нельзя создать такую категорию, потому что она установлена по умолчанию"
+            detail="You cannot create such a category because it is set by default"
         )
 
     if category_name.lower() == "default_category":
@@ -103,7 +103,7 @@ async def create_new_category(category_name: str, user_id: str):
     if os.path.isdir(category_path):
         raise HTTPException(
             status_code=403,
-            detail="Такая категория уже существует"
+            detail="Such a category already exists"
         )
 
     os.makedirs(category_path)
@@ -130,7 +130,9 @@ async def create_new_category(category_name: str, user_id: str):
     }
     await set_history_today(history_dict, user_id)
 
-    return {"category_name": new_category.name}
+    return {
+        "category_name": new_category.name
+    }
 
 
 async def rename_category(category_name: str, new_name: str, user_id: str):
@@ -140,13 +142,13 @@ async def rename_category(category_name: str, new_name: str, user_id: str):
     if category_name.lower() in default_categories:
         raise HTTPException(
             status_code=403,
-            detail="Невозможно переименовать эту категорию, так как она установлена по умолчанию"
+            detail="It is not possible to rename this category because it is set by default"
         )
 
     if new_name.lower() in default_categories:
         raise HTTPException(
             status_code=403,
-            detail="Невозможно переименовать эту категорию, так как новое имя является категорией по умолчанию"
+            detail="It is not possible to rename this category because the new name is the default category"
         )
 
     category = await get_category(category_name, user_id)
@@ -180,7 +182,9 @@ async def rename_category(category_name: str, new_name: str, user_id: str):
 
     await set_history_today(history_dict, user_id)
 
-    return {"new_name": new_name}
+    return {
+        "new_name": new_name
+    }
 
 
 async def delete_category(category_name: str, user_id: str):
@@ -190,7 +194,7 @@ async def delete_category(category_name: str, user_id: str):
     if category_name.lower() in default_categories:
         raise HTTPException(
             status_code=403,
-            detail="Невозможно удалить эту категорию, так как она установлена по умолчанию"
+            detail="It is not possible to delete this category because it is set by default"
         )
 
     category = await get_category(category_name.lower(), user_id)
@@ -214,7 +218,9 @@ async def delete_category(category_name: str, user_id: str):
 
     await set_history_today(history_dict, user_id)
 
-    return {"status": "succes"}
+    return {
+        "message": "You're deleted the category"
+    }
 
 
 async def change_size_category(category_name: str, action: str, size: int, user_id: str):
@@ -226,4 +232,6 @@ async def change_size_category(category_name: str, action: str, size: int, user_
     elif action == "delete":
         await category.update({"$inc": {"size": -size}})
 
-    return {"status": "succes"}
+    return {
+        "status": "succes"
+    }

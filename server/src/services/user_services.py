@@ -24,5 +24,5 @@ async def get_user_id(authorize: AuthJWT = Depends()):
     except (MissingTokenError):
         raise HTTPException(
             status_code=401,
-            detail="Не авторизован"
+            detail="Not authorized"
         )

@@ -11,7 +11,7 @@ async def change_email(user_id: str, new_email: str):
     if not is_valid_email(new_email):
         raise HTTPException(
             status_code=400,
-            detail="Неверный адрес электронной почты"
+            detail="Incorrect email address"
         )
 
     async for user_elem in User.find({
@@ -20,13 +20,15 @@ async def change_email(user_id: str, new_email: str):
         if user_elem:
             raise HTTPException(
                 status_code=403,
-                detail="Данный email уже занят"
+                detail="This email is already taken"
             )
 
     await user.update({"$set": {"email": new_email}})
     await user.update({"$set": {"username": new_email.split('@')[0]}})
 
-    return {"new_email": new_email}
+    return {
+        "new_email": new_email
+    }
 
 
 async def change_password(user_id: str, new_password: str):
@@ -34,4 +36,6 @@ async def change_password(user_id: str, new_password: str):
 
     await user.update({"$set": {"password": hash_password(new_password)}})
 
-    return {"new_password": new_password}
+    return {
+        "new_password": new_password
+    }
