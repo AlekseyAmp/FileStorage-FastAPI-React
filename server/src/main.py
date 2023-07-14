@@ -16,7 +16,7 @@ from routes import (
 from config.database import DbSettings
 
 
-app = FastAPI()
+app = FastAPI(title="FileStorage", version="0.1")
 
 
 dbSettings = DbSettings()
